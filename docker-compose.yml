@@ -1,0 +1,105 @@
+# TaxIntel - lokale ontwikkelomgeving
+#
+#   frontend  Angular (ng serve)          http://localhost:4200
+#   backend   Python API (FastAPI)        http://localhost:8000
+#   mongo     MongoDB                     mongodb://localhost:27017
+#   mongo-express  DB-beheer (optioneel)  http://localhost:8081   -> docker compose --profile tools up
+#
+# Start:  cp .env.example .env  &&  docker compose up --build
+
+name: taxintel
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    ports:
+      - "${FRONTEND_PORT:-4200}:4200"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    environment:
+      API_URL: http://localhost:${BACKEND_PORT:-8000}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+    # Zolang er nog geen Angular-project in ./frontend staat, blijft de container gewoon draaien.
+    command: >
+      sh -c "if [ -f package.json ]; then npm install && npx ng serve --host 0.0.0.0 --poll 2000;
+             else echo 'Nog geen Angular-project in ./frontend (ng new ...). Container wacht.'; tail -f /dev/null; fi"
+    depends_on:
+      - backend
+    networks:
+      - taxintel
+
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      MONGO_URI: mongodb://${MONGO_APP_USER}:${MONGO_APP_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=${MONGO_DB}
+      MONGO_DB: ${MONGO_DB}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+      EVENTS_API_KEY: ${EVENTS_API_KEY:-}
+      DELIJN_API_KEY: ${DELIJN_API_KEY:-}
+      ILINE_API_KEY: ${ILINE_API_KEY:-}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-4200}
+      WATCHFILES_FORCE_POLLING: "true"   # hot reload op Windows bind mounts
+    # Zolang er nog geen app/main.py is, blijft de container gewoon draaien.
+    command: >
+      sh -c "if [ -f app/main.py ]; then uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload;
+             else echo 'Nog geen backend/app/main.py. Container wacht.'; tail -f /dev/null; fi"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - taxintel
+
+  mongo:
+    image: mongo:8.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+      MONGO_DB: ${MONGO_DB}
+      MONGO_APP_USER: ${MONGO_APP_USER}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+      # Draait enkel bij de eerste start (lege volume): maakt app-user, collecties, validators en indexen aan.
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - taxintel
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    profiles: ["tools"]
+    ports:
+      - "127.0.0.1:${MONGO_EXPRESS_PORT:-8081}:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongo:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER:-admin}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASSWORD:-admin}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - taxintel
+
+volumes:
+  mongo_data:
+  frontend_node_modules:
+
+networks:
+  taxintel:
