@@ -1,0 +1,10 @@
+# API
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+pydantic-settings==2.6.1
+
+# Database (pymongo bevat ook de async client)
+pymongo==4.10.1
+
+# Externe API's (Google Maps, Events, De Lijn, ILine)
+httpx==0.28.1
