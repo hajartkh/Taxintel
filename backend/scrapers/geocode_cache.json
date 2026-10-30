@@ -1,0 +1,1934 @@
+{
+ "Tijl Uilenspiegellaan|2050|Antwerpen": {
+  "lat": 51.229135,
+  "lon": 4.380536,
+  "geo_precisie": "straat",
+  "geo_adres": "Tijl Uilenspiegellaan, Antwerpen"
+ },
+ "Dambruggestraat 336|2060|Antwerpen": {
+  "lat": 51.229087,
+  "lon": 4.421697,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Dambruggestraat 336, 2060 Antwerpen"
+ },
+ "Waalse kaai 14 2000|2000|ANTWERPEN": {
+  "lat": 51.209189,
+  "lon": 4.38819,
+  "geo_precisie": "straat",
+  "geo_adres": "Waalsekaai, Antwerpen"
+ },
+ "De Robianostraat 214|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.195326,
+  "lon": 4.47498,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "de Robianostraat 214, 2150 Antwerpen"
+ },
+ "Groenplaats 21|2000|Antwerpen": {
+  "lat": 51.219802,
+  "lon": 4.401616,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Groenplaats 21, 2000 Antwerpen"
+ },
+ "WIJNEGEMSTRAAT 27|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.219745,
+  "lon": 4.442585,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Wijnegemstraat 27, 2140 Antwerpen"
+ },
+ "Wolstraat 7|2000|Antwerpen": {
+  "lat": 51.221815,
+  "lon": 4.402793,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Wolstraat 7, 2000 Antwerpen"
+ },
+ "Heistraat 34a|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.171741,
+  "lon": 4.394447,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Heistraat 34A, 2610 Antwerpen"
+ },
+ "Desguinlei 25|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.193073,
+  "lon": 4.403623,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Desguinlei 25, 2018 Antwerpen"
+ },
+ "Kammenstraat 81|2000|Antwerpen": {
+  "lat": 51.216155,
+  "lon": 4.401929,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kammenstraat 81, 2000 Antwerpen"
+ },
+ "Kotterstraat 1|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Jaak De Boeckstraat 71|2170|Merksem (Antwerpen)": {
+  "lat": 51.245779,
+  "lon": 4.446057,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Jaak De Boeckstraat 71, 2170 Antwerpen"
+ },
+ "Blancefloerlaan 501|2050|Antwerpen": {
+  "lat": 51.21915,
+  "lon": 4.350881,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Blancefloerlaan 501, 2050 Antwerpen"
+ },
+ "Wittestraat 10|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.189701,
+  "lon": 4.386206,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Wittestraat 10, 2020 Antwerpen"
+ },
+ "De Coninckplein 26|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.221769,
+  "lon": 4.421074,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "De Coninckplein 26, 2060 Antwerpen"
+ },
+ "Grotesteenweg|2600|Berchem": {
+  "lat": 51.186896,
+  "lon": 4.428288,
+  "geo_precisie": "straat",
+  "geo_adres": "Grotesteenweg, Antwerpen"
+ },
+ "Willem Elsschotstraat 5|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.225433,
+  "lon": 4.379897,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Willem Elsschotstraat 5, 2050 Antwerpen"
+ },
+ "Florent Cootmansplein|2600|Berchem (Antwerpen)": {
+  "lat": 51.192895,
+  "lon": 4.439645,
+  "geo_precisie": "straat",
+  "geo_adres": "Florent Cootmansplein, Antwerpen"
+ },
+ "Willem Lepelstraat 13|2000|Antwerpen": {
+  "lat": 51.213565,
+  "lon": 4.396141,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Willem Lepelstraat 13, 2000 Antwerpen"
+ },
+ "Leopold de Waelplaats 1|2000|Antwerpen": {
+  "lat": 51.208467,
+  "lon": 4.394851,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Leopold de Waelplaats 1, 2000 Antwerpen"
+ },
+ "Kapelstraat 296|2660|Hoboken (Antwerpen)": {
+  "lat": 51.173828,
+  "lon": 4.339029,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kapelstraat 296, 2660 Antwerpen"
+ },
+ "De Keyserhoeve 66|2040|Berendrecht-Zandvliet-Lillo": {
+  "lat": 51.359279,
+  "lon": 4.311682,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "De Keyserhoeve 66, 2040 Antwerpen"
+ },
+ "Boomgaardstraat 204|2600|Berchem (Antwerpen)": {
+  "lat": 51.200988,
+  "lon": 4.423977,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Boomgaardstraat 204, 2600 Antwerpen"
+ },
+ "Veltwijcklaan 180 (ingang Moerenhoutlaan)|2180|Ekeren (Antwerpen)": {
+  "lat": 51.280551,
+  "lon": 4.429627,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Veltwijcklaan 180, 2180 Antwerpen"
+ },
+ "Krijgsbaan 100|2660|Hoboken": {
+  "lat": 51.168711,
+  "lon": 4.363765,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Krijgsbaan 100, 2660 Antwerpen"
+ },
+ "Cellebroedersstraat 2|2000|Antwerpen": {
+  "lat": 51.219377,
+  "lon": 4.412226,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Cellebroedersstraat 2, 2000 Antwerpen"
+ },
+ "#Sint-Bernardsesteenweg/Krijgsbaan|2660|Hoboken (Antwerpen)": null,
+ "Lakborslei 200|2100|Deurne (Antwerpen)": {
+  "lat": 51.228488,
+  "lon": 4.45581,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lakborslei 200, 2100 Antwerpen"
+ },
+ "Krugerstraat 232|2660|Hoboken (Antwerpen)": {
+  "lat": 51.186525,
+  "lon": 4.365737,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Krugerstraat 232, 2660 Antwerpen"
+ },
+ "Turnhoutsebaan 139|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.215455,
+  "lon": 4.43459,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Turnhoutsebaan 139, 2140 Antwerpen"
+ },
+ "Zillebekelaan 6A|2600|Berchem (Antwerpen)": {
+  "lat": 51.19505,
+  "lon": 4.44398,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Zillebekelaan 6A, 2600 Antwerpen"
+ },
+ "Ankerrui 5/7|2000|Antwerpen": {
+  "lat": 51.226772,
+  "lon": 4.412557,
+  "geo_precisie": "straat",
+  "geo_adres": "Ankerrui, Antwerpen"
+ },
+ "Van Schoonbekestraat 148|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.19986,
+  "lon": 4.40369,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Van Schoonbekestraat 148, 2018 Antwerpen"
+ },
+ "Kipdorpvest 26|2000|Antwerpen": {
+  "lat": 51.218635,
+  "lon": 4.414221,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kipdorpvest 26, 2000 Antwerpen"
+ },
+ "Lucien Hendrickxlei 17|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.19208,
+  "lon": 4.488504,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lucien Hendrickxlei 17, 2150 Antwerpen"
+ },
+ "Van Ertbornstraat 17|2000|Antwerpen": {
+  "lat": 51.222331,
+  "lon": 4.39785,
+  "geo_precisie": "straat",
+  "geo_adres": "Ernest Van Dijckkaai, Antwerpen"
+ },
+ "Kern 18|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.171172,
+  "lon": 4.39347,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kern 18, 2610 Antwerpen"
+ },
+ "Veltwijcklaan 252|2180|Ekeren (Antwerpen)": {
+  "lat": 51.282287,
+  "lon": 4.441225,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Veltwijcklaan 252, 2180 Antwerpen"
+ },
+ "Lange Vlierstraat 5|2000|Antwerpen": {
+  "lat": 51.214608,
+  "lon": 4.397032,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lange Vlierstraat 5, 2000 Antwerpen"
+ },
+ "Bordeauxstraat 7A bus 0.1|2000|Antwerpen": {
+  "lat": 51.23044,
+  "lon": 4.40929,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Bordeauxstraat 7A, 2000 Antwerpen"
+ },
+ "De Keyserhoeve 66|2040|ANTWERPEN": {
+  "lat": 51.359279,
+  "lon": 4.311682,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "De Keyserhoeve 66, 2040 Antwerpen"
+ },
+ "Breughelstraat 31|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.207741,
+  "lon": 4.414888,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Breughelstraat 31, 2018 Antwerpen"
+ },
+ "Suikerrui 17-19|2000|Antwerpen": {
+  "lat": 51.221108,
+  "lon": 4.398263,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Suikerrui 17, 2000 Antwerpen"
+ },
+ "Hendrik Conscienceplein 4|2000|Antwerpen": {
+  "lat": 51.220762,
+  "lon": 4.403947,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hendrik Conscienceplein 4, 2000 Antwerpen"
+ },
+ "Lievevrouwkesbosweg 20|2610|Wilrijk": {
+  "lat": 51.161326,
+  "lon": 4.37837,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lievevrouwkesbosweg 20, 2610 Antwerpen"
+ },
+ "Kapelstraat 64|2660|Hoboken": {
+  "lat": 51.175243,
+  "lon": 4.347324,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kapelstraat 64, 2660 Antwerpen"
+ },
+ "de Gryspeerstraat 86|2100|Deurne (Antwerpen)": {
+  "lat": 51.227093,
+  "lon": 4.450963,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "De Gryspeerstraat 86, 2100 Antwerpen"
+ },
+ "Sint-Camillusstraat 29|2610|Wilrijk": {
+  "lat": 51.17107,
+  "lon": 4.396127,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Camillusstraat 29, 2610 Antwerpen"
+ },
+ "Moorkensplein 19|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.213133,
+  "lon": 4.434262,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Moorkensplein 19, 2140 Antwerpen"
+ },
+ "Driekoningenstraat 126, 2600 Berchem|2000|Antwerpen": {
+  "lat": 51.197132,
+  "lon": 4.422147,
+  "geo_precisie": "huisnummer (postcode wijkt af)",
+  "geo_adres": "Driekoningenstraat 126, 2600 Antwerpen"
+ },
+ "Aan het steen|2000|Antwerpen": {
+  "lat": 51.227594,
+  "lon": 4.401887,
+  "geo_precisie": "straat",
+  "geo_adres": "Adriaan Brouwerstraat, Antwerpen"
+ },
+ "Burgemeester Edgar Ryckaertsplein 1|2600|Berchem (Antwerpen)": {
+  "lat": 51.200473,
+  "lon": 4.433298,
+  "geo_precisie": "straat",
+  "geo_adres": "Burgemeester E. Ryckaertsplein, Antwerpen"
+ },
+ "Berkenrodelei 36|2660|Hoboken (Antwerpen)": {
+  "lat": 51.179032,
+  "lon": 4.350416,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Berkenrodelei 36, 2660 Antwerpen"
+ },
+ "Sint-Bernardsesteenweg 665|2660|Hoboken": {
+  "lat": 51.173923,
+  "lon": 4.36655,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Bernardsesteenweg 665, 2660 Antwerpen"
+ },
+ "Strijdhoflaan 18|2600|Berchem (Antwerpen)": {
+  "lat": 51.186693,
+  "lon": 4.426241,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Strijdhoflaan 18, 2600 Antwerpen"
+ },
+ "Middelheimlaan 61|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.181389,
+  "lon": 4.413468,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Middelheimlaan 61, 2020 Antwerpen"
+ },
+ "Hanegraefstraat 5|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.218517,
+  "lon": 4.380767,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hanegraefstraat 5, 2050 Antwerpen"
+ },
+ "Schildersstraat|2000|Antwerpen": {
+  "lat": 51.20866,
+  "lon": 4.396198,
+  "geo_precisie": "straat",
+  "geo_adres": "Schildersstraat, Antwerpen"
+ },
+ "Boterhamstraat 1|2000|Antwerpen": {
+  "lat": 51.225261,
+  "lon": 4.407385,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Boterhamstraat 1, 2000 Antwerpen"
+ },
+ "Sint-Jacobsmarkt 15|2000|Antwerpen": {
+  "lat": 51.220769,
+  "lon": 4.411208,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Jacobsmarkt 15, 2000 Antwerpen"
+ },
+ "Groenendaallaan 394|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Kerkstraat 89|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.21968,
+  "lon": 4.432276,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kerkstraat 89, 2060 Antwerpen"
+ },
+ "Leuvenstraat 32|2000|Antwerpen": {
+  "lat": 51.211386,
+  "lon": 4.389796,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Leuvenstraat 32, 2000 Antwerpen"
+ },
+ "Reyndersstraat 7 Antwerpen|2000|Antwerpen": {
+  "lat": 51.219468,
+  "lon": 4.398621,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Reyndersstraat 7, 2000 Antwerpen"
+ },
+ "Turnhoutsebaan 244|2100|Deurne (Antwerpen)": {
+  "lat": 51.21771,
+  "lon": 4.468672,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Turnhoutsebaan 244, 2100 Antwerpen"
+ },
+ "De Bosschaertstraat 30|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.1885,
+  "lon": 4.378375,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "De Bosschaertstraat 30, 2020 Antwerpen"
+ },
+ "Atletenstraat 80|2020|Antwerpen": {
+  "lat": 51.18427,
+  "lon": 4.382384,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Atletenstraat 80, 2020 Antwerpen"
+ },
+ "Bist 1|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.16923,
+  "lon": 4.393906,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Bist 1, 2610 Antwerpen"
+ },
+ "Slijkweg 5|2180|Ekeren (Antwerpen)": {
+  "lat": 51.300856,
+  "lon": 4.408993,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Slijkweg 5, 2180 Antwerpen"
+ },
+ "Moretuslei 64|2180|Ekeren (Antwerpen)": {
+  "lat": 51.283195,
+  "lon": 4.420399,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Moretuslei 64, 2180 Antwerpen"
+ },
+ "Hendrik Conscienceplein 20|2000|Antwerpen": {
+  "lat": 51.22123,
+  "lon": 4.404734,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hendrik Conscienceplein 20, 2000 Antwerpen"
+ },
+ "Groenendaallaan 394|2030|Antwerpen 3": {
+  "lat": 51.245927,
+  "lon": 4.416367,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Groenendaallaan 394, 2030 Antwerpen"
+ },
+ "Slachthuislaan 25|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.229794,
+  "lon": 4.437466,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Slachthuislaan 25, 2060 Antwerpen"
+ },
+ "Montignystraat 70|2018|Antwerpen": {
+  "lat": 51.20228,
+  "lon": 4.391542,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Montignystraat 70, 2018 Antwerpen"
+ },
+ "Koningstraat 2|2000|Antwerpen": {
+  "lat": 51.222174,
+  "lon": 4.409336,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Koningstraat 2, 2000 Antwerpen"
+ },
+ "Keistraat 5-7|2000|Antwerpen": {
+  "lat": 51.225362,
+  "lon": 4.402089,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Keistraat 5, 2000 Antwerpen"
+ },
+ "Doolweg 6|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.192176,
+  "lon": 4.489852,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Doolweg 6, 2150 Antwerpen"
+ },
+ "Desguinlei 25|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Turnhoutsebaan|2140|Antwerpen": {
+  "lat": 51.215127,
+  "lon": 4.444795,
+  "geo_precisie": "straat",
+  "geo_adres": "Turnhoutsebaan, Antwerpen (2140)"
+ },
+ "Parkweg 1|2170|Merksem (Antwerpen)": {
+  "lat": 51.24689,
+  "lon": 4.449165,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Parkweg 1, 2170 Antwerpen"
+ },
+ "Operaplein|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Karel Oomsstraat 47a|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.194743,
+  "lon": 4.409522,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Karel Oomsstraat 47A, 2018 Antwerpen"
+ },
+ "Moorkensplein 19|2140|Borgerhout": {
+  "lat": 51.213133,
+  "lon": 4.434262,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Moorkensplein 19, 2140 Antwerpen"
+ },
+ "Te Couwelaarlei 120|2100|Deurne (Antwerpen)": {
+  "lat": 51.222821,
+  "lon": 4.458111,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Te Couwelaarlei 120, 2100 Antwerpen"
+ },
+ "Brederodestraat 119 A|2018|Antwerpen 18": {
+  "lat": 51.203289,
+  "lon": 4.394218,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Brederodestraat 119, 2018 Antwerpen"
+ },
+ "Moorkensplein 1|2140|Antwerpen (Borgerhout)": {
+  "lat": 51.213591,
+  "lon": 4.433512,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Moorkensplein 1, 2140 Antwerpen"
+ },
+ "Waalsekaai 47|2000|Antwerpen": {
+  "lat": 51.209224,
+  "lon": 4.38738,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Waalsekaai 47, 2000 Antwerpen"
+ },
+ "August van Putlei 188|2100|Deurne (Antwerpen)": {
+  "lat": 51.198212,
+  "lon": 4.470408,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "August Van Putlei 188, 2100 Antwerpen"
+ },
+ "Prinsesstaat 11|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Helderstraat 57|2600|Berchem (Antwerpen)": {
+  "lat": 51.195323,
+  "lon": 4.442537,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Helderstraat 57, 2600 Antwerpen"
+ },
+ "Amerikalei 110|2000|Antwerpen": {
+  "lat": 51.206999,
+  "lon": 4.395479,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Amerikalei 110, 2000 Antwerpen"
+ },
+ "Groenenborgerlaan 185|2610|Wilrijk": {
+  "lat": 51.178143,
+  "lon": 4.419994,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Groenenborgerlaan 185, 2610 Antwerpen"
+ },
+ "Schijfstraat 105|2020|Antwerpen": {
+  "lat": 51.190683,
+  "lon": 4.373079,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Schijfstraat 105, 2020 Antwerpen"
+ },
+ "Sint-Vincentiusstraat 12|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Lange Nieuwstraat 109|2000|Antwerpen": {
+  "lat": 51.21966,
+  "lon": 4.412635,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lange Nieuwstraat 109, 2000 Antwerpen"
+ },
+ "Campus Groenenborger, Drie Eiken of Middelheim|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Valkstraat 74|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.169321,
+  "lon": 4.384481,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Valkstraat 74, 2610 Antwerpen"
+ },
+ "lakborslei 200-202|2100|Deurne (Antwerpen)": {
+  "lat": 51.228488,
+  "lon": 4.45581,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lakborslei 200, 2100 Antwerpen"
+ },
+ "L. Van Regenmortellei|2150|Borsbeek (Antwerpen)": null,
+ "Lange Beeldekensstraat 267|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.222343,
+  "lon": 4.435196,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lange Beeldekensstraat 267, 2060 Antwerpen"
+ },
+ "Boomgaardstraat 72|2600|Berchem (Antwerpen)": {
+  "lat": 51.199637,
+  "lon": 4.419281,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Boomgaardstraat 72, 2600 Antwerpen"
+ },
+ "Oudeleeuwenrui 29|2000|Antwerpen": {
+  "lat": 51.22763,
+  "lon": 4.407817,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Oudeleeuwenrui 29, 2000 Antwerpen"
+ },
+ "Van Schoonbekestraat 143|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.199039,
+  "lon": 4.403807,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Van Schoonbekestraat 143, 2018 Antwerpen"
+ },
+ "Zegelstraat|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.213605,
+  "lon": 4.443222,
+  "geo_precisie": "straat",
+  "geo_adres": "Zegelstraat, Antwerpen"
+ },
+ "Marielei 25|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Meistraat 2|2000|Antwerpen": {
+  "lat": 51.21564,
+  "lon": 4.410305,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Meistraat 2, 2000 Antwerpen"
+ },
+ "montignystraat 3|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.205106,
+  "lon": 4.392669,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Montignystraat 3, 2018 Antwerpen"
+ },
+ "Pastorijstraat 23|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Handschoenmarkt|2000|Antwerpen": {
+  "lat": 51.220278,
+  "lon": 4.400284,
+  "geo_precisie": "straat",
+  "geo_adres": "Handschoenmarkt, Antwerpen"
+ },
+ "Waalsekaai 14|2000|Antwerpen": {
+  "lat": 51.211764,
+  "lon": 4.391066,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Waalsekaai 14, 2000 Antwerpen"
+ },
+ "Komedieplaats 18|2000|Antwerpen": {
+  "lat": 51.215981,
+  "lon": 4.40736,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Komedieplaats 18, 2000 Antwerpen"
+ },
+ "Oranjestraat 50-52|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.227294,
+  "lon": 4.420847,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Oranjestraat 50, 2060 Antwerpen"
+ },
+ "Schansstraat 9|2660|Hoboken (Antwerpen)": {
+  "lat": 51.167273,
+  "lon": 4.34944,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Schansstraat 9, 2660 Antwerpen"
+ },
+ "Floraliënlaan  400C|2600|Berchem": {
+  "lat": 51.179585,
+  "lon": 4.428822,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Floraliënlaan 400C, 2600 Antwerpen"
+ },
+ "Wolstraat 7-00|2000|Antwerpen": {
+  "lat": 51.221815,
+  "lon": 4.402793,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Wolstraat 7, 2000 Antwerpen"
+ },
+ "Kleine Doornstraat|2610|Antwerpen": {
+  "lat": 51.155711,
+  "lon": 4.396582,
+  "geo_precisie": "straat",
+  "geo_adres": "Kleine Doornstraat, Antwerpen"
+ },
+ "Tongerlostraat 2|2040|Berendrecht (Antwerpen)": {
+  "lat": 51.347107,
+  "lon": 4.330475,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Tongerlostraat 2, 2040 Antwerpen"
+ },
+ "Sint-Camillusstraat 31|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.17109,
+  "lon": 4.39615,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Camillusstraat 31, 2610 Antwerpen"
+ },
+ "Krijgsbaan 100|2610|Wilrijk ": null,
+ "de Robianostraat|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.194064,
+  "lon": 4.485379,
+  "geo_precisie": "straat",
+  "geo_adres": "de Robianostraat, Antwerpen"
+ },
+ "Weiland 1|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Fortsteenweg|2170|Merksem (Antwerpen)": {
+  "lat": 51.261194,
+  "lon": 4.458788,
+  "geo_precisie": "straat",
+  "geo_adres": "Fortsteenweg, Antwerpen"
+ },
+ "Schijfstraat 105|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.190683,
+  "lon": 4.373079,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Schijfstraat 105, 2020 Antwerpen"
+ },
+ "Floraliënlaan 99|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.184463,
+  "lon": 4.413026,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Floraliënlaan 99, 2020 Antwerpen"
+ },
+ "Hendrik Conscienceplein|2000|Antwerpen": {
+  "lat": 51.221104,
+  "lon": 4.404138,
+  "geo_precisie": "straat",
+  "geo_adres": "Hendrik Conscienceplein, Antwerpen"
+ },
+ "Jozef Reusenslei 17|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.193228,
+  "lon": 4.488489,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Jozef Reusenslei 17, 2150 Antwerpen"
+ },
+ "Deurne|2100|Deurne (Antwerpen)": {
+  "lat": 51.187626,
+  "lon": 4.449411,
+  "geo_precisie": "straat",
+  "geo_adres": "Deurnestraat, Antwerpen"
+ },
+ "Stadionstraat 76|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.184231,
+  "lon": 4.385281,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Stadionstraat 76, 2020 Antwerpen"
+ },
+ "Grote Pieter Potstraat 15|2000|Antwerpen": {
+  "lat": 51.22019,
+  "lon": 4.39725,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Grote Pieter Potstraat 15, 2000 Antwerpen"
+ },
+ "sint Michielsstraat 19|2000|Antwerpen": {
+  "lat": 51.221119,
+  "lon": 4.413293,
+  "geo_precisie": "straat",
+  "geo_adres": "Korte Sint-Annastraat, Antwerpen"
+ },
+ "Hoofdfrontweg|2660|Hoboken (Antwerpen)": {
+  "lat": 51.16545,
+  "lon": 4.350578,
+  "geo_precisie": "straat",
+  "geo_adres": "Hoofdfrontweg, Antwerpen"
+ },
+ "De Coninckplein 26|2060|Antwerpen": {
+  "lat": 51.221769,
+  "lon": 4.421074,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "De Coninckplein 26, 2060 Antwerpen"
+ },
+ "Geuzenstraat|2000|Antwerpen": {
+  "lat": 51.211919,
+  "lon": 4.397172,
+  "geo_precisie": "straat",
+  "geo_adres": "Geuzenstraat, Antwerpen"
+ },
+ "Vaartweg 440|2100|Deurne (Antwerpen)": {
+  "lat": 51.211027,
+  "lon": 4.472644,
+  "geo_precisie": "straat",
+  "geo_adres": "Vaartweg, Antwerpen"
+ },
+ "Lange Gasthuisstraat 33|2000|Antwerpen": {
+  "lat": 51.214429,
+  "lon": 4.405491,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lange Gasthuisstraat 33, 2000 Antwerpen"
+ },
+ "Posthofbrug 00|2600|Antwerpen": {
+  "lat": 51.196235,
+  "lon": 4.433275,
+  "geo_precisie": "straat",
+  "geo_adres": "Posthofbrug, Antwerpen"
+ },
+ "Nationalestraat 28|2000|Antwerpen": {
+  "lat": 51.217259,
+  "lon": 4.399664,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Nationalestraat 28, 2000 Antwerpen"
+ },
+ "Jan Palfijnstraat|2060|Antwerpen": {
+  "lat": 51.224028,
+  "lon": 4.431088,
+  "geo_precisie": "straat",
+  "geo_adres": "Jan Palfijnstraat, Antwerpen"
+ },
+ "Volksstraat 62-64|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Diepestraat 34|2060|Antwerpen": {
+  "lat": 51.223949,
+  "lon": 4.422492,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Diepestraat 34, 2060 Antwerpen"
+ },
+ "Parkweg|2100|Deurne": {
+  "lat": 51.21755,
+  "lon": 4.467059,
+  "geo_precisie": "straat",
+  "geo_adres": "Parkweg, Antwerpen (2100)"
+ },
+ "Sint-Camillusstraat 29|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.17107,
+  "lon": 4.396127,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Camillusstraat 29, 2610 Antwerpen"
+ },
+ "Boomsesteenweg 335|2610|Antwerpen": {
+  "lat": 51.168317,
+  "lon": 4.387116,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Boomsesteenweg 335, 2610 Antwerpen"
+ },
+ "Driehoekstraat 237|2180|Ekeren (Antwerpen)": {
+  "lat": 51.287421,
+  "lon": 4.425507,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Driehoekstraat 237, 2180 Antwerpen"
+ },
+ "Maurice Dequeeckerplein 1|2100|Deurne (Antwerpen)": {
+  "lat": 51.21863,
+  "lon": 4.459824,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Maurice Dequeeckerplein 1, 2100 Antwerpen"
+ },
+ "Suikerrui 21|2000|Antwerpen": {
+  "lat": 51.22108,
+  "lon": 4.398381,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Suikerrui 21, 2000 Antwerpen"
+ },
+ "Circuit|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Frankrijklei 85-87|2000|Antwerpen": {
+  "lat": 51.214261,
+  "lon": 4.412996,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Frankrijklei 85, 2000 Antwerpen"
+ },
+ "Tolhuisstraat 10-16|2040|Lillo (Antwerpen)": {
+  "lat": 51.304265,
+  "lon": 4.289359,
+  "geo_precisie": "straat",
+  "geo_adres": "Tolhuisstraat, Antwerpen"
+ },
+ "Zillebekelaan 4|2600|Berchem (Antwerpen)": {
+  "lat": 51.19488,
+  "lon": 4.4436,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Zillebekelaan 4, 2600 Antwerpen"
+ },
+ "Moerelei 123, 2610 Antwerpen|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.159857,
+  "lon": 4.374042,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Moerelei 123, 2610 Antwerpen"
+ },
+ "Frederik de Merodestraat 36|2600|Berchem (Antwerpen)": {
+  "lat": 51.195496,
+  "lon": 4.416275,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Frederik de Merodestraat 36, 2600 Antwerpen"
+ },
+ "Lage Weg 356|2660|Hoboken (Antwerpen)": {
+  "lat": 51.186733,
+  "lon": 4.362573,
+  "geo_precisie": "straat",
+  "geo_adres": "Lageweg, Antwerpen"
+ },
+ "Frans Van Hombeeckplein 17|2600|Berchem": {
+  "lat": 51.19535,
+  "lon": 4.416956,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Frans Van Hombeeckplein 17, 2600 Antwerpen"
+ },
+ "Hardenvoort 55|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.231222,
+  "lon": 4.421601,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hardenvoort 55, 2060 Antwerpen"
+ },
+ "Corneel Smitslei 36, 2150 Borsbeek|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.196459,
+  "lon": 4.486417,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Corneel Smitslei 36, 2150 Antwerpen"
+ },
+ "Frans Versmissenlaan 19|2100|Deurne (Antwerpen)": {
+  "lat": 51.227294,
+  "lon": 4.477371,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Frans Versmissenlaan 19, 2100 Antwerpen"
+ },
+ "Mellinetplein 13|2600|Berchem (Antwerpen)": {
+  "lat": 51.180716,
+  "lon": 4.42951,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Mellinetplein 13, 2600 Antwerpen"
+ },
+ "de Robianostraat 11|2150|Borsbeek": {
+  "lat": 51.19339,
+  "lon": 4.48676,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "de Robianostraat 11, 2150 Antwerpen"
+ },
+ "Florastraat 120|2140|Borgerhout": {
+  "lat": 51.218948,
+  "lon": 4.442018,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Florastraat 120, 2140 Antwerpen"
+ },
+ "Lodewijk Mortelmansstraat 13|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.178866,
+  "lon": 4.385274,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lodewijk Mortelmansstraat 13, 2610 Antwerpen"
+ },
+ "Frans Stienletlaan|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.177671,
+  "lon": 4.37662,
+  "geo_precisie": "straat",
+  "geo_adres": "Frans Stienletlaan, Antwerpen"
+ },
+ "Paleisstraat 39|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Haantjeslei 50|2018|Antwerpen": {
+  "lat": 51.20274,
+  "lon": 4.398774,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Haantjeslei 50, 2018 Antwerpen"
+ },
+ "Reuzenpoort 5|2140|Borgerhout": {
+  "lat": 51.21467,
+  "lon": 4.432665,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Reuzenpoort 5, 2140 Antwerpen"
+ },
+ "Juul Grietensstraat 8|2140|Borgerhout": {
+  "lat": 51.210864,
+  "lon": 4.448617,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Juul Grietensstraat 8, 2140 Antwerpen"
+ },
+ "Uitbreidingsstraat 251|2600|Berchem (Antwerpen)": {
+  "lat": 51.183035,
+  "lon": 4.436947,
+  "geo_precisie": "straat",
+  "geo_adres": "Berchemboslaan, Antwerpen"
+ },
+ "Kerkelei 43, 2610 Antwerpen|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.168894,
+  "lon": 4.397817,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kerkelei 43, 2610 Antwerpen"
+ },
+ "Munthof|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Uitbreidingstraat 251|2600|Berchem (Antwerpen)": {
+  "lat": 51.193774,
+  "lon": 4.423593,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Uitbreidingstraat 251, 2600 Antwerpen"
+ },
+ "Grotesteenweg 489|2600|Berchem": {
+  "lat": 51.182104,
+  "lon": 4.430952,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Grotesteenweg 489, 2600 Antwerpen"
+ },
+ "Gloriantlaan 60|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.225798,
+  "lon": 4.384792,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Gloriantlaan 60, 2050 Antwerpen"
+ },
+ "Louisalei 46|2660|Hoboken (Antwerpen)": {
+  "lat": 51.176975,
+  "lon": 4.346776,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Louisalei 46, 2660 Antwerpen"
+ },
+ "Moerelei 123|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.159857,
+  "lon": 4.374042,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Moerelei 123, 2610 Antwerpen"
+ },
+ "Sint-Annastrand 2|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.235391,
+  "lon": 4.384216,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Annastrand 2, 2050 Antwerpen"
+ },
+ "Lageweg 356|2660|Hoboken (Antwerpen)": {
+  "lat": 51.187951,
+  "lon": 4.365018,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lageweg 356, 2660 Antwerpen"
+ },
+ "Corneel Franckstraat 25|2100|Deurne (Antwerpen)": {
+  "lat": 51.207802,
+  "lon": 4.473957,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Corneel Franckstraat 25, 2100 Antwerpen"
+ },
+ "Grensstraat 9|2100|Deurne (Antwerpen)": {
+  "lat": 51.195617,
+  "lon": 4.471686,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Grensstraat 9, 2100 Antwerpen"
+ },
+ "Maarschalk Gérardstraat 18|2000|Antwerpen": {
+  "lat": 51.212604,
+  "lon": 4.403647,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Maarschalk Gérardstraat 18, 2000 Antwerpen"
+ },
+ "August Van de Wielelei 172|2100|Deurne (Antwerpen)": {
+  "lat": 51.216832,
+  "lon": 4.488512,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "August Van de Wielelei 172, 2100 Antwerpen"
+ },
+ "Kaasstraat 4-6|2000|Antwerpen": {
+  "lat": 51.221556,
+  "lon": 4.397986,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kaasstraat 4, 2000 Antwerpen"
+ },
+ "Lakenstraat 14|2000|Antwerpen": {
+  "lat": 51.209493,
+  "lon": 4.387419,
+  "geo_precisie": "straat",
+  "geo_adres": "Lakenstraat, Antwerpen"
+ },
+ "Leopoldplaats 12|2000|Antwerpen": {
+  "lat": 51.21223,
+  "lon": 4.406722,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Leopoldplaats 12, 2000 Antwerpen"
+ },
+ "Quellinstraat 31|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.216253,
+  "lon": 4.416574,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Quellinstraat 31, 2018 Antwerpen"
+ },
+ "Zaha Hadidplein 1|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Parochiaanstraat 4|2000|Antwerpen": {
+  "lat": 51.22001,
+  "lon": 4.411318,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Parochiaanstraat 4, 2000 Antwerpen"
+ },
+ "Uitbreidingstraat 454|2600|Berchem (Antwerpen)": {
+  "lat": 51.200611,
+  "lon": 4.432319,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Uitbreidingstraat 454, 2600 Antwerpen"
+ },
+ "Vinçottestraat 44|2140|Borgerhout": {
+  "lat": 51.216862,
+  "lon": 4.438575,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Vinçottestraat 44, 2140 Antwerpen"
+ },
+ "Zirkstraat 36|2000|Antwerpen": {
+  "lat": 51.222622,
+  "lon": 4.401802,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Zirkstraat 36, 2000 Antwerpen"
+ },
+ "Kronenburgstraat 62|2000|Antwerpen": {
+  "lat": 51.211816,
+  "lon": 4.398067,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kronenburgstraat 62, 2000 Antwerpen"
+ },
+ "Vrijdagmarkt|2000|Antwerpen": {
+  "lat": 51.218502,
+  "lon": 4.398374,
+  "geo_precisie": "straat",
+  "geo_adres": "Vrijdagmarkt, Antwerpen"
+ },
+ "Hanzestedenplaats 1|2000|Antwerpen": {
+  "lat": 51.228931,
+  "lon": 4.404709,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hanzestedenplaats 1, 2000 Antwerpen"
+ },
+ "Hertsdeinstraat 13, 2018 Antwerpen-Zuid|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.203846,
+  "lon": 4.398229,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hertsdeinstraat 13, 2018 Antwerpen"
+ },
+ "Kloosterstraat 15|2000|Antwerpen": {
+  "lat": 51.216675,
+  "lon": 4.395635,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kloosterstraat 15, 2000 Antwerpen"
+ },
+ "Hanegraefstraat 1|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.219479,
+  "lon": 4.380916,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hanegraefstraat 10, 2050 Antwerpen"
+ },
+ "Laar 12|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.216408,
+  "lon": 4.433041,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Laar 12, 2140 Antwerpen"
+ },
+ "Gitschotellei|2600|Berchem (Antwerpen)": {
+  "lat": 51.183035,
+  "lon": 4.436947,
+  "geo_precisie": "straat",
+  "geo_adres": "Berchemboslaan, Antwerpen"
+ },
+ "Verschansingstraat 29|2000|Antwerpen": {
+  "lat": 51.20797,
+  "lon": 4.391312,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Verschansingstraat 29, 2000 Antwerpen"
+ },
+ "Arenaplein|2100|Deurne (Antwerpen)": {
+  "lat": 51.187626,
+  "lon": 4.449411,
+  "geo_precisie": "straat",
+  "geo_adres": "Deurnestraat, Antwerpen"
+ },
+ "Lodewijk van Berckenlaan 361|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.197004,
+  "lon": 4.450425,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lodewijk Van Berckenlaan 361, 2140 Antwerpen"
+ },
+ "Jules Moretuslei 358|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.172253,
+  "lon": 4.391964,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Jules Moretuslei 358, 2610 Antwerpen"
+ },
+ "Godefriduskaai 30|2000|Antwerpen": {
+  "lat": 51.22746,
+  "lon": 4.407688,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Godefriduskaai 30, 2000 Antwerpen"
+ },
+ "Borrewaterstraat 1|2170|Merksem (Antwerpen)": {
+  "lat": 51.242309,
+  "lon": 4.441762,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Borrewaterstraat 1, 2170 Antwerpen"
+ },
+ "Lindenboomstraat 3|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.195778,
+  "lon": 4.480573,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lindenboomstraat 3, 2150 Antwerpen"
+ },
+ "Menegemlei 30|2100|Deurne (Antwerpen)": {
+  "lat": 51.20065,
+  "lon": 4.462868,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Menegemlei 30, 2100 Antwerpen"
+ },
+ "Geelhandplaats 28 verdieping 4|2060|Antwerpen": {
+  "lat": 51.222667,
+  "lon": 4.430549,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Geelhandplaats 28, 2060 Antwerpen"
+ },
+ "Tongerlostraat 2|2040|Berendrecht-Zandvliet-Lillo": {
+  "lat": 51.347107,
+  "lon": 4.330475,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Tongerlostraat 2, 2040 Antwerpen"
+ },
+ "Columbiastraat 110|2030|Antwerpen 3 (Antwerpen)": {
+  "lat": 51.253005,
+  "lon": 4.423258,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Columbiastraat 110, 2030 Antwerpen"
+ },
+ "Oostenstraat 50|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.206624,
+  "lon": 4.426167,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Oostenstraat 50, 2018 Antwerpen"
+ },
+ "LEOPOLD DE WAELPLAATS 1|2000|Antwerpen": {
+  "lat": 51.208467,
+  "lon": 4.394851,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Leopold de Waelplaats 1, 2000 Antwerpen"
+ },
+ "Schijfstraat 105|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "De Coninckplein 26|2000|Antwerpen": {
+  "lat": 51.206913,
+  "lon": 4.393172,
+  "geo_precisie": "straat",
+  "geo_adres": "Admiraal de Boisotstraat, Antwerpen"
+ },
+ "Lamorinierestraat 83|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Moorkensplein|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.213451,
+  "lon": 4.433105,
+  "geo_precisie": "straat",
+  "geo_adres": "Moorkensplein, Antwerpen"
+ },
+ "Droogdokkenweg AWN1|2030|Antwerpen 3 (Antwerpen)": {
+  "lat": 51.23708,
+  "lon": 4.40323,
+  "geo_precisie": "straat",
+  "geo_adres": "Droogdokkenweg, Antwerpen"
+ },
+ "Quellinstraat 1A|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Albertstraat 32|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.205295,
+  "lon": 4.414473,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Albertstraat 32, 2018 Antwerpen"
+ },
+ "Filip Williotstraat 19|2600|Berchem (Antwerpen)": {
+  "lat": 51.188073,
+  "lon": 4.434179,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Filip Williotstraat 19, 2600 Antwerpen"
+ },
+ "Bleekhofstraat|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.211609,
+  "lon": 4.429285,
+  "geo_precisie": "straat",
+  "geo_adres": "Bleekhofstraat, Antwerpen"
+ },
+ "Markgravelei 149|2018|Antwerpen": {
+  "lat": 51.196683,
+  "lon": 4.406806,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Markgravelei 149, 2018 Antwerpen"
+ },
+ "Van Den Hautelei 79A|2100|Deurne (Antwerpen)": {
+  "lat": 51.204094,
+  "lon": 4.468413,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Van den Hautelei 79A, 2100 Antwerpen"
+ },
+ "Broeder Frederikstraat 3|2170|Merksem": {
+  "lat": 51.245616,
+  "lon": 4.451217,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Broeder Frederikstraat 3, 2170 Antwerpen"
+ },
+ "Jozef de bomstraat 33|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.206136,
+  "lon": 4.406508,
+  "geo_precisie": "straat",
+  "geo_adres": "Jozef De Bomstraat, Antwerpen"
+ },
+ "Kerkelei 43|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.168894,
+  "lon": 4.397817,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kerkelei 43, 2610 Antwerpen"
+ },
+ "Isabellalei 107|2018|Antwerpen": {
+  "lat": 51.203373,
+  "lon": 4.418576,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Isabellalei 107, 2018 Antwerpen"
+ },
+ "Van Steenlandstraat 15|2100|Deurne": {
+  "lat": 51.208638,
+  "lon": 4.455715,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Van Steenlandstraat 15, 2100 Antwerpen"
+ },
+ "Pastoor Goetschalckxstraat 57|2180|Ekeren": {
+  "lat": 51.278016,
+  "lon": 4.450966,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Pastoor Goetschalckxstraat 57, 2180 Antwerpen"
+ },
+ "Baron Leroystraat 31|2100|Deurne": {
+  "lat": 51.226393,
+  "lon": 4.468269,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Baron Leroystraat 31, 2100 Antwerpen"
+ },
+ "Salesianenlaan 1|2660|Hoboken (Antwerpen)": {
+  "lat": 51.173612,
+  "lon": 4.368112,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Salesianenlaan 1, 2660 Antwerpen"
+ },
+ "Lijnwaadmarkt 3|2000|Antwerpen": {
+  "lat": 51.220797,
+  "lon": 4.40181,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lijnwaadmarkt 3, 2000 Antwerpen"
+ },
+ "Egied Segerslaan 29-31|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.176593,
+  "lon": 4.375528,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Egied Segerslaan 29, 2610 Antwerpen"
+ },
+ "Galgenweellaan 66|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.218256,
+  "lon": 4.377989,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Galgenweellaan 66, 2050 Antwerpen"
+ },
+ "Arthur Matthyslaan 82|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.203035,
+  "lon": 4.452815,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Arthur Matthyslaan 82, 2140 Antwerpen"
+ },
+ "Bist 39d|2180|Ekeren (Antwerpen)": {
+  "lat": 51.283663,
+  "lon": 4.439692,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Bist 39D, 2180 Antwerpen"
+ },
+ "Sint-Hubertusstraat 13|2600|Berchem": {
+  "lat": 51.196549,
+  "lon": 4.416521,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Hubertusstraat 13, 2600 Antwerpen"
+ },
+ "Pothoekstraat 112|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.223761,
+  "lon": 4.437076,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Pothoekstraat 112, 2060 Antwerpen"
+ },
+ "Jozef Reusenslei 182|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.198962,
+  "lon": 4.490532,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Jozef Reusenslei 182, 2150 Antwerpen"
+ },
+ "Schoenmarkt 16-18|2000|Antwerpen": {
+  "lat": 51.218196,
+  "lon": 4.40409,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Schoenmarkt 16, 2000 Antwerpen"
+ },
+ "Groot Hagelkruis 6|2180|Ekeren": {
+  "lat": 51.277938,
+  "lon": 4.417095,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Groot Hagelkruis 6, 2180 Antwerpen"
+ },
+ "Heistraat 65 A|2610|Antwerpen": {
+  "lat": 51.172131,
+  "lon": 4.39395,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Heistraat 65, 2610 Antwerpen"
+ },
+ "Plantin en Moretuslei 00|2018|Antwerpen": {
+  "lat": 51.209193,
+  "lon": 4.432146,
+  "geo_precisie": "straat",
+  "geo_adres": "Plantin en Moretuslei, Antwerpen"
+ },
+ "Montevideostraat 3|2000|Antwerpen": {
+  "lat": 51.233217,
+  "lon": 4.403541,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Montevideostraat 3, 2000 Antwerpen"
+ },
+ "Onafhankelijkheidslaan|2020|Antwerpen": {
+  "lat": 51.193693,
+  "lon": 4.395371,
+  "geo_precisie": "straat",
+  "geo_adres": "Onafhankelijkheidslaan, Antwerpen"
+ },
+ "Berkenrodelei 32-36|2660|Hoboken (Antwerpen)": {
+  "lat": 51.178754,
+  "lon": 4.349946,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Berkenrodelei 32, 2660 Antwerpen"
+ },
+ "Turnhoutsebaan 92|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.215223,
+  "lon": 4.431663,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Turnhoutsebaan 92, 2140 Antwerpen"
+ },
+ "Langstraat 102|2140|Borgerhout": {
+  "lat": 51.2125,
+  "lon": 4.433819,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Langstraat 102, 2140 Antwerpen"
+ },
+ "Hoogstraat 12|2000|Antwerpen": {
+  "lat": 51.220383,
+  "lon": 4.398558,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hoogstraat 12, 2000 Antwerpen"
+ },
+ "Van Heybeeckstraat 26|2170|Merksem (Antwerpen)": {
+  "lat": 51.246941,
+  "lon": 4.44869,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Van Heybeeckstraat 26, 2170 Antwerpen"
+ },
+ "Frankrijklei 109|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Van Eycklei 00|2018|Antwerpen": {
+  "lat": 51.210316,
+  "lon": 4.417871,
+  "geo_precisie": "straat",
+  "geo_adres": "Van Eycklei, Antwerpen"
+ },
+ "Sint Camillusstraat 25|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.174559,
+  "lon": 4.416254,
+  "geo_precisie": "straat",
+  "geo_adres": "Sint-Augustinuslaan, Antwerpen"
+ },
+ "De Coninckplein 25-26|2000|Antwerpen": {
+  "lat": 51.206913,
+  "lon": 4.393172,
+  "geo_precisie": "straat",
+  "geo_adres": "Admiraal de Boisotstraat, Antwerpen"
+ },
+ "Reyndersstraat 7|2000|Antwerpen": {
+  "lat": 51.219468,
+  "lon": 4.398621,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Reyndersstraat 7, 2000 Antwerpen"
+ },
+ "Schroeilaan|2660|Antwerpen": {
+  "lat": 51.185494,
+  "lon": 4.353509,
+  "geo_precisie": "straat",
+  "geo_adres": "Schroeilaan, Antwerpen"
+ },
+ "Kasteelstraat 16|2000|Antwerpen": {
+  "lat": 51.207419,
+  "lon": 4.389935,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kasteelstraat 16, 2000 Antwerpen"
+ },
+ "Sint-Rochusstraat 4|2100|Deurne (Antwerpen)": {
+  "lat": 51.207192,
+  "lon": 4.465124,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Rochusstraat 4, 2100 Antwerpen"
+ },
+ "Louisalei 7|2660|Hoboken": {
+  "lat": 51.176709,
+  "lon": 4.348023,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Louisalei 7, 2660 Antwerpen"
+ },
+ "Koningin Astridplein|2018|Antwerpen": {
+  "lat": 51.219001,
+  "lon": 4.420746,
+  "geo_precisie": "straat",
+  "geo_adres": "Koningin Astridplein, Antwerpen"
+ },
+ "Klaproosstraat|2610|Wilrijk": {
+  "lat": 51.170607,
+  "lon": 4.409258,
+  "geo_precisie": "straat",
+  "geo_adres": "Klaproosstraat, Antwerpen"
+ },
+ "Riemstraat 45|2000|Antwerpen": {
+  "lat": 51.212962,
+  "lon": 4.39326,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Riemstraat 45, 2000 Antwerpen"
+ },
+ "Maarschalk Gérardstraat 4|2000|Antwerpen": {
+  "lat": 51.213396,
+  "lon": 4.403986,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Maarschalk Gérardstraat 4, 2000 Antwerpen"
+ },
+ "Ommeganckstraat 53|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.216908,
+  "lon": 4.425406,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Ommeganckstraat 53, 2018 Antwerpen"
+ },
+ "18|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Pothoekstraat 112|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Lamorinièrestraat 183|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.202296,
+  "lon": 4.419856,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Lamorinièrestraat 183, 2018 Antwerpen"
+ },
+ "Bosuilplein 1|2100|Deurne (Antwerpen)": {
+  "lat": 51.23027,
+  "lon": 4.466224,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Bosuilplein 1, 2100 Antwerpen"
+ },
+ "Willem van Laarstraat 15/17|2600|Berchem (Antwerpen)": {
+  "lat": 51.194874,
+  "lon": 4.421824,
+  "geo_precisie": "straat",
+  "geo_adres": "Willem Van Laarstraat, Antwerpen"
+ },
+ "Gerard Legrellelaan 10|2020|Antwerpen 2 (Antwerpen)": {
+  "lat": 51.189098,
+  "lon": 4.404159,
+  "geo_precisie": "straat",
+  "geo_adres": "Gerard Le Grellelaan, Antwerpen"
+ },
+ "Oudestraat 55, 2660 Hoboken|2660|Hoboken (Antwerpen)": {
+  "lat": 51.176047,
+  "lon": 4.353965,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Oudestraat 55, 2660 Antwerpen"
+ },
+ "Heistraat 390|2610|Wilrijk": {
+  "lat": 51.180479,
+  "lon": 4.391285,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Heistraat 390, 2610 Antwerpen"
+ },
+ "Nieuwstad|2000|Antwerpen": {
+  "lat": 51.214186,
+  "lon": 4.410161,
+  "geo_precisie": "straat",
+  "geo_adres": "Nieuwstad, Antwerpen"
+ },
+ "Driekoningenstraat 126|2600|Berchem (Antwerpen)": {
+  "lat": 51.197132,
+  "lon": 4.422147,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Driekoningenstraat 126, 2600 Antwerpen"
+ },
+ "Daenenstraat 14|2600|Berchem (Antwerpen)": {
+  "lat": 51.198689,
+  "lon": 4.423663,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Daenenstraat 14, 2600 Antwerpen"
+ },
+ "Veltwijcklaan 222 (GPS Statiestraat 1)|2180|Ekeren (Antwerpen)": {
+  "lat": 51.281612,
+  "lon": 4.434121,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Veltwijcklaan 222, 2180 Antwerpen"
+ },
+ "Keizerstraat 18|2000|Antwerpen": {
+  "lat": 51.221652,
+  "lon": 4.40682,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Keizerstraat 18, 2000 Antwerpen"
+ },
+ "Minderbroedersstraat 22|2000|Antwerpen": {
+  "lat": 51.222792,
+  "lon": 4.404762,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Minderbroedersstraat 22, 2000 Antwerpen"
+ },
+ "nvt|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Koning Elisabethlei 22|2018|Antwerpen": {
+  "lat": 51.219001,
+  "lon": 4.420746,
+  "geo_precisie": "straat",
+  "geo_adres": "Koningin Astridplein, Antwerpen"
+ },
+ "Blancefloerlaan 181C|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.22013,
+  "lon": 4.347185,
+  "geo_precisie": "straat",
+  "geo_adres": "Blancefloerlaan, Antwerpen"
+ },
+ "Distelvinklaaan 22|2660|Hoboken (Antwerpen)": null,
+ "Willy Vandersteenplein 1|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.224482,
+  "lon": 4.430116,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Willy Vandersteenplein 1, 2060 Antwerpen"
+ },
+ "JOODSE WIJK  00|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Frankrijklei 3|2000|Antwerpen": {
+  "lat": 51.218622,
+  "lon": 4.416515,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Frankrijklei 3, 2000 Antwerpen"
+ },
+ "Stadscentrum|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Kalmthoutsebaan 119|2040|Antwerpen": {
+  "lat": 51.363201,
+  "lon": 4.335643,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kalmthoutsebaan 119, 2040 Antwerpen"
+ },
+ "Diepestraat 34|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.223949,
+  "lon": 4.422492,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Diepestraat 34, 2060 Antwerpen"
+ },
+ "Scheldekaaien|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Korte Nieuwstraat 5|2000|Antwerpen": {
+  "lat": 51.220665,
+  "lon": 4.40313,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Korte Nieuwstraat 5, 2000 Antwerpen"
+ },
+ "64|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Thomas More Campus Sint-Andries, Sint-Andriesstraat 2|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Sint-Camillusstraat 95|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.171772,
+  "lon": 4.398952,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Camillusstraat 95, 2610 Antwerpen"
+ },
+ "F. Beirenslaan 2a|2150|Borsbeek (Antwerpen)": null,
+ "Volkstraat 40|2000|Antwerpen": {
+  "lat": 51.211072,
+  "lon": 4.395184,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Volkstraat 40, 2000 Antwerpen"
+ },
+ "Columbiastraat 110|2030|Antwerpen 3": {
+  "lat": 51.253005,
+  "lon": 4.423258,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Columbiastraat 110, 2030 Antwerpen"
+ },
+ "Kasteelpleinstraat 31|2000|Antwerpen": {
+  "lat": 51.210909,
+  "lon": 4.401674,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Kasteelpleinstraat 31, 2000 Antwerpen"
+ },
+ "Burgermeester Woutersstraat 28|2600|Berchem (Antwerpen)": {
+  "lat": 51.183035,
+  "lon": 4.436947,
+  "geo_precisie": "straat",
+  "geo_adres": "Berchemboslaan, Antwerpen"
+ },
+ "Merksemsesteenweg 24/26|2100|Deurne (Antwerpen)": {
+  "lat": 51.236961,
+  "lon": 4.454929,
+  "geo_precisie": "straat",
+  "geo_adres": "Merksemsesteenweg, Antwerpen"
+ },
+ "Beukenlaan 12|2610|Wilrijk (Antwerpen)": null,
+ "Laar 50 (activiteitenruimte achter de kerk)|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.216418,
+  "lon": 4.434114,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Laar 50, 2140 Antwerpen"
+ },
+ "Haenegraefstraat 5|2050|Antwerpen 5 (Antwerpen)": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "August Van Putlei 56|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.196556,
+  "lon": 4.476496,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "August Van Putlei 56A, 2150 Antwerpen"
+ },
+ "Frankenlei 109|2000|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Cornelissenlaan|2100|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Dageraadplaats|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.207092,
+  "lon": 4.429712,
+  "geo_precisie": "straat",
+  "geo_adres": "Dageraadplaats, Antwerpen"
+ },
+ "Koningin Astridplein 26|2000|Antwerpen": {
+  "lat": 51.211556,
+  "lon": 4.405917,
+  "geo_precisie": "straat",
+  "geo_adres": "Koninginnestraat, Antwerpen"
+ },
+ "Meir 65|2000|Antwerpen": {
+  "lat": 51.218402,
+  "lon": 4.409298,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Meir 65, 2000 Antwerpen"
+ },
+ "Hendrik Conscienceplein 6|2000|Antwerpen": {
+  "lat": 51.220758,
+  "lon": 4.404085,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hendrik Conscienceplein 6, 2000 Antwerpen"
+ },
+ "Eggestraat 13|2060|Antwerpen 6 (Antwerpen)": {
+  "lat": 51.220723,
+  "lon": 4.437094,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Eggestraat 13, 2060 Antwerpen"
+ },
+ "Sint-Bartholomeusstraat 1|2170|Merksem (Antwerpen)": {
+  "lat": 51.241071,
+  "lon": 4.440032,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Bartholomeusstraat 1, 2170 Antwerpen"
+ },
+ "Bredabaan 310|2170|Merksem (Antwerpen)": {
+  "lat": 51.241675,
+  "lon": 4.43928,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Bredabaan 310, 2170 Antwerpen"
+ },
+ "Hertstraat 7|2100|Deurne": {
+  "lat": 51.219401,
+  "lon": 4.456738,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hertstraat 7, 2100 Antwerpen"
+ },
+ "Frans Harrewijnlaan 1|2180|Ekeren": {
+  "lat": 51.276933,
+  "lon": 4.417912,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Frans Harrewijnlaan 1, 2180 Antwerpen"
+ },
+ "Sint-Jacobstraat 19|2000|Antwerpen": {
+  "lat": 51.219876,
+  "lon": 4.409713,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Sint-Jacobstraat 19, 2000 Antwerpen"
+ },
+ "Grote Kauwenberg 2|2000|Antwerpen": {
+  "lat": 51.223387,
+  "lon": 4.411333,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Grote Kauwenberg 2, 2000 Antwerpen"
+ },
+ "Thibautstraat 41|2100|Deurne (Antwerpen)": {
+  "lat": 51.205361,
+  "lon": 4.45581,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Thibautstraat 41, 2100 Antwerpen"
+ },
+ "via voetpaadje in Dr Veeckmanslaan|2610|Wilrijk (Antwerpen)": {
+  "lat": 51.17883,
+  "lon": 4.384381,
+  "geo_precisie": "straat",
+  "geo_adres": "Cliviastraat, Antwerpen"
+ },
+ "Krijgsbaan 100|2660|Hoboken (Antwerpen)": {
+  "lat": 51.168711,
+  "lon": 4.363765,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Krijgsbaan 100, 2660 Antwerpen"
+ },
+ "Hendrik Conscienceplein 1|2000|Antwerpen": {
+  "lat": 51.221195,
+  "lon": 4.403973,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Hendrik Conscienceplein 1, 2000 Antwerpen"
+ },
+ "Turnhoutsebaan 246|2100|Deurne": {
+  "lat": 51.218514,
+  "lon": 4.472531,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Turnhoutsebaan 246, 2100 Antwerpen"
+ },
+ "Legerstraat  40|2610|Wilrijk": {
+  "lat": 51.165958,
+  "lon": 4.377767,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Legerstraat 40, 2610 Antwerpen"
+ },
+ "Grote Kauwenberg 32|2060|Antwerpen": {
+  "lat": 51.259424,
+  "lon": 4.371799,
+  "geo_precisie": "gemeente",
+  "geo_adres": "Antwerpen"
+ },
+ "Steenovenstraat 89|2040|Berendrecht (Antwerpen)": {
+  "lat": 51.355406,
+  "lon": 4.337347,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Steenovenstraat 89, 2040 Antwerpen"
+ },
+ "Jozef Reusenslei|2150|Borsbeek (Antwerpen)": {
+  "lat": 51.194437,
+  "lon": 4.488829,
+  "geo_precisie": "straat",
+  "geo_adres": "Jozef Reusenslei, Antwerpen"
+ },
+ "Namenstraat 7|2000|Antwerpen": {
+  "lat": 51.208008,
+  "lon": 4.385474,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Namenstraat 7, 2000 Antwerpen"
+ },
+ "Mechelsesteenweg 133|2018|Antwerpen 18 (Antwerpen)": {
+  "lat": 51.205813,
+  "lon": 4.410832,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Mechelsesteenweg 133, 2018 Antwerpen"
+ },
+ "Turnhoutsebaan 288|2140|Borgerhout (Antwerpen)": {
+  "lat": 51.213592,
+  "lon": 4.440236,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Turnhoutsebaan 288, 2140 Antwerpen"
+ },
+ "Desguinlei 25|2018|Antwerpen 18": {
+  "lat": 51.193073,
+  "lon": 4.403623,
+  "geo_precisie": "huisnummer",
+  "geo_adres": "Desguinlei 25, 2018 Antwerpen"
+ }
+}
