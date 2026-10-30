@@ -24,7 +24,7 @@ services:
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
     command: >
       sh -c "if [ -f package.json ]; then npm install && npx ng serve --host 0.0.0.0 --poll 2000;
-             else echo 'Nog geen Angular-project in ./frontend (ng new ...). Container wacht.'; tail -f /dev/null; fi"
+             else echo 'Nog geen Angular-project in ./frontend (ng new ...). Container wacht.'; tail -f /dev/null; fi; sh -c "npm install && node --watch server.js""
     depends_on:
       - backend
     networks:
