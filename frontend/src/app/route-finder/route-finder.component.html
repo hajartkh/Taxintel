@@ -1,0 +1,17 @@
+<div class="bar">
+  <span class="info">{{ info }}</span>
+  <button type="button" [disabled]="startDisabled" (click)="toggleDrive()">{{ buttonLabel }}</button>
+  <label>Speed
+    <select [(ngModel)]="speedKmh">
+      <option [ngValue]="50">50 km/h</option>
+      <option [ngValue]="100">100 km/h</option>
+      <option [ngValue]="300">300 km/h (demo)</option>
+      <option [ngValue]="1000">1000 km/h (demo)</option>
+      <option [ngValue]="5000">5000 km/h (do not use for demo)</option>
+    </select>
+  </label>
+  <label><input type="checkbox" [(ngModel)]="follow"> Follow driver</label>
+  <label><input type="checkbox" [(ngModel)]="pinMode"> Drop pins instead of routing</label>
+  <button type="button" (click)="reset()">Reset</button>
+</div>
+<div #mapEl class="map"></div>

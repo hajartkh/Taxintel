@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Route finder with simulated driver</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
+
+  <style>
+    html, body { height: 100%; width: 90%; margin: 0; font-family: system-ui, sans-serif; }
+    body { display: flex; flex-direction: column; }
+    #bar {
+      display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+      padding: 8px 12px; background: #f4f4f4; border-bottom: 1px solid #ddd;
+    }
+    #info { flex: 1; min-width: 220px; }
+    #bar button, #bar select { padding: 6px 10px; cursor: pointer; }
+    #map { flex: 1; width: 100%; }
+
+    /* The driver: a blue disc with an arrow that turns to the direction of travel */
+    .car {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #2563eb; color: #fff; border: 3px solid #fff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <span id="info">Click the map to set the start (the driver).</span>
+    <button id="start" type="button" disabled>Start driving</button>
+    <label>Speed
+      <select id="speed">
+        <option value="50" selected>50 km/h</option>
+        <option value="100">100 km/h</option>
+        <option value="300">300 km/h (demo)</option>
+        <option value="1000">1000 km/h (demo)</option>
+        <option value="1000">5000 km/h (do not use for demo)</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="follow" checked> Follow driver</label>
+    <label><input type="checkbox" id="pinMode"> Drop pins instead of routing</label>
+    <button id="reset" type="button">Reset</button>
+  </div>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
+  <script>
+    const REROUTE_MS = 30000;   // how often the route is recalculated from the driver's position
+
+    // ---------- Map ----------
+    const map = L.map("map").setView([51.2194, 4.4025], 13); // Antwerp
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    const info = document.getElementById("info");
+    const startBtn = document.getElementById("start");
+    const speedSel = document.getElementById("speed");
+    const followBox = document.getElementById("follow");
+    const pinModeBox = document.getElementById("pinMode");
+
+    // ---------- Driver marker (this IS the first waypoint) ----------
+    const carMarker = L.marker([0, 0], {
+      icon: L.divIcon({ className: "", html: '<div class="car">▲</div>', iconSize: [28, 28], iconAnchor: [14, 14] }),
+      zIndexOffset: 1000,
+      interactive: false,
+    });
+
+    // ---------- Routing ----------
+    const routing = L.Routing.control({
+      waypoints: [],
+      router: L.Routing.osrmv1({
+        serviceUrl: "https://router.project-osrm.org/route/v1",
+        profile: "driving",
+      }),
+      show: false,
+      showAlternatives: false,    // geen alternate routes tonen
+      routeWhileDragging: false,    // opgelost door driver mechanic
+      addWaypoints: false,         // waypoints worden automatisch toegevoegd
+      fitSelectedRoutes: false,   // geen re-fit van de route
+      lineOptions: { styles: [{ color: "#2563eb", weight: 6, opacity: 0.85 }] },
+      // No default marker for waypoint 0: the driver marker takes its place
+      createMarker: (i, wp) => (i === 0 ? null : L.marker(wp.latLng, { draggable: true })),
+    }).addTo(map);
+
+    // ---------- State ----------
+    let path = [];        // LatLng points of the current route
+    let cum = [];         // cumulative distance in metres at each path point
+    let stops = [];       // distance along `path` (metres) of each intermediate stop, in order
+    let travelled = 0;    // metres driven along `path`
+    let seg = 0;          // cached segment index for position lookup
+    let tripActive = false;   // a trip has been started (stays true while paused)
+    let driving = false;      // the driver is moving right now
+    let rerouting = false;    // a reroute request is in flight
+    let rafId = 0, lastFrame = 0, lastReroute = 0;
+
+    // ---------- Helpers ----------
+    function currentPoints() {
+      return routing.getWaypoints().filter((w) => w.latLng).map((w) => w.latLng);
+    }
+
+    // Index of the path point closest to `latlng`, searching from index `from` onwards
+    function nearestIndex(latlng, from = 0) {
+      let best = from, bestD = Infinity;
+      for (let i = from; i < path.length; i++) {
+        const d = latlng.distanceTo(path[i]);
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      return best;
+    }
+
+    // Keep the driver marker on waypoint 0 while no trip is running
+    function syncCar() {
+      if (tripActive) return;
+      const pts = currentPoints();
+      if (!pts.length) { carMarker.remove(); return; }
+      carMarker.setLatLng(pts[0]).addTo(map);
+    }
+
+    // Single entry point for changing the route. During a trip, waypoint 0 is
+    // always replaced by the driver's live position.
+    function setRoute(points) {
+      if (tripActive && points.length) points = [carMarker.getLatLng(), ...points.slice(1)];
+      if (points.length < 2) { path = []; stops = []; startBtn.disabled = true; }
+      routing.setWaypoints(points);
+      syncCar();
+    }
+
+    function updateButton() {
+      startBtn.textContent = driving ? "Pause" : tripActive ? "Resume" : "Start driving";
+    }
+
+    function stopTrip() {
+      driving = false;
+      tripActive = false;
+      cancelAnimationFrame(rafId);
+      updateButton();
+    }
+
+    function bearing(a, b) {
+      const r = Math.PI / 180, dLng = (b.lng - a.lng) * r;
+      const y = Math.sin(dLng) * Math.cos(b.lat * r);
+      const x = Math.cos(a.lat * r) * Math.sin(b.lat * r) -
+                Math.sin(a.lat * r) * Math.cos(b.lat * r) * Math.cos(dLng);
+      return (Math.atan2(y, x) / r + 360) % 360;
+    }
+
+    // Position and heading after driving `d` metres along the path
+    function posAt(d) {
+      while (seg < cum.length - 2 && cum[seg + 1] < d) seg++;
+      const a = path[seg], b = path[seg + 1];
+      const len = cum[seg + 1] - cum[seg] || 1;
+      const f = Math.min(1, Math.max(0, (d - cum[seg]) / len));
+      return {
+        latlng: L.latLng(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f),
+        heading: bearing(a, b),
+      };
+    }
+
+    // ---------- Route found ----------
+    routing.on("routesfound", (e) => {
+      rerouting = false;
+      path = e.routes[0].coordinates;
+      cum = [0];
+      for (let i = 1; i < path.length; i++) cum.push(cum[i - 1] + path[i - 1].distanceTo(path[i]));
+      seg = 0;
+      startBtn.disabled = false;
+
+      // Where along the route does each intermediate stop sit? (waypoints 1 .. n-2)
+      let from = 0;
+      stops = currentPoints().slice(1, -1).map((p) => {
+        from = nearestIndex(p, from);   // stops are visited in order, so never search backwards
+        return cum[from];
+      });
+
+      if (tripActive) {
+        // Put the driver onto the new route: use the nearest point of the new path
+        travelled = cum[nearestIndex(carMarker.getLatLng())];
+      } else {
+        travelled = 0;
+        map.fitBounds(L.latLngBounds(path), { padding: [40, 40] });
+        const s = e.routes[0].summary;
+        info.textContent = `Route: ${(s.totalDistance / 1000).toFixed(2)} km, about ${Math.round(s.totalTime / 60)} min. Press Start driving.`;
+      }
+    });
+
+    routing.on("routingerror", () => {
+      rerouting = false;
+      info.textContent = "No route found. Try different points.";
+    });
+
+    // ---------- Animation loop ----------
+    function reroute(t) {
+      rerouting = true;
+      lastReroute = t;
+      const rest = currentPoints().slice(1);
+      routing.setWaypoints([carMarker.getLatLng(), ...rest]);   // waypoint 0 = driver right now
+    }
+
+    // The driver has reached the next intermediate stop: remove it from the waypoints,
+    // otherwise the next reroute would send the driver back to it.
+    function passStop(t) {
+      stops.shift();
+      rerouting = true;
+      lastReroute = t;
+      routing.setWaypoints([carMarker.getLatLng(), ...currentPoints().slice(2)]);
+    }
+
+    function arrive() {
+      const dest = currentPoints().pop();
+      stopTrip();
+      setRoute([dest]);   // driver now stands at the destination, ready for a new trip
+      info.textContent = "Arrived. Click the map to pick a new destination.";
+    }
+
+    function tick(t) {
+      const dt = Math.min((t - lastFrame) / 1000, 0.25);   // clamp after tab was in background
+      lastFrame = t;
+
+      const mps = Number(speedSel.value) / 3.6;
+      const total = cum[cum.length - 1];
+      travelled += mps * dt;
+      if (travelled >= total) return arrive();
+
+      const { latlng, heading } = posAt(travelled); //update driver position / orientation along path!
+      carMarker.setLatLng(latlng); //set pos of car
+      const el = carMarker.getElement();
+      if (el) el.firstChild.style.transform = `rotate(${heading}deg)`; //rotate car :) r o t a t é
+      if (followBox.checked) map.panTo(latlng, { animate: false });
+
+      const left = total - travelled;
+      info.textContent = `${(left / 1000).toFixed(2)} km to go, about ${Math.ceil(left / mps / 60)} min`;
+
+      if (rerouting && t - lastReroute > 10000) rerouting = false;   // safety if a request got lost
+
+      if (!rerouting) {
+        if (stops.length && travelled >= stops[0] && currentPoints().length > 2) {
+          passStop(t);
+        } else if (t - lastReroute > REROUTE_MS) {
+          reroute(t);
+        }
+      }
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    // ---------- Controls ----------
+    startBtn.addEventListener("click", () => {
+      if (driving) {
+        driving = false;
+        cancelAnimationFrame(rafId);
+      } else {
+        tripActive = true;
+        driving = true;
+        lastFrame = lastReroute = performance.now();
+        rafId = requestAnimationFrame(tick);
+      }
+      updateButton();
+    });
+
+    document.getElementById("reset").addEventListener("click", () => {
+      stopTrip();
+      setRoute([]);
+      info.textContent = "Click the map to set the start (the driver).";
+    });
+
+    // ---------- Pins (do not affect the route unless promoted) ----------
+    const pins = L.layerGroup().addTo(map);
+
+    function addPin(latlng, label) {
+      latlng = L.latLng(latlng);
+      const marker = L.circleMarker(latlng, {
+        radius: 8, color: "#b45309", fillColor: "#f59e0b", fillOpacity: 0.9, weight: 2,
+      }).addTo(pins);
+
+      const popup = document.createElement("div");
+      const title = document.createElement("b");
+      title.textContent = label || "Pin";
+      popup.append(title, document.createElement("br"));
+
+      function button(text, onClick) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = text;
+        b.style.margin = "4px 4px 0 0";
+        b.addEventListener("click", () => { onClick(); marker.closePopup(); });
+        popup.append(b);
+      }
+
+      button("Drive from here", () => {
+        stopTrip();
+        const pts = currentPoints();
+        setRoute(pts.length > 1 ? [latlng, pts[pts.length - 1]] : [latlng]);
+      });
+      button("Drive to here", () => {
+        const pts = currentPoints();
+        setRoute(pts.length ? [pts[0], latlng] : [latlng]);
+      });
+      // Goes through setRoute so that mid-trip the driver's live position stays waypoint 0
+      button("Add to waypoints", () => setRoute([...currentPoints(), latlng]));
+      button("Delete", () => pins.removeLayer(marker));
+
+      marker.bindPopup(popup);
+      return marker;
+    }
+
+    // TODO: get pins from eventAPI instead of hardcoded
+    // for each element in filtered API call for events in the area:
+    addPin([51.3211, 4.3997], "AfterHours event");
+    addPin([51.2211, 4.5997], "AfterHours event");
+    addPin([51.0311, 4.2997], "AfterHours event");
+    addPin([51.1311, 4.1997], "AfterHours event");
+
+    // ---------- Map clicks ----------
+    map.on("click", (e) => {
+      if (pinModeBox.checked) {
+        addPin(e.latlng, `Pin at ${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`);
+        return;
+      }
+      if (tripActive) {                       // mid-trip: a click sets a new destination
+        setRoute([carMarker.getLatLng(), e.latlng]);
+        return;
+      }
+      const pts = currentPoints();
+      if (pts.length === 1) {
+        info.textContent = "Calculating route…";
+        setRoute([pts[0], e.latlng]);
+      } else {
+        info.textContent = "Now click the destination.";
+        setRoute([e.latlng]);
+      }
+    });
+  </script>
+</body>
+</html>
