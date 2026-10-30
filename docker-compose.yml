@@ -45,6 +45,9 @@ services:
       EVENTS_API_KEY: ${EVENTS_API_KEY:-}
       DELIJN_API_KEY: ${DELIJN_API_KEY:-}
       ILINE_API_KEY: ${ILINE_API_KEY:-}
+      IRAIL_STATIONS: ${IRAIL_STATIONS:-}
+      IRAIL_COLLECT_EVERY_MIN: ${IRAIL_COLLECT_EVERY_MIN:-0}
+      IRAIL_USER_AGENT: ${IRAIL_USER_AGENT:-}
       CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-4200}
       WATCHFILES_FORCE_POLLING: "true"   # hot reload op Windows bind mounts
     # Zolang er nog geen app/main.py is, blijft de container gewoon draaien.

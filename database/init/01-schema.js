@@ -60,13 +60,14 @@ create("events", {
   bsonType: "object",
   required: ["source", "title", "startsAt", "venue"],
   properties: {
-    source: { enum: ["events_api", "manual"] },
+    source: { enum: ["events_api", "allevents", "manual"] }, // allevents = scraper (demo)
     externalId: { bsonType: "string" },
     title: { bsonType: "string" },
     description: { bsonType: "string" },
     category: { bsonType: "string" }, // concert, sport, beurs, ...
     startsAt: { bsonType: "date" },
     endsAt: { bsonType: "date" },
+    endsAtEstimated: { bsonType: "bool" }, // true = einduur geschat (bron gaf geen einduur)
     expectedAttendance: { bsonType: ["int", "long"], minimum: 0 },
     venue: {
       bsonType: "object",
@@ -146,6 +147,7 @@ create("hotspotPredictions", {
       properties: {
         eventIds: { bsonType: "array", items: { bsonType: "objectId" } },
         transitHubIds: { bsonType: "array", items: { bsonType: "objectId" } },
+        stationIds: { bsonType: "array", items: { bsonType: "string" } }, // iRail-stations (trainMovements.stationId)
         weather: { bsonType: "string" },
         nearbyDrivers: { bsonType: "int" },
       },
@@ -186,20 +188,81 @@ create("routes", {
 db.routes.createIndex({ driverId: 1, computedAt: -1 });
 db.routes.createIndex({ computedAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 7 }); // 7 dagen bewaren
 
-// ---------- transitHubs: stations, luchthavens, haltes (De Lijn / ILine / NMBS) ----------
+// ---------- transitHubs: stations, luchthavens, haltes (De Lijn / ILine / NMBS via iRail) ----------
 create("transitHubs", {
   bsonType: "object",
   required: ["kind", "name", "location", "source"],
   properties: {
     kind: { enum: ["train", "airport", "bus", "tram"] },
     name: { bsonType: "string" },
+    standardName: { bsonType: "string" }, // iRail: officiele (tweetalige) naam
     location: point,
-    source: { enum: ["delijn", "iline", "manual"] },
-    externalId: { bsonType: "string" },
+    source: { enum: ["delijn", "iline", "irail", "manual"] },
+    externalId: { bsonType: "string" }, // iRail: BE.NMBS.008821006
+    fetchedAt: { bsonType: "date" },
   },
 });
 db.transitHubs.createIndex({ location: "2dsphere" });
 db.transitHubs.createIndex({ source: 1, externalId: 1 }, { unique: true, partialFilterExpression: { externalId: { $exists: true } } });
+
+// ---------- trainMovements: aankomsten/vertrekken per station (iRail liveboards) ----------
+// 1 document per trein per station per richting; bij elke ophaalronde worden vertraging/schrapping bijgewerkt.
+// Basis voor de drukte per station (GET /irail/crowding) en trainingsdata voor het AI-model.
+create("trainMovements", {
+  bsonType: "object",
+  required: ["stationId", "stationName", "location", "direction", "vehicle", "scheduledAt", "expectedAt", "delayS", "canceled", "lastSeenAt"],
+  properties: {
+    stationId: { bsonType: "string" }, // -> transitHubs.externalId
+    stationName: { bsonType: "string" },
+    location: point, // locatie van het station
+    direction: { enum: ["arrival", "departure"] },
+    vehicle: { bsonType: "string" }, // bv. IC2037
+    vehicleType: { bsonType: "string" }, // IC, S1, L, P, EC, EUR, ...
+    longDistance: { bsonType: "bool" }, // IC/internationaal: meer reizigers per trein
+    otherStation: {
+      bsonType: "object", // herkomst (aankomst) of bestemming (vertrek)
+      properties: { id: { bsonType: "string" }, name: { bsonType: "string" } },
+    },
+    scheduledAt: { bsonType: "date" },
+    expectedAt: { bsonType: "date" }, // scheduledAt + vertraging
+    delayS: { bsonType: ["int", "long"] },
+    canceled: { bsonType: "bool" },
+    isExtra: { bsonType: "bool" }, // extra trein (bv. bij grote events)
+    passed: { bsonType: "bool" }, // trein is al aangekomen/vertrokken
+    platform: { bsonType: "string" },
+    platformChanged: { bsonType: "bool" },
+    occupancy: { enum: ["low", "medium", "high", "unknown"] }, // enkel bij vertrekken
+    localHour: { bsonType: "int", minimum: 0, maximum: 23 }, // features voor het AI-model (Brusselse tijd)
+    weekday: { bsonType: "int", minimum: 0, maximum: 6 }, // 0 = maandag
+    firstSeenAt: { bsonType: "date" },
+    lastSeenAt: { bsonType: "date" },
+  },
+});
+db.trainMovements.createIndex({ stationId: 1, direction: 1, vehicle: 1, scheduledAt: 1 }, { unique: true });
+db.trainMovements.createIndex({ expectedAt: 1, stationId: 1 }); // drukte per tijdvenster
+db.trainMovements.createIndex({ location: "2dsphere" });
+db.trainMovements.createIndex({ scheduledAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 180 }); // 180 dagen historiek
+
+// ---------- transitDisturbances: storingen en geplande werken (iRail) ----------
+create("transitDisturbances", {
+  bsonType: "object",
+  required: ["source", "externalId", "type", "title", "active", "lastSeenAt"],
+  properties: {
+    source: { enum: ["irail"] },
+    externalId: { bsonType: "string" }, // hash van titel + link
+    type: { enum: ["disturbance", "planned"] }, // onverwacht of geplande werken
+    title: { bsonType: "string" },
+    description: { bsonType: "string" },
+    link: { bsonType: "string" },
+    stationIds: { bsonType: "array", items: { bsonType: "string" } }, // stations die in de titel vernoemd worden
+    active: { bsonType: "bool" }, // false = niet meer in de feed
+    publishedAt: { bsonType: "date" },
+    firstSeenAt: { bsonType: "date" },
+    lastSeenAt: { bsonType: "date" },
+  },
+});
+db.transitDisturbances.createIndex({ source: 1, externalId: 1 }, { unique: true });
+db.transitDisturbances.createIndex({ active: 1, stationIds: 1 });
 
 // ---------- driverPositions: recente GPS-posities (Could have: andere drivers) ----------
 create("driverPositions", {
@@ -221,7 +284,7 @@ create("apiCache", {
   bsonType: "object",
   required: ["source", "key", "payload", "expiresAt"],
   properties: {
-    source: { enum: ["google_maps", "events_api", "delijn", "iline"] },
+    source: { enum: ["google_maps", "events_api", "delijn", "iline", "irail"] },
     key: { bsonType: "string" }, // bv. hash van URL + params
     payload: {},
     fetchedAt: { bsonType: "date" },
