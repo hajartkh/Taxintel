@@ -3,6 +3,7 @@
 
     python run_all.py --eenmalig            # alles nu ophalen (UiT, allevents, Ticketmaster), opschonen, laden
     python run_all.py                       # blijft draaien; elke bron op zijn eigen tempo
+    python run_all.py --ronde               # eenmaal controleren wat aan de beurt is (voor de taakplanner)
     python run_all.py --status              # wat is wanneer voor het laatst gelopen
     python run_all.py --droog               # niets ophalen; pipeline op bestaande ruwe data + laden als test
     python run_all.py --eenmalig --alleen ticketmaster
@@ -171,6 +172,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--eenmalig", action="store_true", help="eenmaal alles ophalen en laden, dan stoppen")
     ap.add_argument("--alleen", choices=list(SOURCES), help="alleen deze bron ophalen")
+    ap.add_argument("--ronde", action="store_true", help="eenmaal controleren wat aan de beurt is (voor de Windows-taakplanner)")
     ap.add_argument("--status", action="store_true")
     ap.add_argument("--droog", action="store_true", help="niets ophalen; pipeline + load --dry-run")
     ap.add_argument("--check-elke", type=int, default=10, help="minuten tussen controles in de lus")
@@ -180,6 +182,8 @@ def main():
     if a.status:
         return status()
     intervals = {n: getattr(a, f"elke_{n}") for n in SOURCES}
+    if a.ronde:
+        return ronde(a.alleen, intervals=intervals)
     if a.eenmalig or a.droog:
         return ronde(a.alleen, force=True, droog=a.droog, intervals=intervals)
     log("Lus gestart (Ctrl+C om te stoppen).")
