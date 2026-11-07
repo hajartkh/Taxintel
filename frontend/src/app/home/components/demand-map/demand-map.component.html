@@ -1,0 +1,13 @@
+<div #map class="map tx-map"></div>
+
+<app-map-toolbar
+  [fullscreen]="fullscreen()"
+  (search)="search($event)"
+  (locate)="locate()"
+  (fullscreenToggle)="toggleFullscreen()"
+/>
+<app-nav-banner />
+<app-forecast-card />
+<app-map-legend />
+<app-drive-controls />
+<app-toast />

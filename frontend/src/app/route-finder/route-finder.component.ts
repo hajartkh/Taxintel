@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
-import 'leaflet-routing-machine'; // must come after leaflet: it attaches itself to L.Routing
+import '../shared/leaflet/leaflet-plugins'; // adds L.Routing (loads Leaflet first, see that file)
 
 // Default marker icon fix (used by the draggable waypoint markers)
 L.Icon.Default.mergeOptions({

@@ -1,0 +1,26 @@
+:host {
+  position: absolute;
+  z-index: 800;
+  right: 14px;
+  bottom: 28px;
+}
+
+.controls { display: flex; gap: 8px; padding: 6px; }
+
+button {
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.primary { min-width: 150px; border: 0; background: var(--tx-yellow); color: #000; }
+.stop { border: 1px solid var(--tx-line-strong); background: var(--tx-card-2); }
+.stop svg { color: var(--tx-red); }

@@ -1,0 +1,87 @@
+/*
+ * Leaflet theme and map markers.
+ * Leaflet builds its controls, popups and divIcons outside Angular, so these styles
+ * cannot be component-scoped. Everything is scoped to .tx-map (the home page map),
+ * so the route finder keeps the default Leaflet look.
+ */
+
+/* ---------- Leaflet controls ---------- */
+.tx-map { background: #0b0b0b; font-family: var(--tx-font); }
+.tx-map.osm-dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) grayscale(0.6) brightness(0.85) contrast(0.95); }
+.tx-map .leaflet-bar { border: 1px solid var(--tx-line); border-radius: 10px; overflow: hidden; box-shadow: none; }
+.tx-map .leaflet-bar a {
+  width: 40px; height: 40px; line-height: 40px;
+  background: rgba(12, 12, 12, 0.9); color: var(--tx-text); border-bottom-color: var(--tx-line);
+}
+.tx-map .leaflet-bottom.leaflet-left .leaflet-control { margin: 0 0 18px 18px; }
+.tx-map .leaflet-control-attribution { background: rgba(0, 0, 0, 0.6); color: var(--tx-faint); font-size: 10px; }
+.tx-map .leaflet-control-attribution a { color: var(--tx-muted); }
+
+/* ---------- Popups ---------- */
+.tx-map .leaflet-popup-content-wrapper,
+.tx-map .leaflet-popup-tip {
+  background: #121212; color: var(--tx-text); border: 1px solid var(--tx-line); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+.tx-map .leaflet-popup-content-wrapper { border-radius: 12px; }
+.tx-map .leaflet-popup-content { margin: 14px 16px; font-size: 13px; line-height: 1.45; min-width: 220px; }
+.tx-map a.leaflet-popup-close-button { color: var(--tx-muted); }
+.tx-popup-title { font-weight: 800; font-size: 15px; margin-bottom: 2px; }
+.tx-popup-sub { color: var(--tx-muted); }
+.tx-popup-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.tx-popup-btn {
+  margin-top: 12px; width: 100%; padding: 8px; border: 0; border-radius: 8px;
+  background: var(--tx-yellow); color: #000; font-weight: 800;
+}
+
+/* ---------- Markers ---------- */
+.tx-area-label {
+  display: inline-block; transform: translate(-50%, 18px);
+  color: #9a9a9a; font-size: 11px; font-weight: 800; letter-spacing: 0.18em; white-space: nowrap;
+  text-shadow: 0 0 6px #000, 0 0 2px #000;
+}
+.tx-surge {
+  display: inline-block; transform: translate(-50%, -100%);
+  background: var(--tx-red); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px;
+  white-space: nowrap; box-shadow: 0 4px 14px rgba(255, 59, 59, 0.45);
+}
+.tx-event-pin {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  background: #111; border: 2px solid var(--tx-yellow); color: var(--tx-yellow);
+  box-shadow: 0 0 0 4px rgba(255, 212, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+.tx-event-pin.hot {
+  border-color: var(--tx-red); color: var(--tx-red);
+  box-shadow: 0 0 0 4px rgba(255, 59, 59, 0.18), 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+.tx-stop-pin {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--tx-yellow); color: #000; font-weight: 800; font-size: 13px; font-family: var(--tx-font);
+  border: 3px solid #000; box-shadow: 0 0 0 2px var(--tx-yellow), 0 0 16px rgba(255, 212, 0, 0.6);
+}
+.tx-stop-pin.done { background: #333; color: #888; box-shadow: 0 0 0 2px #555; }
+
+/* The driver: yellow disc with an arrow that turns to the direction of travel */
+.tx-driver { position: relative; width: 44px; height: 44px; }
+.tx-driver-pulse {
+  position: absolute; inset: 0; border-radius: 50%; background: rgba(255, 212, 0, 0.25);
+  animation: tx-pulse 2s ease-out infinite;
+}
+.tx-driver-dot {
+  position: absolute; inset: 7px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--tx-yellow); border: 3px solid #000;
+  box-shadow: 0 0 0 2px var(--tx-yellow), 0 0 20px rgba(255, 212, 0, 0.7);
+  transition: transform 0.15s linear;
+}
+@keyframes tx-pulse {
+  from { transform: scale(0.6); opacity: 1; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+
+/* ---------- Route finder (src/app/route-finder) ---------- */
+.car {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #2563eb; color: #fff; border: 3px solid #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; box-sizing: border-box;
+}

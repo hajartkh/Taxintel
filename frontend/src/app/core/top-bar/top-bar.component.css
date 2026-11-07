@@ -1,0 +1,46 @@
+:host {
+  flex: none;
+  height: 64px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--tx-line);
+  background: var(--tx-surface);
+}
+
+.brand { display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.logo { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: var(--tx-yellow); }
+.name { font-size: 21px; font-weight: 800; letter-spacing: 0.02em; }
+.city { padding-left: 12px; border-left: 1px solid var(--tx-line); color: var(--tx-muted); font-size: 14px; }
+
+.clock {
+  margin-left: auto;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--tx-line);
+  border-radius: 10px;
+  background: var(--tx-card);
+  font-size: 14px;
+  font-weight: 700;
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--tx-yellow); box-shadow: 0 0 10px var(--tx-yellow); }
+
+/* Account + notifications always on the right */
+.user { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+.bell { position: relative; padding: 6px; border: 0; background: none; color: var(--tx-muted); }
+.bell::after { content: ''; position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--tx-yellow); }
+.who { text-align: right; font-size: 14px; font-weight: 700; line-height: 1.2; }
+.who small { display: block; color: var(--tx-green); font-size: 12px; font-weight: 600; }
+.avatar { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: var(--tx-yellow); color: #000; font-weight: 800; }
+
+@media (max-width: 1000px) {
+  .clock, .who { display: none; }
+}
+
+@media (max-width: 600px) {
+  :host { padding: 0 14px; }
+  .city { display: none; }
+}

@@ -6,7 +6,7 @@ Slimme app voor taxichauffeurs: events op de kaart, A*-route naar een event en A
 ## Structuur
 
 ```
-frontend/   Angular (Google Maps, kalender, opgeslagen data)
+frontend/   Angular 18 + Leaflet (heatmap, aanbevolen route, stadskalender) - zie frontend/README.md
 backend/    Python API (FastAPI) - één laag tussen app, AI-model, database en externe API's
 database/   MongoDB init (validators + indexen) en SCHEMA.md
 ```
@@ -29,13 +29,24 @@ docker compose --profile tools up # + mongo-express (DB bekijken)
 | mongo-express | http://localhost:8081 |
 
 Zolang `frontend/package.json` of `backend/app/main.py` nog niet bestaan, blijven die containers wachten in plaats van te crashen.
-Het Angular-project aanmaken kan vanuit de container:
-
-```bash
-docker compose run --rm frontend ng new taxintel --directory . --skip-git
-```
 
 De database wordt alleen bij de **eerste** start geïnitialiseerd. Schema gewijzigd? `docker compose down -v` (wist de data) en opnieuw `up`.
+
+## Frontend
+
+Angular 18-app in `frontend/`, details in [`frontend/README.md`](frontend/README.md).
+
+| Route | Pagina |
+|---|---|
+| `/` | Homepagina chauffeur: heatmap van drukke zones in Antwerpen, locatie van de chauffeur, aanbevolen route langs de drukke zones, stadskalender met events |
+| `/route-finder` | Eerste routeplanner (prototype) |
+
+De homepagina draait nog op **dummy data** (`frontend/src/app/home/data/`). Overschakelen naar de backend gebeurt in
+één service (`CityDataService`), zie de frontend-README.
+
+Lokaal zonder Docker: `cd frontend && npm install && npm start`.
+
+`main.html` en `home.html` in de hoofdmap zijn de oorspronkelijke HTML-prototypes; de Angular-app is de versie om op verder te bouwen.
 
 ## Treindata (iRail) - drukte rond stations
 

@@ -1,0 +1,42 @@
+/* TaxIntel theme: black + yellow. Use these variables in every component. */
+:root {
+  --tx-bg: #070707;
+  --tx-surface: #0a0a0a;
+  --tx-panel: #0e0e0e;
+  --tx-card: #141414;
+  --tx-card-2: #1a1a1a;
+  --tx-line: #242424;
+  --tx-line-strong: #3a3a3a;
+  --tx-text: #f4f4f4;
+  --tx-muted: #8b8b8b;
+  --tx-faint: #5c5c5c;
+  --tx-yellow: #ffd400;
+  --tx-yellow-soft: #ffd40022;
+  --tx-red: #ff3b3b;
+  --tx-orange: #ff8a00;
+  --tx-green: #2bd46b;
+  --tx-radius: 12px;
+  --tx-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  --tx-font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; width: 100%; margin: 0; }
+
+body {
+  background: var(--tx-bg);
+  color: var(--tx-text);
+  font-family: var(--tx-font);
+  overflow: hidden;
+}
+
+app-root { display: block; height: 100%; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: 0.45; }
+
+@media (max-width: 1000px) {
+  body { overflow: auto; }
+  app-root { height: auto; min-height: 100%; }
+}

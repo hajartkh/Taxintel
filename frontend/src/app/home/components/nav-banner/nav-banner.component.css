@@ -1,0 +1,33 @@
+:host {
+  position: absolute;
+  z-index: 800;
+  top: 66px;
+  left: 14px;
+  width: 360px;
+  max-width: calc(100% - 80px); /* leave room for the forecast tab */
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px 10px 10px;
+  background: var(--tx-yellow);
+  color: #000;
+  border-radius: var(--tx-radius);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.arrow {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: var(--tx-yellow);
+}
+
+.distance { font-size: 20px; font-weight: 800; line-height: 1; }
+.text { font-size: 13px; font-weight: 700; margin-top: 3px; }

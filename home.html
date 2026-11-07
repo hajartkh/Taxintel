@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TaxIntel · Driver home</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <style>
+    :root {
+      --bg: #070707;
+      --panel: #0e0e0e;
+      --card: #141414;
+      --card-2: #1a1a1a;
+      --line: #242424;
+      --text: #f4f4f4;
+      --muted: #8b8b8b;
+      --faint: #5c5c5c;
+      --yellow: #ffd400;
+      --yellow-dim: #ffd40022;
+      --red: #ff3b3b;
+      --orange: #ff8a00;
+      --green: #2bd46b;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+    .label {
+      font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      height: 64px; flex: none; display: flex; align-items: center; gap: 16px;
+      padding: 0 20px; border-bottom: 1px solid var(--line); background: #0a0a0a;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo {
+      width: 38px; height: 38px; border-radius: 10px; background: var(--yellow);
+      display: grid; place-items: center;
+    }
+    .brand-name { font-size: 21px; font-weight: 800; letter-spacing: .02em; }
+    .brand-city { color: var(--muted); font-size: 14px; padding-left: 12px; border-left: 1px solid var(--line); }
+    .clock {
+      margin: 0 0 0 auto; display: flex; align-items: center; gap: 10px;
+      background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+      padding: 7px 14px; font-weight: 700; font-size: 14px;
+    }
+    .clock .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+    .user { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+    .bell { position: relative; background: none; border: 0; padding: 6px; color: var(--muted); }
+    .bell::after {
+      content: ""; position: absolute; top: 5px; right: 6px; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--yellow);
+    }
+    .user-name { text-align: right; font-weight: 700; font-size: 14px; line-height: 1.2; }
+    .user-name small { display: block; color: var(--green); font-weight: 600; font-size: 12px; }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 10px; background: var(--yellow); color: #000;
+      display: grid; place-items: center; font-weight: 800;
+    }
+
+    /* ---------- Layout ---------- */
+    .layout { flex: 1; display: flex; min-height: 0; }
+    .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .map-wrap { position: relative; flex: 1; min-width: 0; min-height: 0; background: #0b0b0b; overflow: hidden; }
+    .driver-bar {
+      flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap;
+      padding: 12px 18px; border-bottom: 1px solid var(--line); background: var(--panel);
+    }
+    #map { position: absolute; inset: 0; background: #0b0b0b; }
+
+    /* ---------- Map overlays ---------- */
+    .overlay { position: absolute; z-index: 800; }
+    .glass {
+      background: rgba(12, 12, 12, .88); border: 1px solid var(--line); border-radius: var(--radius);
+      backdrop-filter: blur(8px); box-shadow: 0 8px 30px rgba(0, 0, 0, .45);
+    }
+    /* toolbar: search · locate · filter · fullscreen */
+    .toolbar { top: 14px; left: 14px; display: flex; gap: 8px; align-items: flex-start; z-index: 900; }
+    .icon-btn { width: 42px; height: 42px; display: grid; place-items: center; color: var(--text); position: relative; padding: 0; }
+    .icon-btn:hover { border-color: #3a3a3a; }
+    .icon-btn[aria-expanded=true] { border-color: var(--yellow); color: var(--yellow); }
+    .icon-btn .flag {
+      position: absolute; top: 7px; right: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); display: none;
+    }
+    .icon-btn.filtered .flag { display: block; }
+    .searchbox {
+      display: flex; align-items: center; height: 42px; width: 42px; overflow: hidden; transition: width .3s ease;
+    }
+    .searchbox.open { width: 300px; max-width: calc(100vw - 178px); border-color: #3a3a3a; }
+    .searchbox button { width: 40px; height: 40px; flex: none; background: none; border: 0; display: grid; place-items: center; color: var(--text); padding: 0; }
+    .searchbox input {
+      flex: 1; min-width: 0; background: none; border: 0; outline: none; color: var(--text); font: inherit; font-size: 14px;
+      padding-right: 12px; opacity: 0; transition: opacity .2s;
+    }
+    .searchbox.open input { opacity: 1; }
+    .searchbox input::placeholder { color: var(--muted); }
+
+    .filter-wrap { position: relative; }
+    .filter-menu { position: absolute; top: 50px; left: 0; width: 230px; padding: 10px 8px 8px; display: none; }
+    .filter-menu.open { display: block; }
+    .filter-menu .label { color: var(--muted); font-size: 10px; padding: 0 8px 6px; }
+    .switch-row {
+      display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 9px 8px;
+      background: none; border: 0; border-radius: 8px; font-weight: 700; font-size: 13px; text-align: left;
+    }
+    .switch-row:hover { background: var(--card-2); }
+    .switch { width: 34px; height: 20px; border-radius: 10px; background: #333; position: relative; transition: .2s; flex: none; }
+    .switch::after {
+      content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #888; transition: .2s;
+    }
+    .switch-row[aria-checked=true] .switch { background: var(--yellow); }
+    .switch-row[aria-checked=true] .switch::after { left: 17px; background: #000; }
+
+    /* forecast card: slides out to the right, leaving a small tab */
+    .forecast {
+      top: 14px; right: 0; display: flex; align-items: stretch; border-right: 0; border-radius: 12px 0 0 12px;
+      transition: transform .35s ease;
+    }
+    .forecast.collapsed { transform: translateX(calc(100% - 52px)); }
+    .fc-tab {
+      width: 52px; flex: none; background: none; border: 0; border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 0;
+      color: var(--yellow); font-size: 11px; font-weight: 800;
+    }
+    .fc-tab .chev { color: var(--muted); transition: transform .35s; }
+    .forecast.collapsed .fc-tab .chev { transform: rotate(180deg); }
+    .fc-body { width: 220px; padding: 10px 14px 10px 12px; }
+    .forecast-head { display: flex; align-items: center; justify-content: space-between; }
+    .forecast-head .label { font-size: 10px; }
+    .forecast-head .label { color: var(--yellow); }
+    .now-btn {
+      background: var(--card-2); border: 1px solid var(--line); border-radius: 7px; padding: 2px 9px;
+      font-size: 11px; font-weight: 700;
+    }
+    .now-btn.active { background: var(--yellow); color: #000; border-color: var(--yellow); }
+    .forecast-time { font-size: 16px; font-weight: 800; margin: 4px 0 6px; }
+    .forecast-time span { color: var(--muted); font-size: 12px; font-weight: 600; }
+    input[type=range] { width: 100%; accent-color: var(--yellow); margin: 0; }
+    .ticks { display: flex; justify-content: space-between; color: var(--faint); font-size: 9px; font-weight: 700; margin-top: 3px; }
+
+    .nav-banner {
+      top: 66px; left: 14px; display: none; align-items: center; gap: 14px;
+      padding: 10px 18px 10px 10px; width: 360px; max-width: calc(100% - 80px);  /* leave room for the forecast tab */
+      background: var(--yellow); color: #000; border-radius: var(--radius); box-shadow: 0 8px 30px rgba(0,0,0,.5);
+    }
+    .nav-banner.show { display: flex; }
+    .nav-arrow { width: 42px; height: 42px; border-radius: 9px; background: #000; color: var(--yellow); display: grid; place-items: center; flex: none; }
+    .nav-dist { font-size: 20px; font-weight: 800; line-height: 1; }
+    .nav-text { font-size: 13px; font-weight: 700; margin-top: 3px; }
+
+    .legend { bottom: 18px; left: 72px; padding: 12px 14px; font-size: 12px; }
+    .legend .label { color: var(--muted); margin-bottom: 8px; font-size: 10px; }
+    .legend-grid { display: grid; grid-template-columns: auto auto; gap: 6px 16px; }
+    .key { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .sw { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+    .sw.line { width: 18px; height: 4px; border-radius: 2px; background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+    .legend-hint { color: var(--faint); margin-top: 8px; font-size: 11px; }
+
+    .drive-ctl { right: 14px; bottom: 28px; display: none; gap: 8px; padding: 6px; }
+    .drive-ctl.show { display: flex; }
+    .drive-ctl button {
+      height: 46px; padding: 0 16px; border-radius: 9px; font-weight: 800; font-size: 14px; letter-spacing: .03em;
+      display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    }
+    .drive-ctl .primary { background: var(--yellow); color: #000; border: 0; min-width: 150px; justify-content: center; }
+    .drive-ctl .stop { background: var(--card-2); color: var(--text); border: 1px solid #3a3a3a; }
+    .drive-ctl .stop svg { color: var(--red); }
+    .map-wrap.driving .toast { bottom: 96px; }
+
+    .toast {
+      bottom: 18px; left: 50%; transform: translateX(-50%) translateY(10px); opacity: 0; pointer-events: none;
+      padding: 10px 16px; font-size: 13px; font-weight: 600; transition: .25s; max-width: 80%;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%); }
+
+    /* ---------- Leaflet theming ---------- */
+    .leaflet-container { font-family: inherit; }
+    .osm-dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) grayscale(.6) brightness(.85) contrast(.95); }
+    .map-wrap.full { position: fixed; inset: 0; z-index: 3000; }
+    .leaflet-bar { border: 1px solid var(--line) !important; border-radius: 10px !important; overflow: hidden; box-shadow: none !important; }
+    .leaflet-bar a {
+      background: rgba(12,12,12,.9) !important; color: var(--text) !important; border-bottom-color: var(--line) !important;
+      width: 40px !important; height: 40px !important; line-height: 40px !important;
+    }
+    .leaflet-bottom.leaflet-left .leaflet-control { margin: 0 0 18px 18px; }
+    .leaflet-control-attribution { background: rgba(0,0,0,.6) !important; color: var(--faint) !important; font-size: 10px; }
+    .leaflet-control-attribution a { color: var(--muted) !important; }
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+      background: #121212; color: var(--text); border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,.6);
+    }
+    .leaflet-popup-content-wrapper { border-radius: 12px; }
+    .leaflet-popup-content { margin: 14px 16px; font-size: 13px; line-height: 1.45; min-width: 220px; }
+    .leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+    .pop-title { font-weight: 800; font-size: 15px; margin-bottom: 2px; }
+    .pop-sub { color: var(--muted); }
+    .pop-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
+    .pop-btn {
+      margin-top: 12px; width: 100%; padding: 8px; border: 0; border-radius: 8px;
+      background: var(--yellow); color: #000; font-weight: 800;
+    }
+
+    .area-label {
+      color: #9a9a9a; font-size: 11px; font-weight: 800; letter-spacing: .18em; white-space: nowrap;
+      text-shadow: 0 0 6px #000, 0 0 2px #000; transform: translate(-50%, 18px); display: inline-block;
+    }
+    .surge {
+      background: var(--red); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 6px;
+      white-space: nowrap; box-shadow: 0 4px 14px rgba(255,59,59,.45); transform: translate(-50%, -100%); display: inline-block;
+    }
+    .ev-pin {
+      width: 34px; height: 34px; border-radius: 50%; background: #111; border: 2px solid var(--yellow);
+      color: var(--yellow); display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(255,212,0,.15), 0 4px 12px rgba(0,0,0,.6);
+    }
+    .ev-pin.hot { border-color: var(--red); color: var(--red); box-shadow: 0 0 0 4px rgba(255,59,59,.18), 0 4px 12px rgba(0,0,0,.6); }
+    .stop-pin {
+      width: 26px; height: 26px; border-radius: 50%; background: var(--yellow); color: #000; font-weight: 800; font-size: 13px;
+      display: grid; place-items: center; border: 3px solid #000; box-shadow: 0 0 0 2px var(--yellow), 0 0 16px rgba(255,212,0,.6);
+    }
+    .stop-pin.done { background: #333; color: #888; box-shadow: 0 0 0 2px #555; }
+
+    .driver { position: relative; width: 44px; height: 44px; }
+    .driver .pulse {
+      position: absolute; inset: 0; border-radius: 50%; background: rgba(255,212,0,.25);
+      animation: pulse 2s ease-out infinite;
+    }
+    .driver .dot {
+      position: absolute; inset: 7px; border-radius: 50%; background: var(--yellow); border: 3px solid #000;
+      display: grid; place-items: center; box-shadow: 0 0 0 2px var(--yellow), 0 0 20px rgba(255,212,0,.7);
+      transition: transform .15s linear;
+    }
+    @keyframes pulse { from { transform: scale(.6); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+
+    /* ---------- Side panel ---------- */
+    .panel {
+      width: 400px; flex: none; border-left: 1px solid var(--line); background: var(--panel);
+      display: flex; flex-direction: column; min-height: 0;
+    }
+    .panel-scroll { flex: 1; overflow-y: auto; padding: 22px 22px 8px; }
+    .panel-scroll::-webkit-scrollbar { width: 8px; }
+    .panel-scroll::-webkit-scrollbar-thumb { background: #222; border-radius: 4px; }
+    .hello-top { display: flex; align-items: center; gap: 10px; }
+    .hello .label { color: var(--yellow); }
+    .hello h1 { margin: 0; font-size: 22px; font-weight: 800; }
+    .pill-online {
+      font-size: 10px; font-weight: 800; color: var(--green); background: rgba(43,212,107,.12);
+      border: 1px solid rgba(43,212,107,.3); padding: 2px 7px; border-radius: 6px;
+    }
+    .stats {
+      display: grid; grid-template-columns: repeat(3, minmax(84px, 1fr));
+      border: 1px solid var(--line); border-radius: var(--radius); background: var(--card);
+    }
+    .stat { text-align: center; padding: 8px 12px; }
+    .stat + .stat { border-left: 1px solid var(--line); }
+    .stat b { display: block; font-size: 18px; font-weight: 800; }
+    .stat span { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+    .section { border-top: 1px solid var(--line); padding-top: 20px; margin-bottom: 22px; }
+    .section:first-child { border-top: 0; padding-top: 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; }
+    .section-head .sub { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .arrows { display: flex; gap: 4px; }
+    .arrows button {
+      width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--card);
+      display: grid; place-items: center;
+    }
+
+    .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 14px 0; }
+    .day {
+      border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 7px 0 6px;
+      text-align: center; line-height: 1.15;
+    }
+    .day small { display: block; font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+    .day b { font-size: 16px; }
+    .day .dots { display: flex; justify-content: center; gap: 3px; height: 5px; margin-top: 4px; }
+    .day .dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--yellow); }
+    .day.today { border-color: #3d3d3d; }
+    .day.sel { background: var(--yellow); color: #000; border-color: var(--yellow); }
+    .day.sel small { color: #000; }
+    .day.sel .dots i { background: #000; }
+
+    .events { display: flex; flex-direction: column; gap: 8px; }
+    .event {
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; text-align: left;
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 12px 12px 14px;
+      width: 100%;
+    }
+    .event:hover { border-color: #3a3a3a; }
+    .event.active { border-color: var(--yellow); box-shadow: 0 0 0 1px var(--yellow) inset; }
+    .event-time { border-right: 1px solid var(--line); line-height: 1.2; padding: 6px 12px 6px 0; white-space: nowrap; }
+    .event-time b { font-size: 14px; }
+    .event-time span { color: var(--muted); font-weight: 600; margin: 0 3px; }
+    .event-name { font-weight: 700; font-size: 14px; }
+    .event-venue { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .badge {
+      font-size: 10px; font-weight: 800; padding: 4px 7px; border-radius: 6px; white-space: nowrap;
+    }
+    .badge.high { color: var(--red); background: rgba(255,59,59,.12); border: 1px solid rgba(255,59,59,.35); }
+    .badge.busy { color: var(--orange); background: rgba(255,138,0,.12); border: 1px solid rgba(255,138,0,.35); }
+    .badge.mod { color: var(--yellow); background: var(--yellow-dim); border: 1px solid rgba(255,212,0,.3); }
+    .empty { color: var(--muted); font-size: 13px; padding: 14px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); }
+
+    .route-sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 12px; }
+    .route-sum div { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+    .route-sum b { display: block; font-size: 17px; }
+    .route-sum span { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .stops { list-style: none; padding: 0; margin: 0; position: relative; }
+    .stops li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 8px 0; position: relative; }
+    .stops li + li::before {
+      content: ""; position: absolute; left: 13px; top: -10px; height: 20px; width: 2px; background: #333;
+    }
+    .stop-num {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--yellow); color: #000; font-weight: 800;
+      display: grid; place-items: center; font-size: 13px; position: relative; z-index: 1;
+    }
+    .stops li.start .stop-num { background: #000; border: 2px solid var(--yellow); color: var(--yellow); }
+    .stops li.done { opacity: .45; }
+    .stops li.done .stop-num { background: #333; color: #999; }
+    .stop-name { font-weight: 700; font-size: 14px; }
+    .stop-why { color: var(--muted); font-size: 12px; }
+    .route-opts { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; color: var(--muted); font-size: 13px; }
+    .route-opts select {
+      background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 5px 8px; font: inherit;
+    }
+    .route-opts label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .route-opts input[type=checkbox] { accent-color: var(--yellow); }
+    .info { color: var(--muted); font-size: 12px; margin-top: 10px; min-height: 16px; }
+
+    .panel-foot { padding: 14px 22px 20px; border-top: 1px solid var(--line); display: flex; gap: 8px; }
+    .cta {
+      flex: 1; height: 56px; border-radius: var(--radius); border: 0; background: var(--yellow); color: #000;
+      font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 8px 26px rgba(255,212,0,.25);
+    }
+    .cta:hover:not(:disabled) { filter: brightness(1.05); }
+    .end-btn {
+      display: none; width: 56px; height: 56px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--card);
+      place-items: center;
+    }
+    .end-btn.show { display: grid; }
+
+    @media (max-width: 1000px) {
+      body { overflow: auto; }
+      .layout { flex-direction: column; }
+      .map-wrap { flex: none; height: 65vh; }
+      .panel { width: 100%; border-left: 0; border-top: 1px solid var(--line); }
+      .clock, .user-name { display: none; }
+      .legend { display: none; }
+    }
+    @media (max-width: 600px) {
+      .topbar { padding: 0 14px; }
+      .brand-city { display: none; }
+      .forecast { top: 64px; }
+      .stats { width: 100%; }
+      .hello h1 { font-size: 19px; }
+      .panel-scroll { padding: 18px 14px 8px; }
+      .panel-foot { padding: 12px 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ======================= TOP BAR ======================= -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 17h14v-5l-2-5H7l-2 5v5Z"/><path d="M9 4h6"/><circle cx="8" cy="14" r="1"/><circle cx="16" cy="14" r="1"/><path d="M6 17v2M18 17v2"/>
+        </svg>
+      </div>
+      <span class="brand-name">TAXINTEL</span>
+      <span class="brand-city">Antwerpen</span>
+    </div>
+    <div class="clock"><span class="dot"></span><span id="clock">–</span></div>
+    <div class="user">
+      <button class="bell" type="button" aria-label="Notifications">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </button>
+      <div class="user-name">Sam Peeters<small>● Online</small></div>
+      <div class="avatar">SP</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="main-col">
+    <!-- ======================= DRIVER BAR ======================= -->
+    <div class="driver-bar">
+      <div class="hello">
+        <h1 id="greeting">Hello, Sam</h1>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>€84</b><span>Today</span></div>
+        <div class="stat"><b>12</b><span>Trips</span></div>
+        <div class="stat"><b>4.92</b><span>Rating</span></div>
+      </div>
+    </div>
+
+    <!-- ======================= MAP ======================= -->
+    <section class="map-wrap" id="mapWrap">
+      <div id="map"></div>
+
+      <div class="overlay toolbar">
+        <div class="searchbox glass" id="searchBox">
+          <button id="searchBtn" type="button" title="Search" aria-label="Search" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </button>
+          <input id="search" list="places" placeholder="Search places" autocomplete="off" tabindex="-1">
+          <datalist id="places"></datalist>
+        </div>
+        <button id="locate" class="glass icon-btn" type="button" title="Center on my position" aria-label="Center on my position">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+        </button>
+        <div class="filter-wrap">
+          <button id="filterBtn" class="glass icon-btn" type="button" title="Map layers" aria-label="Map layers" aria-expanded="false" aria-controls="filterMenu">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8Z"/></svg>
+            <span class="flag"></span>
+          </button>
+          <div class="filter-menu glass" id="filterMenu">
+            <div class="label">Show on map</div>
+            <button class="switch-row" type="button" role="switch" aria-checked="true" data-layer="heat"><span>Heatmap</span><span class="switch"></span></button>
+            <button class="switch-row" type="button" role="switch" aria-checked="true" data-layer="events"><span>Events</span><span class="switch"></span></button>
+            <button class="switch-row" type="button" role="switch" aria-checked="true" data-layer="route"><span>Recommended route</span><span class="switch"></span></button>
+          </div>
+        </div>
+        <button id="fullBtn" class="glass icon-btn" type="button" title="Fullscreen map" aria-label="Fullscreen map">
+          <svg id="fullIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+        </button>
+      </div>
+
+      <div class="overlay nav-banner" id="navBanner" role="status">
+        <div class="nav-arrow" id="navArrow"></div>
+        <div><div class="nav-dist" id="navDist"></div><div class="nav-text" id="navText"></div></div>
+      </div>
+
+      <div class="overlay forecast glass" id="forecast">
+        <button class="fc-tab" id="fcToggle" type="button" aria-expanded="true" title="Hide forecast" aria-label="Show or hide demand forecast">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span id="fcTabTime">–</span>
+          <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <div class="fc-body" id="fcBody">
+          <div class="forecast-head">
+            <span class="label">Demand forecast</span>
+            <button id="nowBtn" class="now-btn" type="button">Now</button>
+          </div>
+          <div class="forecast-time" id="forecastLabel">–</div>
+          <input id="hour" type="range" min="0" max="47" step="1" aria-label="Forecast time">
+          <div class="ticks"><span>06</span><span>12</span><span>18</span><span>00</span><span>05:30</span></div>
+        </div>
+      </div>
+
+      <div class="overlay legend glass">
+        <div class="label">Map key</div>
+        <div class="legend-grid">
+          <span class="key"><span class="sw" style="background:var(--red)"></span>High demand</span>
+          <span class="key"><span class="sw" style="background:var(--orange)"></span>Busy</span>
+          <span class="key"><span class="sw" style="background:#111;border:2px solid var(--yellow)"></span>Event venue</span>
+          <span class="key"><span class="sw line"></span>Recommended</span>
+        </div>
+        <div class="legend-hint">Click the map to move the driver</div>
+      </div>
+
+      <div class="overlay drive-ctl glass" id="driveCtl" role="group" aria-label="Trip controls">
+        <button class="primary" id="mapPauseBtn" type="button"></button>
+        <button class="stop" id="mapStopBtn" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>STOP
+        </button>
+      </div>
+
+      <div class="overlay toast glass" id="toast"></div>
+    </section>
+    </div>
+
+    <!-- ======================= SIDE PANEL ======================= -->
+    <aside class="panel">
+      <div class="panel-scroll">
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="label">City calendar</div>
+              <div class="sub" id="calDate">–</div>
+            </div>
+            <div class="arrows">
+              <button id="prevDay" type="button" aria-label="Previous day">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <button id="nextDay" type="button" aria-label="Next day">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="week" id="week"></div>
+          <div class="events" id="events"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div>
+              <div class="label">Smart route</div>
+              <div class="sub" id="routeBasis">–</div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8L4 10.7l5 3.6L7.1 20 12 16.4l4.9 3.6-1.9-5.7 5-3.6-6.1-1.9Z"/></svg>
+          </div>
+          <div class="route-sum">
+            <div><b id="sumDist">–</b><span>Distance</span></div>
+            <div><b id="sumTime">–</b><span>Drive time</span></div>
+            <div><b id="sumStops">–</b><span>Hotspots</span></div>
+          </div>
+          <ul class="stops" id="stops"></ul>
+          <div class="route-opts">
+            <label>Speed
+              <select id="speed">
+                <option value="50" selected>50 km/h</option>
+                <option value="100">100 km/h</option>
+                <option value="300">300 km/h (demo)</option>
+                <option value="1000">1000 km/h (demo)</option>
+              </select>
+            </label>
+            <label><input type="checkbox" id="follow" checked> Follow driver</label>
+          </div>
+          <div class="info" id="info"></div>
+        </div>
+      </div>
+
+      <div class="panel-foot">
+        <button id="startBtn" class="cta" type="button" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 19-9-9 19-2-8-8-2Z"/></svg>
+          <span id="startLabel">Start recommended route</span>
+        </button>
+        <button id="endBtn" class="end-btn" type="button" title="End trip" aria-label="End trip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
+
+  <script>
+  /* =====================================================================
+     DUMMY DATA
+     Replace with backend calls later:
+       VENUES / EVENTS  -> /api/events   (UiTdatabank, Ticketmaster, AllEvents)
+       AREAS            -> /api/busy-areas (De Lijn, iRail)
+     Event dates are generated relative to today so the demo never goes stale.
+     ===================================================================== */
+  const VENUES = {
+    sportpaleis:  { name: "Sportpaleis",            lat: 51.2297, lng: 4.4415 },
+    lotto:        { name: "Lotto Arena",            lat: 51.2322, lng: 4.4455 },
+    bosuil:       { name: "Bosuilstadion",          lat: 51.2316, lng: 4.4728 },
+    olympisch:    { name: "Olympisch Stadion",      lat: 51.1868, lng: 4.3960 },
+    schouwburg:   { name: "Stadsschouwburg",        lat: 51.2148, lng: 4.4071 },
+    elisabeth:    { name: "Koningin Elisabethzaal", lat: 51.2161, lng: 4.4228 },
+    opera:        { name: "Opera Antwerpen",        lat: 51.2163, lng: 4.4137 },
+    desingel:     { name: "deSingel",               lat: 51.1937, lng: 4.4082 },
+    trix:         { name: "Trix",                   lat: 51.2228, lng: 4.4430 },
+    ampere:       { name: "Ampere",                 lat: 51.2147, lng: 4.4190 },
+    expo:         { name: "Antwerp Expo",           lat: 51.1898, lng: 4.3905 },
+    mas:          { name: "MAS · Eilandje",         lat: 51.2289, lng: 4.4049 },
+    kinepolis:    { name: "Kinepolis",              lat: 51.2462, lng: 4.4196 },
+  };
+
+  // [dayOffset, start, end, name, venue, category, expected attendance]
+  const EVENT_ROWS = [
+    [0, "18:30", "21:30", "Comedy night: Stand-up Live",    "elisabeth",  "culture",   1900],
+    [0, "20:00", "23:00", "Night Lights Tour",              "sportpaleis","concert",  18000],
+    [0, "20:45", "22:45", "Royal Antwerp FC – KRC Genk",    "bosuil",     "sports",   15500],
+    [0, "20:00", "22:30", "Musical: Harbour Lights",        "schouwburg", "culture",   2000],
+    [0, "23:00", "05:00", "Club night: Techno Friday",      "ampere",     "nightlife", 1200],
+    [1, "14:00", "18:00", "Antwerp Comic Fair",             "expo",       "fair",      9000],
+    [1, "19:30", "22:00", "Antwerp Symphony Orchestra",     "elisabeth",  "culture",   1900],
+    [1, "20:00", "23:30", "Indie Rock Night",               "trix",       "concert",   1500],
+    [1, "21:00", "00:30", "Urban Beats Festival",           "lotto",      "concert",   6500],
+    [1, "22:00", "04:00", "Harbour Party",                  "mas",        "nightlife", 3000],
+    [2, "13:30", "15:30", "Beerschot – Standard Luik",      "olympisch",  "sports",    9500],
+    [2, "15:00", "17:30", "Family Ice Show",                "sportpaleis","culture",  10000],
+    [2, "20:00", "22:00", "Premiere night",                 "kinepolis",  "culture",   2500],
+    [3, "19:30", "22:00", "Opera: Tosca",                   "opera",      "culture",   1000],
+    [3, "20:00", "22:00", "Jazz at deSingel",               "desingel",   "concert",    900],
+    [4, "20:00", "23:00", "Rock Legends Live",              "sportpaleis","concert",  17000],
+    [4, "20:30", "22:30", "Antwerp Giants – Oostende",      "lotto",      "sports",    5000],
+    [5, "10:00", "18:00", "Trade fair: BuildExpo",          "expo",       "fair",     12000],
+    [5, "20:00", "22:30", "Ballet: Swan Lake",              "opera",      "culture",   1000],
+    [6, "20:30", "22:30", "Royal Antwerp FC – Anderlecht",  "bosuil",     "sports",   16000],
+    [6, "21:00", "02:00", "Rooftop Session",                "mas",        "nightlife", 2500],
+    [7, "20:00", "23:00", "Pop Diva World Tour",            "sportpaleis","concert",  18000],
+    [8, "19:30", "22:00", "Theatre: De Storm",              "schouwburg", "culture",   1800],
+    [9, "20:00", "23:00", "Metal Mayhem",                   "trix",       "concert",   1500],
+    [10,"20:00", "22:30", "Symphonic Movie Night",          "elisabeth",  "culture",   1900],
+    [11,"18:00", "20:00", "Beerschot – Club Brugge",        "olympisch",  "sports",   11000],
+    [12,"20:00", "23:30", "Hip-Hop Allstars",               "sportpaleis","concert",  16000],
+    [13,"14:00", "18:00", "Christmas Market Opening",       "mas",        "fair",      7000],
+  ];
+
+  // Permanent busy areas (stations, nightlife, shopping) with a typical hourly profile
+  const AREAS = [
+    { id: "centraal",  name: "Centraal",  lat: 51.2172, lng: 4.4210, kind: "station",   weight: 0.80, spread: 260 },
+    { id: "berchem",   name: "Berchem",   lat: 51.1993, lng: 4.4327, kind: "station",   weight: 0.45, spread: 200 },
+    { id: "oudestad",  name: "Oude Stad", lat: 51.2205, lng: 4.4005, kind: "nightlife", weight: 0.60, spread: 300 },
+    { id: "zuid",      name: "Zuid",      lat: 51.2085, lng: 4.3960, kind: "nightlife", weight: 0.50, spread: 280 },
+    { id: "eilandje",  name: "Eilandje",  lat: 51.2295, lng: 4.4065, kind: "nightlife", weight: 0.40, spread: 260 },
+    { id: "meir",      name: "Meir",      lat: 51.2183, lng: 4.4100, kind: "shopping",  weight: 0.55, spread: 240 },
+  ];
+  const PROFILES = { // 00:00 … 23:00
+    station:   [.15,.1,.05,.05,.1,.3,.6,.9,.85,.5,.4,.4,.45,.45,.5,.6,.85,.95,.7,.5,.45,.4,.35,.25],
+    nightlife: [.8,.7,.55,.4,.2,.05,.02,.02,.05,.1,.15,.2,.25,.25,.25,.3,.35,.4,.5,.6,.7,.8,.85,.9],
+    shopping:  [0,0,0,0,0,0,0,.05,.1,.3,.6,.75,.8,.8,.85,.9,.85,.6,.25,.05,0,0,0,0],
+  };
+  const AREA_REASON = { station: "Train arrivals", nightlife: "Nightlife", shopping: "Shoppers" };
+
+  const DRIVER_START = [51.2108, 4.4128];   // dummy GPS position of the driver
+  const OSRM_URL = "https://router.project-osrm.org/route/v1";
+
+  /* =====================================================================
+     HELPERS
+     ===================================================================== */
+  const $ = (id) => document.getElementById(id);
+  const H = 3600e3;
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const gauss = (x, mu, s) => Math.exp(-0.5 * ((x - mu) / s) ** 2);
+  const pad = (n) => String(n).padStart(2, "0");
+  const fmtTime = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const startOfDay = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const sameDay = (a, b) => startOfDay(a).getTime() === startOfDay(b).getTime();
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const DAY_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const fmtLongDate = (d) => d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
+  const fmtShortDate = (d) => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+
+  function at(day, hhmm) {
+    const [h, m] = hhmm.split(":").map(Number);
+    const x = new Date(day); x.setHours(h, m, 0, 0); return x;
+  }
+  function relDay(d) {
+    const diff = Math.round((startOfDay(d) - startOfDay(new Date())) / (24 * H));
+    return diff === 0 ? "Today" : diff === 1 ? "Tomorrow" : diff === -1 ? "Yesterday" : DAY_SHORT[d.getDay()];
+  }
+  // Deterministic random numbers, so the heatmap doesn't flicker when the time changes
+  function seeded(str) {
+    let a = 0; for (const c of str) a = (a * 31 + c.charCodeAt(0)) | 0;
+    return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+
+  const TODAY = startOfDay(new Date());
+  const EVENTS = EVENT_ROWS.map(([d, s, e, name, venue, cat, att], i) => {
+    const day = addDays(TODAY, d);
+    const start = at(day, s);
+    let end = at(day, e);
+    if (end <= start) end = addDays(end, 1);           // runs past midnight
+    return { id: i, name, venue, cat, attendance: att, start, end, v: VENUES[venue] };
+  });
+
+  /* =====================================================================
+     DEMAND MODEL (dummy) — what is busy at time t?
+     ===================================================================== */
+  function profileAt(arr, t) {
+    const h = t.getHours() + t.getMinutes() / 60, i = Math.floor(h), f = h - i;
+    return arr[i % 24] * (1 - f) + arr[(i + 1) % 24] * f;
+  }
+  function areaIntensity(a, t) {
+    let v = a.weight * profileAt(PROFILES[a.kind], t);
+    const nightOf = new Date(t - 6 * H).getDay();                 // 00-06h belongs to the previous evening
+    if (a.kind === "nightlife" && (nightOf === 5 || nightOf === 6)) v *= 1.35;   // Fri/Sat nights
+    if (a.kind === "shopping" && t.getDay() === 0) v *= 0.2;                      // shops closed Sunday
+    return v;
+  }
+  const eventSize = (ev) => clamp(ev.attendance / 15000, 0.18, 1.2);
+  // Taxi demand around an event: some at arrival, a big peak when it lets out
+  function eventIntensity(ev, t) {
+    const h = (t - ev.start) / H, dur = (ev.end - ev.start) / H;
+    const arrive = 0.5 * gauss(h, -0.75, 0.6);
+    const leave = gauss(h, dur + 0.25, 0.5);
+    const during = h >= 0 && h <= dur ? 0.12 : 0;
+    return eventSize(ev) * Math.max(arrive, leave, during);
+  }
+  function eventPhase(ev, t) {
+    const h = (t - ev.start) / H, dur = (ev.end - ev.start) / H;
+    if (h < 0) return `starts ${fmtTime(ev.start)}`;
+    if (h <= dur) return `ends ${fmtTime(ev.end)}`;
+    return `let out ${fmtTime(ev.end)}`;
+  }
+  function demandLevel(i) { return i >= 0.75 ? "high" : i >= 0.4 ? "busy" : "mod"; }
+  const LEVEL_TEXT = { high: "High demand", busy: "Busy", mod: "Moderate" };
+
+  function computeHotspots(t) {
+    const spots = AREAS.map((a) => ({
+      id: a.id, name: a.name, latlng: L.latLng(a.lat, a.lng), spread: a.spread,
+      intensity: areaIntensity(a, t), reason: AREA_REASON[a.kind],
+    }));
+    for (const ev of EVENTS) {
+      const i = eventIntensity(ev, t);
+      if (i < 0.03) continue;
+      spots.push({
+        id: "ev" + ev.id, name: ev.v.name, latlng: L.latLng(ev.v.lat, ev.v.lng), event: ev,
+        spread: 150 + 230 * Math.sqrt(eventSize(ev)), intensity: i, reason: `${ev.name} · ${eventPhase(ev, t)}`,
+      });
+    }
+    return spots;
+  }
+
+  // Merge hotspots that are close together (e.g. Eilandje + an event at MAS) into one route target
+  function clusterSpots(spots) {
+    const clusters = [];
+    for (const s of [...spots].sort((a, b) => b.intensity - a.intensity)) {
+      const c = clusters.find((c) => c.latlng.distanceTo(s.latlng) < 450);
+      if (c) c.intensity += s.intensity * 0.6;
+      else clusters.push({ ...s });
+    }
+    return clusters;
+  }
+
+  /* =====================================================================
+     MAP
+     ===================================================================== */
+  const map = L.map("map", { zoomControl: false, attributionControl: true }).setView([51.2155, 4.4205], 13);
+  // Basemap: Esri Dark Gray (no API key). If it can't be loaded, fall back to
+  // OpenStreetMap (same tiles as main.html) darkened with a CSS filter.
+  const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
+  map.createPane("streetNames").style.zIndex = 420;          // street names above the heatmap
+  map.getPane("streetNames").style.pointerEvents = "none";
+  const baseTiles = L.tileLayer(ESRI + "World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19, maxNativeZoom: 16, attribution: "Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors",
+  }).addTo(map);
+  const nameTiles = L.tileLayer(ESRI + "World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19, maxNativeZoom: 16, pane: "streetNames", opacity: 0.8,
+  }).addTo(map);
+  let tilesOk = false, tileErrors = 0;
+  baseTiles.on("tileload", () => (tilesOk = true));
+  baseTiles.on("tileerror", () => { if (!tilesOk && ++tileErrors === 4) useOsmTiles(); });
+  function useOsmTiles() {
+    map.removeLayer(baseTiles); map.removeLayer(nameTiles);
+    document.body.classList.add("osm-dark");
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19, attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+  }
+  L.control.zoom({ position: "bottomleft" }).addTo(map);
+
+  map.createPane("routePane").style.zIndex = 450;   // above the heatmap canvas
+  map.createPane("labelPane").style.zIndex = 440;
+  map.createPane("stopPane").style.zIndex = 650;      // numbered stops above event pins
+  map.getPane("labelPane").style.pointerEvents = "none";
+
+  // ---------- Heatmap ----------
+  const heat = L.heatLayer([], {
+    radius: 36, blur: 28, maxZoom: 14, max: 1, minOpacity: 0.04,
+    gradient: { 0.1: "#4a3a00", 0.3: "#ffd400", 0.5: "#ffa800", 0.7: "#ff6a00", 0.9: "#ff2a2a" },
+  }).addTo(map);
+  // Zoomed in, the scattered points overlap less: lower the ceiling so hotspots keep their colour
+  function scaleHeat() {
+    const z = map.getZoom();
+    heat.setOptions({ max: clamp(Math.pow(0.6, z - 13), 0.2, 1.6), radius: z >= 15 ? 46 : 36, blur: z >= 15 ? 34 : 28 });
+  }
+  map.on("zoomend", scaleHeat);
+  scaleHeat();
+  const offsetCache = {};
+  function heatPoints(spots) {
+    const pts = [];
+    for (const s of spots) {
+      if (!offsetCache[s.id]) {
+        const rnd = seeded(s.id), offs = [];
+        for (let k = 0; k < 36; k++) {           // gaussian scatter around the hotspot centre
+          const r = Math.sqrt(-2 * Math.log(rnd() || 1e-9)), th = 2 * Math.PI * rnd();
+          offs.push([r * Math.cos(th), r * Math.sin(th)]);
+        }
+        offsetCache[s.id] = offs;
+      }
+      const mLat = 1 / 111320, mLng = 1 / (111320 * Math.cos(s.latlng.lat * Math.PI / 180));
+      const w = clamp(s.intensity, 0, 1.3) * 0.2;
+      for (const [dx, dy] of offsetCache[s.id]) {
+        pts.push([s.latlng.lat + dy * s.spread * 0.5 * mLat, s.latlng.lng + dx * s.spread * 0.5 * mLng, w]);
+      }
+    }
+    return pts;
+  }
+
+  // ---------- Area labels + surge badge ----------
+  const labels = L.layerGroup().addTo(map);
+  for (const a of AREAS) {
+    L.marker([a.lat, a.lng], {
+      pane: "labelPane", interactive: false,
+      icon: L.divIcon({ className: "", html: `<span class="area-label">${esc(a.name.toUpperCase())}</span>`, iconSize: [0, 0] }),
+    }).addTo(labels);
+  }
+  const surgeMarker = L.marker([0, 0], { pane: "labelPane", interactive: false });
+
+  // ---------- Event markers ----------
+  const ICONS = {
+    concert:   '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    sports:    '<circle cx="12" cy="12" r="9"/><path d="m12 7 4 3-1.5 5h-5L8 10Z"/>',
+    culture:   '<path d="M3 9a3 3 0 0 0 0 6v4h18v-4a3 3 0 0 0 0-6V5H3Z"/><path d="M13 5v2M13 17v2M13 11v2"/>',
+    nightlife: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>',
+    fair:      '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/>',
+  };
+  const svgIcon = (cat, size = 16) =>
+    `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[cat]}</svg>`;
+
+  const eventLayer = L.layerGroup().addTo(map);
+  const eventMarkers = {};
+
+  function eventPopup(ev) {
+    const lvl = demandLevel(eventSize(ev));
+    const peak = new Date(ev.end.getTime() + 15 * 60e3);
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div class="pop-title">${esc(ev.name)}</div>
+      <div class="pop-sub">${esc(ev.v.name)} · ${relDay(ev.start)} ${fmtTime(ev.start)}–${fmtTime(ev.end)}</div>
+      <div class="pop-row"><span class="pop-sub">Expected visitors</span><b>~${(ev.attendance / 1000).toFixed(1)}k</b></div>
+      <div class="pop-row"><span class="pop-sub">Peak pickups</span><b>${fmtTime(peak)}</b></div>
+      <div class="pop-row"><span class="pop-sub">Demand</span><span class="badge ${lvl}">${LEVEL_TEXT[lvl]}</span></div>
+      <button class="pop-btn" type="button">Show forecast at ${fmtTime(peak)}</button>`;
+    div.querySelector("button").addEventListener("click", () => { focusEvent(ev, false); map.closePopup(); });
+    return div;
+  }
+
+  function renderEventMarkers() {
+    eventLayer.clearLayers();
+    for (const k in eventMarkers) delete eventMarkers[k];
+    // group events of the selected day by venue
+    const byVenue = {};
+    for (const ev of eventsOfDay(state.day)) (byVenue[ev.venue] ||= []).push(ev);
+    for (const [venue, evs] of Object.entries(byVenue)) {
+      const ev = evs.sort((a, b) => b.attendance - a.attendance)[0];
+      const hot = demandLevel(eventSize(ev)) === "high";
+      const m = L.marker([ev.v.lat, ev.v.lng], {
+        icon: L.divIcon({ className: "", html: `<div class="ev-pin ${hot ? "hot" : ""}">${svgIcon(ev.cat)}</div>`, iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -16] }),
+        title: ev.name,
+      }).addTo(eventLayer);
+      m.bindPopup(() => eventPopup(ev), { autoPanPaddingTopLeft: [20, 70], autoPanPaddingBottomRight: [20, 20] });
+      evs.forEach((e) => (eventMarkers[e.id] = m));
+    }
+  }
+
+  // ---------- Driver ----------
+  const driverIcon = L.divIcon({
+    className: "",
+    html: `<div class="driver"><span class="pulse"></span><div class="dot">
+             <svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 2 20 21 12 16.5 4 21Z" fill="#000"/></svg>
+           </div></div>`,
+    iconSize: [44, 44], iconAnchor: [22, 22],
+  });
+  const car = L.marker(DRIVER_START, { icon: driverIcon, zIndexOffset: 1000, interactive: false }).addTo(map);
+  function setHeading(deg) {
+    const el = car.getElement();
+    if (el) el.querySelector(".dot").style.transform = `rotate(${deg}deg)`;
+  }
+
+  // ---------- Route layers ----------
+  const routeGroup = L.layerGroup().addTo(map);
+  const routeGlow = L.polyline([], { pane: "routePane", color: "#ffd400", weight: 16, opacity: 0.16, interactive: false }).addTo(routeGroup);
+  const routeLine = L.polyline([], { pane: "routePane", color: "#ffd400", weight: 5, opacity: 0.95, lineJoin: "round", interactive: false }).addTo(routeGroup);
+  const stopLayer = L.layerGroup().addTo(routeGroup);
+
+  /* =====================================================================
+     STATE
+     ===================================================================== */
+  // The forecast slider covers one "taxi night": 06:00 of the selected day to 05:30 the next morning
+  const state = {
+    day: TODAY,          // selected calendar day
+    slot: 0,             // 0..47 → 06:00 + slot * 30 min
+    live: true,          // follow the real clock
+    stripStart: TODAY,   // first day shown in the week strip
+    activeEvent: null,
+    show: { heat: true, events: true, route: true },
+  };
+  const forecastTime = () => new Date(state.day.getTime() + (6 + state.slot * 0.5) * H);
+  function setNow() {
+    const now = new Date();
+    let day = startOfDay(now), h = now.getHours() + now.getMinutes() / 60;
+    if (h < 6) { day = addDays(day, -1); h += 24; }
+    state.day = day;
+    state.slot = clamp(Math.round((h - 6) * 2), 0, 47);
+    state.live = true;
+    ensureStripShowsDay();
+  }
+  function setForecast(time) {
+    let day = startOfDay(time), h = time.getHours() + time.getMinutes() / 60;
+    if (h < 6) { day = addDays(day, -1); h += 24; }
+    state.day = day;
+    state.slot = clamp(Math.round((h - 6) * 2), 0, 47);
+    state.live = false;
+    ensureStripShowsDay();
+  }
+  function ensureStripShowsDay() {
+    const diff = Math.round((state.day - state.stripStart) / (24 * H));
+    if (diff < 0 || diff > 6) state.stripStart = addDays(state.stripStart, Math.floor(diff / 7) * 7);
+  }
+  function eventsOfDay(day) {
+    return EVENTS.filter((e) => sameDay(e.start, day)).sort((a, b) => a.start - b.start);
+  }
+
+  /* =====================================================================
+     RENDER: forecast + heatmap
+     ===================================================================== */
+  let hotspots = [];
+  function refreshDemand() {
+    const t = forecastTime();
+    $("hour").value = state.slot;
+    $("forecastLabel").innerHTML = `${fmtTime(t)} <span>${relDay(t)} · ${fmtShortDate(t)}</span>`;
+    $("fcTabTime").textContent = fmtTime(t);
+    $("nowBtn").classList.toggle("active", state.live);
+
+    hotspots = computeHotspots(t);
+    heat.setLatLngs(state.show.heat ? heatPoints(hotspots) : []);
+
+    // surge badge on the busiest hotspot
+    const top = clusterSpots(hotspots)[0];
+    if (top && top.intensity >= 0.75 && state.show.heat) {
+      const mult = (1 + Math.min(top.intensity, 1.6) * 0.9).toFixed(1);
+      surgeMarker.setLatLng(top.latlng).setIcon(L.divIcon({
+        className: "", html: `<span class="surge">${mult}× SURGE</span>`, iconSize: [0, 0], iconAnchor: [0, 26],
+      })).addTo(map);
+    } else surgeMarker.remove();
+
+    scheduleRoute();
+  }
+
+  /* =====================================================================
+     RENDER: calendar
+     ===================================================================== */
+  function renderCalendar() {
+    $("calDate").textContent = fmtLongDate(state.day);
+    const week = $("week");
+    week.innerHTML = "";
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(state.stripStart, i);
+      const n = eventsOfDay(d).length;
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "day" + (sameDay(d, state.day) ? " sel" : "") + (sameDay(d, new Date()) ? " today" : "");
+      b.innerHTML = `<small>${DAY_SHORT[d.getDay()]}</small><b>${d.getDate()}</b><span class="dots">${"<i></i>".repeat(Math.min(n, 4))}</span>`;
+      b.setAttribute("aria-label", `${fmtLongDate(d)}, ${n} events`);
+      b.addEventListener("click", () => selectDay(d));
+      week.append(b);
+    }
+
+    const list = $("events");
+    list.innerHTML = "";
+    const evs = eventsOfDay(state.day);
+    if (!evs.length) list.innerHTML = `<div class="empty">No major events on this day.</div>`;
+    for (const ev of evs) {
+      const lvl = demandLevel(eventSize(ev));
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "event" + (state.activeEvent === ev.id ? " active" : "");
+      b.innerHTML = `
+        <div class="event-time"><b>${fmtTime(ev.start)}<span>–</span>${fmtTime(ev.end)}</b></div>
+        <div><div class="event-name">${esc(ev.name)}</div>
+             <div class="event-venue">${esc(ev.v.name)}</div></div>
+        <span class="badge ${lvl}">${LEVEL_TEXT[lvl]}</span>`;
+      b.addEventListener("click", () => focusEvent(ev, true));
+      list.append(b);
+    }
+    renderEventMarkers();
+  }
+
+  function selectDay(d) {
+    const keepSlot = state.slot;
+    state.day = startOfDay(d);
+    state.activeEvent = null;
+    if (sameDay(d, new Date()) && state.live) setNow();
+    else { state.live = false; state.slot = keepSlot; }
+    ensureStripShowsDay();
+    renderCalendar();
+    refreshDemand();
+  }
+
+  // Jump the forecast to when the event lets out and show it on the map
+  function focusEvent(ev, openPopup) {
+    state.activeEvent = ev.id;
+    setForecast(new Date(ev.end.getTime() + 15 * 60e3));
+    if (!sameDay(state.day, ev.start)) state.day = startOfDay(ev.start);  // keep the event's day selected
+    renderCalendar();
+    refreshDemand();
+    if (!tripActive || !$("follow").checked) map.flyTo([ev.v.lat, ev.v.lng], 15, { duration: 0.8 });
+    if (openPopup && state.show.events) setTimeout(() => eventMarkers[ev.id]?.openPopup(), 850);
+  }
+
+  /* =====================================================================
+     RECOMMENDED ROUTE
+     Picks the best hotspots (demand vs. distance), orders them as a
+     nearest-neighbour tour from the driver and lets OSRM route it over
+     real streets.
+     ===================================================================== */
+  const router = L.Routing.osrmv1({ serviceUrl: OSRM_URL, profile: "driving" });
+
+  let path = [], cum = [], instructions = [];
+  let stops = [];           // [{...cluster, at: metres along path, done}]
+  let travelled = 0, seg = 0;
+  let tripActive = false, driving = false;
+  let rafId = 0, lastFrame = 0, lastLineUpdate = 0;
+  let routeReq = 0, routeTimer = 0, routeKey = "";
+
+  function recommendStops(from) {
+    const clusters = clusterSpots(hotspots).filter((c) => from.distanceTo(c.latlng) > 350);
+    clusters.forEach((c) => (c.score = c.intensity / (1 + from.distanceTo(c.latlng) / 4000)));
+    let picked = clusters.filter((c) => c.intensity >= 0.25).sort((a, b) => b.score - a.score).slice(0, 3);
+    if (!picked.length) picked = clusters.sort((a, b) => b.intensity - a.intensity).slice(0, 2); // quiet hours
+    const ordered = [];
+    let cur = from;
+    while (picked.length) {
+      picked.sort((a, b) => cur.distanceTo(a.latlng) - cur.distanceTo(b.latlng));
+      const next = picked.shift();
+      ordered.push(next);
+      cur = next.latlng;
+    }
+    return ordered;
+  }
+
+  function scheduleRoute(force = false) {
+    clearTimeout(routeTimer);
+    routeTimer = setTimeout(() => updateRoute(force), 350);
+  }
+
+  function updateRoute(force) {
+    const from = car.getLatLng();
+    const targets = recommendStops(from);
+    const key = targets.map((s) => s.id).join("|") + (tripActive ? "" : "@" + from.lat.toFixed(4) + from.lng.toFixed(4));
+
+    $("routeBasis").textContent = `Based on forecast for ${relDay(forecastTime())} ${fmtTime(forecastTime())}`;
+    if (!force && key === routeKey) {          // same stops: only refresh the reasons in the list
+      targets.forEach((t) => { const s = stops.find((x) => x.id === t.id); if (s) Object.assign(s, { intensity: t.intensity, reason: t.reason }); });
+      renderStops();
+      return;
+    }
+    routeKey = key;
+    if (!targets.length) return;
+
+    const id = ++routeReq;
+    $("info").textContent = "Calculating route…";
+    const wps = [from, ...targets.map((t) => t.latlng)].map((ll) => L.Routing.waypoint(ll));
+    router.route(wps, (err, routes) => {
+      if (id !== routeReq) return;                                  // a newer request is underway
+      if (err || !routes?.length) {
+        applyRoute([from, ...targets.map((t) => t.latlng)], [], targets, null);
+        $("info").textContent = "Routing service unreachable — showing a straight-line preview.";
+        return;
+      }
+      const r = routes[0];
+      applyRoute(r.coordinates, r.instructions || [], targets, r.waypointIndices);
+      $("info").textContent = tripActive ? "Route updated to the new forecast." : "Route ready. Press start when you are.";
+    }, null, {});
+  }
+
+  function applyRoute(coords, instr, targets, wpIdx) {
+    path = coords.map((c) => L.latLng(c));
+    cum = [0];
+    for (let i = 1; i < path.length; i++) cum.push(cum[i - 1] + path[i - 1].distanceTo(path[i]));
+    instructions = instr;
+    travelled = 0; seg = 0;
+
+    // distance along the path of every stop
+    let from = 0;
+    stops = targets.map((t, i) => {
+      let idx;
+      if (wpIdx && wpIdx[i + 1] != null) idx = wpIdx[i + 1];
+      else { idx = nearestIndex(t.latlng, from); }
+      from = idx;
+      return { ...t, at: cum[Math.min(idx, cum.length - 1)], done: false };
+    });
+
+    drawRoute();
+    renderStops();
+    const km = cum[cum.length - 1] / 1000;
+    $("sumDist").textContent = `${km.toFixed(1)} km`;
+    $("sumTime").textContent = `${Math.max(1, Math.round((km / 30) * 60))} min`;   // ~30 km/h average in the city
+    $("sumStops").textContent = stops.length;
+    $("startBtn").disabled = path.length < 2;
+    if (!tripActive && state.show.route && path.length > 1 && !hasFitted) {
+      hasFitted = true;
+      const busy = clusterSpots(hotspots).filter((c) => c.intensity >= 0.3).map((c) => c.latlng);
+      map.fitBounds(L.latLngBounds([...path, ...busy]), { paddingTopLeft: [40, 140], paddingBottomRight: [40, 90], maxZoom: 15 });
+    }
+  }
+  let hasFitted = false;
+
+  function nearestIndex(latlng, from = 0) {
+    let best = from, bestD = Infinity;
+    for (let i = from; i < path.length; i++) {
+      const d = latlng.distanceTo(path[i]);
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    return best;
+  }
+
+  function drawRoute() {
+    const remaining = tripActive ? [car.getLatLng(), ...path.slice(seg + 1)] : path;
+    routeGlow.setLatLngs(remaining);
+    routeLine.setLatLngs(remaining);
+    stopLayer.clearLayers();
+    stops.forEach((s, i) => {
+      L.marker(s.latlng, {
+        pane: "stopPane", zIndexOffset: 500,
+        icon: L.divIcon({ className: "", html: `<div class="stop-pin ${s.done ? "done" : ""}">${i + 1}</div>`, iconSize: [26, 26], iconAnchor: [13, 13] }),
+        title: s.name,
+      }).bindTooltip(`${s.name} — ${s.reason}`, { direction: "top", offset: [0, -12] }).addTo(stopLayer);
+    });
+  }
+
+  function renderStops() {
+    const ul = $("stops");
+    ul.innerHTML = `<li class="start"><span class="stop-num">
+        <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2 20 21 12 16.5 4 21Z" fill="currentColor"/></svg></span>
+        <div><div class="stop-name">Your position</div><div class="stop-why">${tripActive ? "Driving" : "Ready"}</div></div><span></span></li>`;
+    stops.forEach((s, i) => {
+      const lvl = demandLevel(s.intensity);
+      const li = document.createElement("li");
+      if (s.done) li.className = "done";
+      li.innerHTML = `<span class="stop-num">${i + 1}</span>
+        <div><div class="stop-name">${esc(s.name)}</div><div class="stop-why">${esc(s.reason)}</div></div>
+        <span class="badge ${lvl}">${LEVEL_TEXT[lvl]}</span>`;
+      ul.append(li);
+    });
+  }
+
+  /* =====================================================================
+     DRIVING SIMULATION (from main.html)
+     ===================================================================== */
+  function bearing(a, b) {
+    const r = Math.PI / 180, dLng = (b.lng - a.lng) * r;
+    const y = Math.sin(dLng) * Math.cos(b.lat * r);
+    const x = Math.cos(a.lat * r) * Math.sin(b.lat * r) - Math.sin(a.lat * r) * Math.cos(b.lat * r) * Math.cos(dLng);
+    return (Math.atan2(y, x) / r + 360) % 360;
+  }
+  function posAt(d) {
+    while (seg < cum.length - 2 && cum[seg + 1] < d) seg++;
+    const a = path[seg], b = path[seg + 1];
+    const len = cum[seg + 1] - cum[seg] || 1;
+    const f = clamp((d - cum[seg]) / len, 0, 1);
+    return { latlng: L.latLng(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f), heading: bearing(a, b) };
+  }
+
+  const ICON_PAUSE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+  const ICON_PLAY = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8Z"/></svg>';
+  function updateButtons() {
+    $("startLabel").textContent = driving ? "Pause" : tripActive ? "Resume route" : "Start recommended route";
+    $("endBtn").classList.toggle("show", tripActive);
+    $("navBanner").classList.toggle("show", tripActive);
+    $("driveCtl").classList.toggle("show", tripActive);
+    $("mapWrap").classList.toggle("driving", tripActive);
+    $("mapPauseBtn").innerHTML = driving ? `${ICON_PAUSE}PAUSE` : `${ICON_PLAY}RESUME ROUTE`;
+  }
+
+  function stopTrip() {
+    driving = false; tripActive = false;
+    cancelAnimationFrame(rafId);
+    updateButtons();
+  }
+
+  function arrive() {
+    const end = path[path.length - 1];
+    car.setLatLng(end);
+    stops.forEach((s) => (s.done = true));
+    stopTrip();
+    toast(`Route completed at ${stops[stops.length - 1]?.name || "destination"}. New recommendation incoming.`);
+    routeKey = "";
+    scheduleRoute(true);
+  }
+
+  const TURN = {
+    left: "M15 18 9 12l6-6", right: "m9 18 6-6-6-6", straight: "M12 19V5M5 12l7-7 7 7",
+  };
+  function navArrow(mod) {
+    const d = /left/i.test(mod || "") ? TURN.left : /right/i.test(mod || "") ? TURN.right : TURN.straight;
+    return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+  }
+  function updateNav() {
+    const next = instructions.find((i) => i.index > seg);
+    const left = cum[cum.length - 1] - travelled;
+    if (!next) {
+      $("navArrow").innerHTML = navArrow();
+      $("navDist").textContent = left < 1000 ? `${Math.round(left)} m` : `${(left / 1000).toFixed(1)} km`;
+      $("navText").textContent = "to destination";
+      return;
+    }
+    const d = cum[Math.min(next.index, cum.length - 1)] - travelled;
+    $("navArrow").innerHTML = navArrow(next.modifier);
+    $("navDist").textContent = d < 1000 ? `${Math.max(0, Math.round(d / 10) * 10)} m` : `${(d / 1000).toFixed(1)} km`;
+    $("navText").textContent = next.text || next.road || next.type;
+  }
+
+  function tick(t) {
+    const dt = Math.min((t - lastFrame) / 1000, 0.25);
+    lastFrame = t;
+    const mps = Number($("speed").value) / 3.6;
+    const total = cum[cum.length - 1];
+    travelled += mps * dt;
+    if (travelled >= total) return arrive();
+
+    const { latlng, heading } = posAt(travelled);
+    car.setLatLng(latlng);
+    setHeading(heading);
+    if ($("follow").checked) map.panTo(latlng, { animate: false });
+
+    const next = stops.find((s) => !s.done);
+    if (next && travelled >= next.at - 15 && next !== stops[stops.length - 1]) {
+      next.done = true;
+      toast(`Hotspot reached: ${next.name} — ${LEVEL_TEXT[demandLevel(next.intensity)].toLowerCase()}`);
+      drawRoute(); renderStops();
+    }
+    if (t - lastLineUpdate > 250) {
+      lastLineUpdate = t;
+      const rem = [latlng, ...path.slice(seg + 1)];
+      routeGlow.setLatLngs(rem); routeLine.setLatLngs(rem);
+      updateNav();
+      const left = total - travelled;
+      $("info").textContent = `${(left / 1000).toFixed(2)} km to go · about ${Math.ceil(left / mps / 60)} min at this speed`;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function startOrPause() {
+    if (driving) { driving = false; cancelAnimationFrame(rafId); }
+    else {
+      if (!tripActive) {
+        tripActive = true; renderStops();
+        if (window.innerWidth <= 1000) mapWrap.scrollIntoView({ behavior: "smooth", block: "end" });  // phone: bring the map into view
+      }
+      driving = true;
+      lastFrame = performance.now();
+      if ($("follow").checked) map.setView(car.getLatLng(), Math.max(map.getZoom(), 15));
+      rafId = requestAnimationFrame(tick);
+    }
+    updateButtons();
+    updateNav();
+  }
+  function endTrip() {
+    stopTrip();
+    routeKey = "";
+    scheduleRoute(true);
+    toast("Trip stopped. Route recalculated from your position.");
+  }
+  $("startBtn").addEventListener("click", startOrPause);
+  $("mapPauseBtn").addEventListener("click", startOrPause);
+  $("endBtn").addEventListener("click", endTrip);
+  $("mapStopBtn").addEventListener("click", endTrip);
+
+  /* =====================================================================
+     UI WIRING
+     ===================================================================== */
+  let toastTimer = 0;
+  function toast(msg) {
+    const el = $("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove("show"), 3200);
+  }
+
+  $("hour").addEventListener("input", (e) => {
+    state.slot = Number(e.target.value);
+    state.live = false;
+    refreshDemand();
+  });
+  $("nowBtn").addEventListener("click", () => { setNow(); renderCalendar(); refreshDemand(); });
+  $("prevDay").addEventListener("click", () => selectDay(addDays(state.day, -1)));
+  $("nextDay").addEventListener("click", () => selectDay(addDays(state.day, 1)));
+  $("locate").addEventListener("click", () => map.flyTo(car.getLatLng(), 15, { duration: 0.6 }));
+
+  // ---------- Layer filter menu ----------
+  const filterBtn = $("filterBtn"), filterMenu = $("filterMenu");
+  function setFilterMenu(open) {
+    filterMenu.classList.toggle("open", open);
+    filterBtn.setAttribute("aria-expanded", open);
+  }
+  filterBtn.addEventListener("click", (e) => { e.stopPropagation(); setFilterMenu(!filterMenu.classList.contains("open")); });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".filter-wrap")) setFilterMenu(false); });
+
+  document.querySelectorAll(".switch-row").forEach((row) => {
+    row.addEventListener("click", () => {
+      const k = row.dataset.layer;
+      state.show[k] = !state.show[k];
+      row.setAttribute("aria-checked", state.show[k]);
+      filterBtn.classList.toggle("filtered", Object.values(state.show).some((v) => !v));
+      if (k === "events") state.show.events ? eventLayer.addTo(map) : eventLayer.remove();
+      if (k === "route") state.show.route ? routeGroup.addTo(map) : routeGroup.remove();
+      if (k === "heat") { state.show.heat ? labels.addTo(map) : labels.remove(); refreshDemand(); }
+    });
+  });
+
+  // ---------- Search: icon only, slides open on press ----------
+  const searchBox = $("searchBox"), searchInput = $("search");
+  function setSearch(open) {
+    searchBox.classList.toggle("open", open);
+    $("searchBtn").setAttribute("aria-expanded", open);
+    searchInput.tabIndex = open ? 0 : -1;
+    if (open) setTimeout(() => searchInput.focus(), 150);
+    else { searchInput.value = ""; searchInput.blur(); }
+  }
+  $("searchBtn").addEventListener("click", () => {
+    if (!searchBox.classList.contains("open")) setSearch(true);
+    else if (searchInput.value.trim()) runSearch(searchInput.value);
+    else setSearch(false);
+  });
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setSearch(false);
+  });
+  searchInput.addEventListener("blur", () => setTimeout(() => {
+    if (!searchInput.value.trim() && document.activeElement !== searchInput) setSearch(false);
+  }, 200));
+
+  // ---------- Fullscreen map ----------
+  const mapWrap = $("mapWrap");
+  const FULL_ON = "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5", FULL_OFF = "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5";
+  function setFull(on) {
+    mapWrap.classList.toggle("full", on);
+    $("fullIcon").innerHTML = `<path d="${on ? FULL_OFF : FULL_ON}"/>`;
+    $("fullBtn").title = on ? "Exit fullscreen" : "Fullscreen map";
+    setTimeout(() => map.invalidateSize(), 60);
+  }
+  $("fullBtn").addEventListener("click", () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (mapWrap.classList.contains("full")) setFull(false);       // CSS-only mode (e.g. iPhone)
+    else { setFull(true); mapWrap.requestFullscreen?.().catch(() => {}); }
+  });
+  document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement) setFull(false); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mapWrap.classList.contains("full") && !document.fullscreenElement) setFull(false);
+  });
+
+  // ---------- Forecast card: slide away ----------
+  function setForecastOpen(open) {
+    $("forecast").classList.toggle("collapsed", !open);
+    $("fcToggle").setAttribute("aria-expanded", open);
+    $("fcToggle").title = open ? "Hide forecast" : "Show forecast";
+    $("fcBody").inert = !open;
+  }
+  $("fcToggle").addEventListener("click", () => setForecastOpen($("forecast").classList.contains("collapsed")));
+  setForecastOpen(window.innerWidth > 700);       // starts tucked away on phones
+
+  // Slide the forecast away while an event popup is open, then bring it back
+  let fcWasOpen = false;
+  map.on("popupopen", () => {
+    fcWasOpen = !$("forecast").classList.contains("collapsed");
+    if (fcWasOpen) setForecastOpen(false);
+  });
+  map.on("popupclose", () => { if (fcWasOpen) setForecastOpen(true); fcWasOpen = false; });
+
+  // Click the map = simulate a new GPS position for the driver
+  map.on("click", (e) => {
+    if (tripActive) { toast("End the trip first to move the driver."); return; }
+    car.setLatLng(e.latlng);
+    setHeading(0);
+    toast("Driver moved — recalculating recommended route…");
+    scheduleRoute(true);
+  });
+
+  // Search venues and areas
+  const PLACES = [
+    ...AREAS.map((a) => ({ name: a.name, lat: a.lat, lng: a.lng })),
+    ...Object.entries(VENUES).map(([key, v]) => ({ name: v.name, lat: v.lat, lng: v.lng, venue: key })),
+  ];
+  $("places").innerHTML = PLACES.map((p) => `<option value="${esc(p.name)}">`).join("");
+  searchInput.addEventListener("change", (e) => runSearch(e.target.value));
+  function runSearch(value) {
+    const q = value.trim().toLowerCase();
+    if (!q) return;
+    const p = PLACES.find((p) => p.name.toLowerCase() === q) || PLACES.find((p) => p.name.toLowerCase().includes(q));
+    if (!p) { toast("No match. Try a venue such as Sportpaleis."); return; }
+    map.flyTo([p.lat, p.lng], 15, { duration: 0.8 });
+    if (p.venue) {
+      const ev = eventsOfDay(state.day).find((x) => x.venue === p.venue);
+      if (ev) setTimeout(() => eventMarkers[ev.id]?.openPopup(), 850);
+      else toast(`${p.name}: no events on ${fmtShortDate(state.day)}.`);
+    }
+    setSearch(false);
+  }
+
+  // Header clock + greeting; follow real time while "Now" is active
+  function tickClock() {
+    const now = new Date();
+    $("clock").textContent = `${fmtShortDate(now)} · ${fmtTime(now)}`;
+    const h = now.getHours();
+    const part = h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+    $("greeting").textContent = `${part}, Sam`;
+    if (state.live) {
+      const before = state.slot + "|" + state.day;
+      setNow();
+      if (before !== state.slot + "|" + state.day) { renderCalendar(); refreshDemand(); }
+    }
+  }
+
+  /* ---------- Boot ---------- */
+  setNow();
+  tickClock();
+  setInterval(tickClock, 30000);
+  renderCalendar();
+  refreshDemand();
+  renderStops();
+  </script>
+</body>
+</html>
