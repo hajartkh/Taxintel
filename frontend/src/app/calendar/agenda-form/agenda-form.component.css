@@ -1,0 +1,36 @@
+:host { display: block; }
+
+form { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1px solid var(--tx-yellow); border-radius: var(--tx-radius); background: var(--tx-card); }
+h3 { margin: 0 0 2px; font-size: 14px; font-weight: 800; }
+
+.row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field span { font-size: 11px; font-weight: 700; color: var(--tx-muted); }
+.field em { font-style: normal; color: var(--tx-faint); font-weight: 600; }
+
+input, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--tx-line);
+  border-radius: 8px;
+  background: var(--tx-bg);
+  color: var(--tx-text);
+  font: inherit;
+  font-size: 14px;
+  color-scheme: dark;
+}
+input:focus, textarea:focus { outline: none; border-color: var(--tx-yellow); }
+input.ng-invalid.ng-touched { border-color: var(--tx-red); }
+textarea { resize: vertical; }
+
+.error { margin: -4px 0 0; color: var(--tx-red); font-size: 12px; font-weight: 600; }
+
+.actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.actions button { padding: 9px 16px; border-radius: 9px; font-size: 13px; font-weight: 800; }
+.secondary { border: 1px solid var(--tx-line); background: var(--tx-card-2); }
+.primary { border: 0; background: var(--tx-yellow); color: #000; }
+
+@media (max-width: 420px) {
+  .row { grid-template-columns: 1fr 1fr; }
+  .row .field:first-child { grid-column: 1 / -1; }
+}

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { HomeStore } from '../../state/home.store';
 import { MapLayersMenuComponent } from '../map-layers-menu/map-layers-menu.component';
 
@@ -6,7 +7,7 @@ import { MapLayersMenuComponent } from '../map-layers-menu/map-layers-menu.compo
 @Component({
   selector: 'app-map-toolbar',
   standalone: true,
-  imports: [MapLayersMenuComponent],
+  imports: [MapLayersMenuComponent, TranslatePipe],
   templateUrl: './map-toolbar.component.html',
   styleUrl: './map-toolbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

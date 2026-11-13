@@ -1,9 +1,9 @@
 <div class="main">
-  <section class="driver-bar" aria-label="Driver summary">
+  <section class="driver-bar" [attr.aria-label]="'home.summary' | t">
     <h1>{{ greeting() }}</h1>
     <dl class="stats">
-      <div class="stat"><dt>Today</dt><dd>€{{ driver().earningsToday }}</dd></div>
-      <div class="stat"><dt>Trips</dt><dd>{{ driver().tripsToday }}</dd></div>
+      <div class="stat"><dt>{{ 'home.stats.today' | t }}</dt><dd>€{{ driver().earningsToday }}</dd></div>
+      <div class="stat"><dt>{{ 'home.stats.trips' | t }}</dt><dd>{{ driver().tripsToday }}</dd></div>
     </dl>
   </section>
 
@@ -21,10 +21,10 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="m3 11 19-9-9 19-2-8-8-2Z" />
       </svg>
-      {{ startLabel() }}
+      {{ startLabel() | t }}
     </button>
     @if (trip.active()) {
-      <button class="end" type="button" title="End trip" aria-label="End trip" (click)="trip.stop()">
+      <button class="end" type="button" [title]="'home.endTrip' | t" [attr.aria-label]="'home.endTrip' | t" (click)="trip.stop()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>
       </button>
     }

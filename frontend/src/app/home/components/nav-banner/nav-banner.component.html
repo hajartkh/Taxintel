@@ -11,7 +11,7 @@
     </div>
     <div>
       <div class="distance">{{ nav.distance }}</div>
-      <div class="text">{{ nav.text }}</div>
+      <div class="text">{{ nav.text ?? ("trip.toDestination" | t) }}</div>
     </div>
   </div>
 }

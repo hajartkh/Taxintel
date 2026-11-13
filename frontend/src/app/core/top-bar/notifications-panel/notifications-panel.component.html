@@ -1,0 +1,35 @@
+<div class="head">
+  <div>
+    <h2>{{ 'notif.title' | t }}</h2>
+    @if (notifications.unreadCount()) {
+      <span class="count">{{ 'notif.unread' | t: { count: notifications.unreadCount() } }}</span>
+    }
+  </div>
+  <button class="mark-all" type="button" [disabled]="!notifications.unreadCount()" (click)="notifications.markAllRead()">
+    {{ 'notif.markAll' | t }}
+  </button>
+</div>
+
+<ul>
+  @for (n of items(); track n.id) {
+    <li>
+      <button type="button" class="item" [class.unread]="!n.read" (click)="notifications.markRead(n.id)">
+        <span class="icon {{ n.kind }}" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="icons[n.kind]" />
+          </svg>
+        </span>
+        <span class="text">
+          <span class="title">{{ n.title | t }}</span>
+          <span class="body">{{ n.body | t }}</span>
+          <span class="ago">{{ n.ago }}</span>
+        </span>
+        @if (!n.read) {
+          <span class="dot" aria-hidden="true"></span>
+        }
+      </button>
+    </li>
+  } @empty {
+    <li class="empty">{{ 'notif.empty' | t }}</li>
+  }
+</ul>

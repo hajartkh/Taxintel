@@ -3,22 +3,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { ClockService } from '../../core/clock.service';
 import { clamp } from '../../shared/utils/math';
-import { HOUR_MS, addDays, daysBetween, isSameDay, startOfDay } from '../../shared/utils/time';
-import { CityDataService } from '../data/city-data.service';
+import { HOUR_MS, addDays, daysBetween, isSameDay, startOfDay, startOfWeek } from '../../shared/utils/time';
+import { CityDataService } from '../../core/city-data/city-data.service';
+import { BusyArea, CityEvent, Venue } from '../../core/city-data/city.models';
 import { HOME_CONFIG } from '../home.config';
 import { computeHotspots, eventsOnDay, peakPickupTime } from '../logic/demand-model';
-import { BusyArea, CityEvent, LayerVisibility, MapFocus, MapLayer, MapTheme, Place, Venue } from '../models/home.models';
-
-const THEME_STORAGE_KEY = 'taxintel.mapTheme';
-
-/** The map style the driver picked last time on this device (dark by default). */
-function loadMapTheme(): MapTheme {
-  try {
-    return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark';
-  } catch {
-    return 'dark'; // storage unavailable (private mode, server rendering)
-  }
-}
+import { LayerVisibility, MapFocus, MapLayer, Place } from '../models/home.models';
 
 /** Dates are equal when they are the same moment (signals compare by reference otherwise). */
 const sameTime = (a: Date, b: Date): boolean => a.getTime() === b.getTime();
@@ -56,15 +46,23 @@ export class HomeStore {
   readonly slot = signal(0);
   /** True while the forecast follows the real clock ("Now"). */
   readonly live = signal(true);
-  /** First day shown in the week strip of the calendar. */
-  readonly stripStart = signal(startOfDay(new Date()), { equal: sameTime });
+  /**
+   * Page of the week strip: 0 = today and the six days after it (default);
+   * 1, 2 … = the following weeks, Monday to Sunday.
+   */
+  readonly weekOffset = signal(0);
   readonly activeEventId = signal<number | null>(null);
   readonly layers = signal<LayerVisibility>({ heat: true, events: true, route: true });
-  readonly mapTheme = signal<MapTheme>(loadMapTheme());
   /** Forecast card on the map: starts tucked away on phones. */
   readonly forecastOpen = signal(typeof window === 'undefined' || window.innerWidth > 700);
 
   // ---------- Derived ----------
+  /** First day shown in the week strip. */
+  readonly stripStart = computed(() => {
+    const today = startOfDay(this.clock.now());
+    const offset = this.weekOffset();
+    return offset === 0 ? today : addDays(startOfWeek(today), 7 * offset);
+  }, { equal: sameTime });
   readonly forecastTime = computed(
     () => new Date(this.day().getTime() + (HOME_CONFIG.shiftStartHour + this.slot() * 0.5) * HOUR_MS),
   );
@@ -120,8 +118,12 @@ export class HomeStore {
     this.showDayInStrip(day);
   }
 
-  shiftDay(days: number): void {
-    this.selectDay(addDays(this.day(), days));
+  /** Page the week strip (−1 / +1) and select its first day. Week 0 (starting today) is the earliest. */
+  shiftWeek(direction: number): void {
+    const offset = Math.max(0, this.weekOffset() + direction);
+    if (offset === this.weekOffset()) return;
+    this.weekOffset.set(offset);
+    this.selectDay(this.stripStart());
   }
 
   /** Select an event: jump the forecast to when it lets out and show it on the map. */
@@ -136,21 +138,17 @@ export class HomeStore {
     this.focusRequests.next({ lat: ev.venue.lat, lng: ev.venue.lng, eventId: ev.id, openPopup });
   }
 
-  setMapTheme(theme: MapTheme): void {
-    this.mapTheme.set(theme);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      // not remembered, but the theme still changes
-    }
-  }
-
   toggleLayer(layer: MapLayer): void {
     this.layers.update((l) => ({ ...l, [layer]: !l[layer] }));
   }
 
+  /** Make sure the week strip shows `day` (days before today fall back to week 0). */
   private showDayInStrip(day: Date): void {
-    const diff = daysBetween(this.stripStart(), day);
-    if (diff < 0 || diff > 6) this.stripStart.set(addDays(this.stripStart(), Math.floor(diff / 7) * 7));
+    const position = daysBetween(this.stripStart(), day);
+    if (position >= 0 && position <= 6) return; // already visible
+    const today = startOfDay(this.clock.now());
+    const fromToday = daysBetween(today, day);
+    const offset = fromToday <= 6 ? 0 : Math.round(daysBetween(startOfWeek(today), startOfWeek(day)) / 7);
+    this.weekOffset.set(offset);
   }
 }

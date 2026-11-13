@@ -1,6 +1,6 @@
 <div class="head">
   <div>
-    <h2 class="label">Smart route</h2>
+    <h2 class="label">{{ 'route.title' | t }}</h2>
     <div class="sub">{{ basis() }}</div>
   </div>
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--tx-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -9,9 +9,9 @@
 </div>
 
 <div class="summary">
-  <div><b>{{ summary()?.distance ?? '–' }}</b><span>Distance</span></div>
-  <div><b>{{ summary()?.time ?? '–' }}</b><span>Drive time</span></div>
-  <div><b>{{ summary()?.stops ?? '–' }}</b><span>Hotspots</span></div>
+  <div><b>{{ summary()?.distance ?? '–' }}</b><span>{{ 'route.distance' | t }}</span></div>
+  <div><b>{{ summary()?.time ?? '–' }}</b><span>{{ 'route.driveTime' | t }}</span></div>
+  <div><b>{{ summary()?.stops ?? '–' }}</b><span>{{ 'route.hotspots' | t }}</span></div>
 </div>
 
 <ol class="stops">
@@ -20,8 +20,8 @@
       <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2 20 21 12 16.5 4 21Z" fill="currentColor" /></svg>
     </span>
     <div>
-      <div class="name">Your position</div>
-      <div class="why">{{ trip.active() ? 'Driving' : 'Ready' }}</div>
+      <div class="name">{{ 'route.yourPosition' | t }}</div>
+      <div class="why">{{ (trip.active() ? 'route.driving' : 'route.ready') | t }}</div>
     </div>
   </li>
   @for (item of stops(); track item.stop.id; let i = $index) {
@@ -29,7 +29,7 @@
       <span class="num">{{ i + 1 }}</span>
       <div>
         <div class="name">{{ item.stop.name }}</div>
-        <div class="why">{{ item.stop.reason }}</div>
+        <div class="why">{{ item.stop.reason | t }}</div>
       </div>
       <app-demand-badge [level]="item.level" />
     </li>
@@ -38,13 +38,13 @@
 
 <div class="options">
   <label>
-    Speed
+    {{ 'route.speed' | t }}
     <select (change)="setSpeed($event)">
       @for (speed of speedOptions; track speed) {
-        <option [value]="speed" [selected]="speed === trip.speedKmh()">{{ speed }} km/h{{ speed > 100 ? ' (demo)' : '' }}</option>
+        <option [value]="speed" [selected]="speed === trip.speedKmh()">{{ speed }} km/h @if (speed > 100) { {{ 'route.demo' | t }} }</option>
       }
     </select>
   </label>
-  <label><input type="checkbox" [checked]="trip.follow()" (change)="setFollow($event)" /> Follow driver</label>
+  <label><input type="checkbox" [checked]="trip.follow()" (change)="setFollow($event)" /> {{ 'route.follow' | t }}</label>
 </div>
-<div class="info" aria-live="polite">{{ trip.info() }}</div>
+<div class="info" aria-live="polite">{{ trip.info() | t }}</div>

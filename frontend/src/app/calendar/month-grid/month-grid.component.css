@@ -1,0 +1,33 @@
+:host { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+.grid { flex: 1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-template-rows: auto repeat(6, minmax(88px, 1fr)); gap: 4px; }
+.weekday { padding: 4px 8px; font-size: 11px; font-weight: 800; color: var(--tx-muted); text-transform: uppercase; align-self: end; }
+.cell {
+  min-width: 0; padding: 6px; display: flex; flex-direction: column; gap: 3px; align-items: stretch;
+  border: 1px solid var(--tx-line); border-radius: 10px; background: var(--tx-card); text-align: left; overflow: hidden;
+}
+.cell:hover { border-color: var(--tx-line-strong); }
+.cell.out { opacity: 0.4; }
+.cell.selected { border-color: var(--tx-yellow); box-shadow: 0 0 0 1px var(--tx-yellow) inset; }
+.num { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 13px; font-weight: 800; }
+.today .num { background: var(--tx-yellow); color: #000; }
+
+.chip { padding: 2px 6px; border-radius: 5px; border-left: 3px solid var(--tx-yellow); background: #1f1f1f; font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip.high { border-left-color: var(--tx-red); }
+.chip.own { border-left-color: var(--tx-green); }
+.more { font-size: 11px; color: var(--tx-muted); padding-left: 4px; }
+.dots { display: none; gap: 3px; justify-content: center; }
+.dots i, .legend i { width: 6px; height: 6px; border-radius: 50%; background: var(--tx-yellow); }
+.dots i.high, .legend i.high { background: var(--tx-red); }
+.dots i.own, .legend i.own { background: var(--tx-green); }
+
+.legend { display: flex; gap: 16px; margin-top: 10px; font-size: 12px; color: var(--tx-muted); }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; }
+
+@media (max-width: 1000px) {
+  .grid { grid-template-rows: auto repeat(6, minmax(56px, auto)); }
+  .chip, .more { display: none; }
+  .dots { display: flex; margin-top: auto; }
+  .cell { align-items: center; }
+}

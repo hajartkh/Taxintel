@@ -1,0 +1,44 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <h3>{{ 'form.title' | t }}</h3>
+
+  <label class="field">
+    <span>{{ 'form.name' | t }}</span>
+    <input type="text" formControlName="title" [placeholder]="'form.namePlaceholder' | t" autocomplete="off" maxlength="80" />
+  </label>
+  @if (form.controls.title.touched && form.controls.title.invalid) {
+    <p class="error" role="alert">{{ 'form.required' | t }}</p>
+  }
+
+  <div class="row">
+    <label class="field">
+      <span>{{ 'form.date' | t }}</span>
+      <input type="date" formControlName="date" />
+    </label>
+    <label class="field small">
+      <span>{{ 'form.start' | t }}</span>
+      <input type="time" formControlName="start" />
+    </label>
+    <label class="field small">
+      <span>{{ 'form.end' | t }}</span>
+      <input type="time" formControlName="end" />
+    </label>
+  </div>
+  @if (form.hasError('endBeforeStart')) {
+    <p class="error" role="alert">{{ 'form.endAfterStart' | t }}</p>
+  }
+
+  <label class="field">
+    <span>{{ 'form.location' | t }} <em>({{ 'form.optional' | t }})</em></span>
+    <input type="text" formControlName="location" autocomplete="off" maxlength="80" />
+  </label>
+
+  <label class="field">
+    <span>{{ 'form.note' | t }} <em>({{ 'form.optional' | t }})</em></span>
+    <textarea formControlName="note" rows="2" maxlength="300"></textarea>
+  </label>
+
+  <div class="actions">
+    <button class="secondary" type="button" (click)="cancelled.emit()">{{ 'form.cancel' | t }}</button>
+    <button class="primary" type="submit">{{ 'form.save' | t }}</button>
+  </div>
+</form>

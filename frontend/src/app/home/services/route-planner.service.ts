@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import '../../shared/leaflet/leaflet-plugins'; // adds L.Routing
+import { Language } from '../../core/settings/settings.service';
 import { distanceMeters } from '../../shared/utils/geo';
 import { HOME_CONFIG } from '../home.config';
 import { clusterHotspots } from '../logic/demand-model';
@@ -20,7 +21,17 @@ interface OsrmRoute extends L.Routing.IRoute {
  */
 @Injectable({ providedIn: 'root' })
 export class RoutePlannerService {
-  private readonly router = L.Routing.osrmv1({ serviceUrl: HOME_CONFIG.osrmUrl, profile: 'driving' });
+  /** One router per language: OSRM's turn-by-turn texts come in the app language. */
+  private readonly routers = new Map<Language, L.Routing.IRouter>();
+
+  private router(language: Language): L.Routing.IRouter {
+    let router = this.routers.get(language);
+    if (!router) {
+      router = L.Routing.osrmv1({ serviceUrl: HOME_CONFIG.osrmUrl, profile: 'driving', language } as L.Routing.OSRMOptions);
+      this.routers.set(language, router);
+    }
+    return router;
+  }
 
   /**
    * Best hotspots (demand vs. distance), ordered as a nearest-neighbour tour from `from`.
@@ -53,10 +64,10 @@ export class RoutePlannerService {
   }
 
   /** Street route from `from` past all `targets`. Falls back to straight lines when OSRM is unreachable. */
-  plan(from: L.LatLng, targets: Hotspot[]): Promise<PlannedRoute> {
+  plan(from: L.LatLng, targets: Hotspot[], language: Language = 'en'): Promise<PlannedRoute> {
     const points = [from, ...targets.map((t) => L.latLng(t.lat, t.lng))];
     return new Promise((resolve) => {
-      this.router.route(
+      this.router(language).route(
         points.map((p) => L.Routing.waypoint(p)),
         (error?: L.Routing.IError, routes?: L.Routing.IRoute[]) => {
           const route = routes?.[0] as OsrmRoute | undefined;

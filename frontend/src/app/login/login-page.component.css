@@ -1,0 +1,22 @@
+:host { flex: 1; display: grid; place-items: center; padding: 24px; }
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid var(--tx-line);
+  border-radius: 16px;
+  background: var(--tx-panel);
+}
+.logo { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 14px; background: var(--tx-yellow); }
+h1 { margin: 18px 0 6px; font-size: 22px; font-weight: 800; }
+p { margin: 0 0 22px; color: var(--tx-muted); font-size: 14px; line-height: 1.5; }
+.sign-in { width: 100%; height: 52px; border: 0; border-radius: var(--tx-radius); background: var(--tx-yellow); color: #000; font-size: 16px; font-weight: 800; }
+
+.languages { display: flex; gap: 14px; margin-top: 20px; }
+.languages button { padding: 2px 0; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--tx-muted); font-size: 13px; font-weight: 700; }
+.languages button[aria-checked='true'] { color: var(--tx-yellow); border-bottom-color: var(--tx-yellow); }

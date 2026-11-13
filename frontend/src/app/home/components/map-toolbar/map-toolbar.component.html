@@ -1,5 +1,5 @@
 <div class="searchbox glass" [class.open]="searchOpen()">
-  <button type="button" title="Search" aria-label="Search" [attr.aria-expanded]="searchOpen()" (click)="onSearchButton()">
+  <button type="button" [title]="'map.search' | t" [attr.aria-label]="'map.search' | t" [attr.aria-expanded]="searchOpen()" (click)="onSearchButton()">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
       <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
     </svg>
@@ -7,9 +7,9 @@
   <input
     #searchInput
     list="tx-places"
-    placeholder="Search places"
+    [placeholder]="'map.searchPlaceholder' | t"
     autocomplete="off"
-    aria-label="Search an area or venue"
+    [attr.aria-label]="'map.searchAria' | t"
     [tabIndex]="searchOpen() ? 0 : -1"
     (change)="submitSearch()"
     (keydown.escape)="closeSearch()"
@@ -22,7 +22,7 @@
   </datalist>
 </div>
 
-<button class="glass icon-btn" type="button" title="Center on my position" aria-label="Center on my position" (click)="locate.emit()">
+<button class="glass icon-btn" type="button" [title]="'map.locate' | t" [attr.aria-label]="'map.locate' | t" (click)="locate.emit()">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
     <circle cx="12" cy="12" r="3" /><circle cx="12" cy="12" r="8" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
   </svg>
@@ -32,8 +32,8 @@
   <button
     class="glass icon-btn"
     type="button"
-    title="Map layers"
-    [attr.aria-label]="store.hasHiddenLayers() ? 'Map layers (some hidden)' : 'Map layers'"
+    [title]="'map.layers' | t"
+    [attr.aria-label]="(store.hasHiddenLayers() ? 'map.layersHidden' : 'map.layers') | t"
     aria-controls="tx-layer-menu"
     [attr.aria-expanded]="filterOpen()"
     (click)="filterOpen.set(!filterOpen())"
@@ -54,8 +54,8 @@
 <button
   class="glass icon-btn"
   type="button"
-  [title]="fullscreen() ? 'Exit fullscreen' : 'Fullscreen map'"
-  [attr.aria-label]="fullscreen() ? 'Exit fullscreen' : 'Fullscreen map'"
+  [title]="(fullscreen() ? 'map.exitFullscreen' : 'map.fullscreen') | t"
+  [attr.aria-label]="(fullscreen() ? 'map.exitFullscreen' : 'map.fullscreen') | t"
   (click)="fullscreenToggle.emit()"
 >
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

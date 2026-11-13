@@ -1,4 +1,4 @@
-<a class="brand" routerLink="/" aria-label="TaxIntel home">
+<a class="brand" routerLink="/" [attr.aria-label]="'top.home' | t">
   <span class="logo" aria-hidden="true">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M5 17h14v-5l-2-5H7l-2 5v5Z" /><path d="M9 4h6" /><circle cx="8" cy="14" r="1" /><circle cx="16" cy="14" r="1" /><path d="M6 17v2M18 17v2" />
@@ -10,17 +10,47 @@
 
 <div class="clock"><span class="dot" aria-hidden="true"></span>{{ clockLabel() }}</div>
 
-<div class="user">
-  <button class="bell" type="button" aria-label="Notifications">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  </button>
-  <div class="who">
-    {{ driver().fullName }}
-    @if (driver().online) {
-      <small>● Online</small>
+@if (auth.signedIn()) {
+  <div class="user">
+    <button
+      class="bell"
+      type="button"
+      [class.open]="openPanel() === 'notifications'"
+      [attr.aria-expanded]="openPanel() === 'notifications'"
+      [attr.aria-label]="notifications.unreadCount() ? ('top.notificationsUnread' | t: { count: notifications.unreadCount() }) : ('top.notifications' | t)"
+      (click)="toggle('notifications')"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      </svg>
+      @if (notifications.unreadCount()) {
+        <span class="unread-dot" aria-hidden="true"></span>
+      }
+    </button>
+
+    <button
+      class="account"
+      type="button"
+      [attr.aria-expanded]="openPanel() === 'account'"
+      [attr.aria-label]="'top.account' | t"
+      (click)="toggle('account')"
+    >
+      <span class="who">
+        {{ driver().fullName }}
+        @if (driver().online) {
+          <small>● {{ 'top.online' | t }}</small>
+        }
+      </span>
+      <span class="avatar" aria-hidden="true">{{ driver().initials }}</span>
+    </button>
+
+    @switch (openPanel()) {
+      @case ('notifications') {
+        <app-notifications-panel />
+      }
+      @case ('account') {
+        <app-account-menu (closed)="openPanel.set(null)" />
+      }
     }
   </div>
-  <div class="avatar" aria-hidden="true">{{ driver().initials }}</div>
-</div>
+}

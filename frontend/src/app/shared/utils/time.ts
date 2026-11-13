@@ -1,30 +1,14 @@
-/** Date/time helpers (24h clock, en-GB date format). */
+/** Date/time helpers (local time). Language-dependent formatting is in core/i18n/i18n.service.ts. */
 
 export const MINUTE_MS = 60_000;
 export const HOUR_MS = 60 * MINUTE_MS;
 export const DAY_MS = 24 * HOUR_MS;
 
-const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 const pad2 = (n: number): string => String(n).padStart(2, '0');
 
-/** "21:30" */
+/** "21:30" (24h, the same in every language). Language-dependent formats live in I18nService. */
 export function formatTime(d: Date): string {
   return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-}
-
-/** "Fri 30 Oct" */
-export function formatShortDate(d: Date): string {
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-}
-
-/** "Friday 30 October" */
-export function formatLongDate(d: Date): string {
-  return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
-}
-
-export function weekdayShort(d: Date): string {
-  return WEEKDAY_SHORT[d.getDay()];
 }
 
 export function startOfDay(d: Date): Date {
@@ -60,19 +44,27 @@ export function atTime(day: Date, hhmm: string): Date {
   return x;
 }
 
-/** "Today", "Tomorrow", "Yesterday" or the short weekday. */
-export function relativeDayLabel(d: Date, now: Date = new Date()): string {
-  const diff = daysBetween(now, d);
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Tomorrow';
-  if (diff === -1) return 'Yesterday';
-  return weekdayShort(d);
+/** Monday of the week that contains `d` (midnight). */
+export function startOfWeek(d: Date): Date {
+  const x = startOfDay(d);
+  return addDays(x, -((x.getDay() + 6) % 7));
 }
 
-export function greetingFor(d: Date): string {
-  const h = d.getHours();
-  if (h < 5) return 'Good night';
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
+export function startOfMonth(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+export function addMonths(d: Date, months: number): Date {
+  return new Date(d.getFullYear(), d.getMonth() + months, 1);
+}
+
+/** "2026-11-13", the format of <input type="date"> (local time, not UTC). */
+export function toDateInputValue(d: Date): string {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+/** Parses "2026-11-13" as local midnight. */
+export function fromDateInputValue(value: string): Date {
+  const [y, m, day] = value.split('-').map(Number);
+  return new Date(y, m - 1, day);
 }

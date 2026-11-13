@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { DEMAND_LABEL } from '../../logic/demand-model';
 import { DemandLevel } from '../../models/home.models';
 
@@ -6,11 +7,12 @@ import { DemandLevel } from '../../models/home.models';
 @Component({
   selector: 'app-demand-badge',
   standalone: true,
-  template: '{{ label() }}',
+  imports: [TranslatePipe],
+  template: '{{ labelKey() | t }}',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class]': '"badge " + level()' },
 })
 export class DemandBadgeComponent {
   readonly level = input.required<DemandLevel>();
-  readonly label = computed(() => DEMAND_LABEL[this.level()]);
+  readonly labelKey = computed(() => DEMAND_LABEL[this.level()]);
 }

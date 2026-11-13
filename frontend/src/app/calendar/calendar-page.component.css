@@ -1,0 +1,40 @@
+:host { flex: 1; min-height: 0; display: flex; }
+
+/* ---------- Month grid ---------- */
+.month { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 18px 22px; overflow: auto; }
+.toolbar { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+h1 { margin: 0 auto 0 8px; font-size: 22px; font-weight: 800; text-transform: capitalize; }
+.nav { display: flex; gap: 6px; }
+.nav button { height: 34px; border: 1px solid var(--tx-line); border-radius: 9px; background: var(--tx-card); font-weight: 700; font-size: 13px; }
+.today { padding: 0 12px; }
+.arrow { width: 34px; display: grid; place-items: center; }
+
+/* ---------- Selected day ---------- */
+.day { flex: none; width: 380px; padding: 18px 20px; border-left: 1px solid var(--tx-line); background: var(--tx-panel); overflow-y: auto; }
+.day-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.add { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: 0; border-radius: 9px; background: var(--tx-yellow); color: #000; font-size: 13px; font-weight: 800; white-space: nowrap; }
+h3 { margin: 20px 0 8px; color: var(--tx-muted); }
+
+.entry { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; padding: 12px; margin-bottom: 8px; border: 1px solid var(--tx-line); border-radius: var(--tx-radius); background: var(--tx-card); }
+.entry.own { border-style: dashed; border-color: rgba(43, 212, 107, 0.45); }
+.time { font-size: 13px; font-weight: 800; white-space: nowrap; }
+.time span { margin: 0 3px; color: var(--tx-muted); }
+.what { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 12px; color: var(--tx-muted); }
+.what b { font-size: 14px; color: var(--tx-text); }
+.what p { margin: 4px 0 0; }
+.map-link { margin-top: 4px; color: var(--tx-yellow); font-weight: 700; text-decoration: none; }
+.delete { padding: 4px; border: 0; background: none; color: var(--tx-muted); }
+.delete:hover { color: var(--tx-red); }
+.empty { margin: 0 0 8px; color: var(--tx-faint); font-size: 13px; }
+
+@media (max-width: 1000px) {
+  :host { flex-direction: column; }
+  .day { width: 100%; border-left: 0; border-top: 1px solid var(--tx-line); }
+}
+@media (max-width: 600px) {
+  .month { padding: 14px; }
+  .toolbar { flex-wrap: wrap; gap: 10px; }
+  h1 { order: 3; width: 100%; margin: 0; font-size: 19px; }
+  .nav { margin-left: auto; }
+}

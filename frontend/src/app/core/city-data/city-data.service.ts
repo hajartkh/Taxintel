@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { startOfDay } from '../../shared/utils/time';
-import { BusyArea, CityEvent, Venue } from '../models/home.models';
+import { BusyArea, CityEvent, Venue } from './city.models';
 import { MOCK_BUSY_AREAS, MOCK_VENUES, buildMockEvents } from './mock-city-data';
 
 /**
- * Data source for the home page.
+ * City data: events and busy areas (used by the home map and the calendar).
  * Returns dummy data for now. To switch to the backend, inject HttpClient here and
  * map the responses of /api/events and /irail/crowding to these models; the
  * components do not need to change.

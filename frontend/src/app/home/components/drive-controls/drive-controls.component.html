@@ -1,19 +1,19 @@
 @if (trip.active()) {
-  <div class="controls glass" role="group" aria-label="Trip controls">
+  <div class="controls glass" role="group" [attr.aria-label]="'drive.controls' | t">
     <button class="primary" type="button" (click)="trip.toggle()">
       @if (trip.status() === 'driving') {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" />
         </svg>
-        PAUSE
+        {{ 'drive.pause' | t }}
       } @else {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8Z" /></svg>
-        RESUME ROUTE
+        {{ 'drive.resume' | t }}
       }
     </button>
     <button class="stop" type="button" (click)="trip.stop()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2" /></svg>
-      STOP
+      {{ 'drive.stop' | t }}
     </button>
   </div>
 }

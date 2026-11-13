@@ -43,3 +43,20 @@
 .badge.high { color: var(--tx-red); background: rgba(255, 59, 59, 0.12); border-color: rgba(255, 59, 59, 0.35); }
 .badge.busy { color: var(--tx-orange); background: rgba(255, 138, 0, 0.12); border-color: rgba(255, 138, 0, 0.35); }
 .badge.mod { color: var(--tx-yellow); background: var(--tx-yellow-soft); border-color: rgba(255, 212, 0, 0.3); }
+
+/* Own agenda item: <span class="badge own">My agenda</span> */
+.badge.own { color: var(--tx-green); background: rgba(43, 212, 107, 0.1); border-color: rgba(43, 212, 107, 0.35); }
+
+/* "← Back to map" link at the top of a page */
+.back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--tx-muted); font-size: 13px; font-weight: 700; text-decoration: none; }
+.back-link:hover { color: var(--tx-yellow); }
+
+/* Dashed "nothing here" box */
+.empty-box {
+  padding: 14px;
+  border: 1px dashed var(--tx-line);
+  border-radius: var(--tx-radius);
+  color: var(--tx-muted);
+  font-size: 13px;
+  text-align: center;
+}

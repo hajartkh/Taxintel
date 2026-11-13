@@ -16,11 +16,14 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as L from 'leaflet';
 import '../../../shared/leaflet/leaflet-plugins'; // adds L.heatLayer
-import { formatTime, relativeDayLabel } from '../../../shared/utils/time';
+import { CityEvent, EventCategory } from '../../../core/city-data/city.models';
+import { I18nService } from '../../../core/i18n/i18n.service';
+import { MapTheme, SettingsService } from '../../../core/settings/settings.service';
+import { formatTime } from '../../../shared/utils/time';
 import { HOME_CONFIG } from '../../home.config';
 import { DEMAND_LABEL, clusterHotspots, demandLevel, eventSize, peakPickupTime } from '../../logic/demand-model';
 import { toHeatPoints } from '../../logic/heat-points';
-import { CityEvent, EventCategory, Hotspot, MapFocus, MapTheme, PlannedRoute } from '../../models/home.models';
+import { Hotspot, MapFocus, PlannedRoute } from '../../models/home.models';
 import { ToastService } from '../../services/toast.service';
 import { TripFrame, TripService } from '../../services/trip.service';
 import { HomeStore } from '../../state/home.store';
@@ -75,6 +78,8 @@ const CATEGORY_ICON: Record<EventCategory, string> = {
 })
 export class DemandMapComponent implements AfterViewInit {
   private readonly store = inject(HomeStore);
+  private readonly settings = inject(SettingsService);
+  private readonly i18n = inject(I18nService);
   private readonly trip = inject(TripService);
   private readonly toast = inject(ToastService);
   private readonly zone = inject(NgZone);
@@ -120,7 +125,7 @@ export class DemandMapComponent implements AfterViewInit {
     const places = this.store.places();
     const place = places.find((p) => p.name.toLowerCase() === q) ?? places.find((p) => p.name.toLowerCase().includes(q));
     if (!place) {
-      this.toast.show('No match. Try a venue such as Sportpaleis.');
+      this.toast.show('toast.noMatch');
       return;
     }
     this.toolbar().closeSearch();
@@ -128,7 +133,7 @@ export class DemandMapComponent implements AfterViewInit {
     if (place.venueId) {
       const ev = this.store.dayEvents().find((e) => e.venue.id === place.venueId);
       if (ev) setTimeout(() => this.eventMarkers.get(ev.id)?.openPopup(), 850);
-      else this.toast.show(`${place.name}: no events on this day.`);
+      else this.toast.show({ key: 'toast.noEventsAt', params: { place: place.name } });
     }
   }
 
@@ -261,7 +266,7 @@ export class DemandMapComponent implements AfterViewInit {
   /** Re-render the map layers whenever the signals they depend on change. */
   private bindState(): void {
     const injector = this.injector;
-    effect(() => this.applyTheme(this.store.mapTheme()), { injector });
+    effect(() => this.applyTheme(this.settings.mapTheme()), { injector });
     effect(() => this.renderHeat(this.store.hotspots(), this.store.layers().heat), { injector });
     effect(() => this.renderEvents(this.store.dayEvents(), this.store.layers().events), { injector });
     effect(() => this.renderRoute(this.trip.route(), this.store.layers().route), { injector });
@@ -298,7 +303,7 @@ export class DemandMapComponent implements AfterViewInit {
       const multiplier = (1 + Math.min(top.intensity, 1.6) * 0.9).toFixed(1);
       this.surge
         .setLatLng([top.lat, top.lng])
-        .setIcon(L.divIcon({ className: '', html: `<span class="tx-surge">${multiplier}× SURGE</span>`, iconSize: [0, 0], iconAnchor: [0, 26] }))
+        .setIcon(L.divIcon({ className: '', html: `<span class="tx-surge">${escapeHtml(this.i18n.t('map.surge', { x: multiplier }))}</span>`, iconSize: [0, 0], iconAnchor: [0, 26] }))
         .addTo(this.map);
     } else {
       this.surge.remove();
@@ -349,7 +354,7 @@ export class DemandMapComponent implements AfterViewInit {
         title: stop.name,
         icon: L.divIcon({ className: '', html: `<div class="tx-stop-pin${stop.done ? ' done' : ''}">${i + 1}</div>`, iconSize: [26, 26], iconAnchor: [13, 13] }),
       })
-        .bindTooltip(`${escapeHtml(stop.name)} — ${escapeHtml(stop.reason)}`, { direction: 'top', offset: [0, -12] })
+        .bindTooltip(`${escapeHtml(stop.name)} — ${escapeHtml(this.i18n.t(stop.reason))}`, { direction: 'top', offset: [0, -12] })
         .addTo(this.stopLayer);
     });
 
@@ -413,7 +418,7 @@ export class DemandMapComponent implements AfterViewInit {
     };
 
     const root = el('div', 'tx-popup');
-    const button = el('button', 'tx-popup-btn', `Show forecast at ${formatTime(peak)}`) as HTMLButtonElement;
+    const button = el('button', 'tx-popup-btn', this.i18n.t('popup.showForecast', { time: formatTime(peak) })) as HTMLButtonElement;
     button.type = 'button';
     button.addEventListener('click', () => {
       this.zone.run(() => this.store.focusEvent(ev, false));
@@ -421,10 +426,10 @@ export class DemandMapComponent implements AfterViewInit {
     });
     root.append(
       el('div', 'tx-popup-title', ev.name),
-      el('div', 'tx-popup-sub', `${ev.venue.name} · ${relativeDayLabel(ev.start)} ${formatTime(ev.start)}–${formatTime(ev.end)}`),
-      row('Expected visitors', el('b', '', `~${(ev.attendance / 1000).toFixed(1)}k`)),
-      row('Peak pickups', el('b', '', formatTime(peak))),
-      row('Demand', el('span', `badge ${level}`, DEMAND_LABEL[level])),
+      el('div', 'tx-popup-sub', `${ev.venue.name} · ${this.i18n.relativeDay(ev.start)} ${formatTime(ev.start)}–${formatTime(ev.end)}`),
+      row(this.i18n.t('popup.visitors'), el('b', '', `~${(ev.attendance / 1000).toFixed(1)}k`)),
+      row(this.i18n.t('popup.peak'), el('b', '', formatTime(peak))),
+      row(this.i18n.t('popup.demand'), el('span', `badge ${level}`, this.i18n.t(DEMAND_LABEL[level]))),
       button,
     );
     return root;

@@ -1,0 +1,46 @@
+:host {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 4000;
+  width: 380px;
+  max-width: calc(100vw - 28px);
+  display: block;
+}
+
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 14px 16px 10px; border-bottom: 1px solid var(--tx-line); }
+h2 { margin: 0; font-size: 15px; font-weight: 800; }
+.count { font-size: 12px; color: var(--tx-yellow); font-weight: 700; }
+.mark-all { padding: 0; border: 0; background: none; color: var(--tx-yellow); font-size: 12px; font-weight: 700; }
+.mark-all:disabled { color: var(--tx-faint); }
+
+ul { list-style: none; margin: 0; padding: 6px; max-height: min(460px, 70vh); overflow-y: auto; }
+.item {
+  width: 100%;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 32px 1fr 10px;
+  gap: 10px;
+  align-items: start;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  text-align: left;
+}
+.item:hover { background: var(--tx-card-2); }
+.item.unread { background: rgba(255, 212, 0, 0.05); }
+
+.icon { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; background: var(--tx-card-2); color: var(--tx-muted); }
+.icon.surge { color: var(--tx-red); }
+.icon.train, .icon.event { color: var(--tx-yellow); }
+.icon.earnings { color: var(--tx-green); }
+
+.text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.title { font-size: 13px; font-weight: 800; }
+.body { font-size: 12px; color: var(--tx-muted); line-height: 1.4; }
+.ago { font-size: 11px; color: var(--tx-faint); margin-top: 2px; }
+.unread .title { color: var(--tx-text); }
+.item:not(.unread) .title { color: #c9c9c9; }
+
+.dot { width: 9px; height: 9px; margin-top: 4px; border-radius: 50%; background: var(--tx-yellow); box-shadow: 0 0 8px var(--tx-yellow); }
+.empty { padding: 24px; text-align: center; color: var(--tx-muted); font-size: 13px; }

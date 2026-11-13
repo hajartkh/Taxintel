@@ -15,10 +15,17 @@ Angular 18 (standalone components, signals) met Leaflet voor de kaart.
 
 | Route | Component | Wat |
 |---|---|---|
-| `/` | `home/home.component` | Homepagina chauffeur: heatmap van drukke zones, locatie chauffeur, aanbevolen route, stadskalender. Via de filterknop: lagen aan/uit en kaartstijl (donker of licht) |
+| `/` | `home/home.component` | Homepagina chauffeur: heatmap van drukke zones, locatie chauffeur, aanbevolen route, stadskalender (weekstrook). Via de filterknop: lagen aan/uit en kaartstijl (donker of licht). `?event=<id>` focust een evenement |
+| `/calendar` | `calendar/calendar-page.component` | Maandkalender met stadsevenementen en eigen agendapunten (toevoegen/verwijderen). `?date=2026-11-13` opent op die dag. Bereikbaar via de titel "City calendar" |
+| `/settings` | `settings/settings-page.component` | Profiel, taal, kaartstijl, afmelden |
+| `/login` | `login/login-page.component` | Na afmelden (dummy-aanmelding) |
 | `/route-finder` | `route-finder/route-finder.component` | Eerste routeplanner (prototype uit `main.html`) |
 
 De pagina's worden lazy geladen (`app.routes.ts`): Leaflet wordt pas gedownload als een kaartpagina opent.
+Alle pagina's behalve `/login` zitten achter `authGuard` (afgemeld → `/login`).
+
+In de top bar: de **bel** opent de meldingen (klik op een melding = gelezen, het gele bolletje verdwijnt; "Mark all as
+read" voor alles), het **accounticoon** opent naam, instellingen, taal (EN/NL/FR) en afmelden.
 
 ## Mappenstructuur
 
@@ -35,7 +42,13 @@ src/
     ├── app.routes.ts           routes (lazy loaded)
     ├── app.config.ts           providers (router, HttpClient)
     ├── core/                   app-breed, één instantie
-    │   ├── top-bar/            header (logo, klok, meldingen, account)
+    │   ├── top-bar/            header + meldingenpaneel + accountmenu
+    │   ├── i18n/               vertalingen (translations/en|nl|fr.ts), I18nService, `t`-pipe
+    │   ├── settings/           SettingsService: taal en kaartstijl (localStorage)
+    │   ├── auth/               AuthService (dummy) + authGuard
+    │   ├── notifications/      NotificationService (dummy meldingen)
+    │   ├── agenda/             AgendaService: eigen agendapunten (localStorage)
+    │   ├── city-data/          CityDataService + modellen + dummy events/drukke zones
     │   ├── clock.service.ts    huidige tijd als signal
     │   └── driver.service.ts   ingelogde chauffeur (dummy)
     ├── shared/
@@ -43,13 +56,15 @@ src/
     │   └── utils/              tijd, geo en wiskunde-hulpfuncties
     ├── events/events.service.ts  GET /api/events
     ├── route-finder/           routeplanner-prototype
+    ├── calendar/               maandkalender (month-grid, agenda-form)
+    ├── settings/               instellingenpagina
+    ├── login/                  aanmeldpagina
     └── home/                   homepagina chauffeur
         ├── home.component.*    pagina-layout (begroeting, kaart, zijpaneel)
         ├── home.config.ts      instellingen (OSRM-url, startpositie, …)
         ├── models/             TypeScript-interfaces
-        ├── data/               CityDataService + dummy data
         ├── logic/              vraagmodel en heatmap-punten (pure functies, getest)
-        ├── state/home.store.ts toestand van de pagina (signals)
+        ├── state/home.store.ts toestand van de pagina (signals): gekozen dag, weekstrook, voorspelling, lagen
         ├── services/           routeplanner (OSRM), rit-simulatie, toasts
         └── components/         kaart, overlays op de kaart, kalender, slimme route
 ```
@@ -64,9 +79,29 @@ src/
   `providers` van `HomeComponent`. Zo leeft de toestand even lang als de pagina, en componenten lezen ze met `inject()`.
 - **Leaflet** draait buiten de Angular-zone (`NgZone.runOutsideAngular`), zodat kaartbewegingen geen change detection
   veroorzaken. De kaart volgt de signals via `effect()`.
-- **Kaartstijl**: de keuze van de chauffeur wordt per toestel onthouden in `localStorage` (`taxintel.mapTheme`).
-  De tegels per stijl staan bovenaan `demand-map.component.ts`.
+- **Kaartstijl**: de tegels per stijl staan bovenaan `demand-map.component.ts`.
+- **Weekstrook** (stadskalender op de homepagina): standaard vandaag + de 6 volgende dagen. De pijl naar rechts toont
+  de volgende weken, telkens van maandag tot zondag; terug kan tot de week van vandaag (logica: `HomeStore.shiftWeek`).
+- **Opgeslagen per toestel** (`localStorage`): `taxintel.language`, `taxintel.mapTheme`, `taxintel.agenda`,
+  `taxintel.signedIn`. Gaat later naar de backend.
 - **Lettertype**: Manrope via `@fontsource/manrope` (zelf gehost, geen verzoek naar Google Fonts).
+
+### Teksten en talen (EN / NL / FR)
+
+Elke tekst staat als sleutel in `core/i18n/translations/en.ts`, met dezelfde sleutel in `nl.ts` en `fr.ts`
+(ontbreekt er een, dan geeft TypeScript een fout). Datums volgen de taal (`en-GB`, `nl-BE`, `fr-BE`), net als de
+route-instructies van OSRM.
+
+```html
+{{ 'cal.title' | t }}
+{{ 'route.basis' | t: { day: 'Today', time: '22:00' } }}
+```
+```ts
+readonly label = computed(() => this.i18n.t('toast.noEventsAt', { place }));  // in een computed: volgt de taal
+```
+
+Services die een tekst doorgeven (toasts, status) geven een `Translatable` (`{ key, params }`) door in plaats van een
+string; de template vertaalt die pas bij het tonen, zodat hij meeverandert met de taal.
 
 ### Leaflet-plugins
 
@@ -80,12 +115,15 @@ import '../shared/leaflet/leaflet-plugins'; // L.Routing en L.heatLayer
 
 ## Van dummy data naar echte data
 
-Alle dummy data zit op twee plaatsen. De componenten hoeven niet te veranderen als je overschakelt.
+Alle dummy data zit in de services hieronder. De componenten hoeven niet te veranderen als je overschakelt.
 
 | Bestand | Nu | Later |
 |---|---|---|
-| `home/data/city-data.service.ts` | `of(...)` met data uit `mock-city-data.ts` | `HttpClient`-calls naar de backend, gemapt naar de modellen in `home/models/home.models.ts` |
+| `core/city-data/city-data.service.ts` | `of(...)` met data uit `mock-city-data.ts` | `HttpClient`-calls naar de backend, gemapt naar de modellen in `core/city-data/city.models.ts` |
 | `core/driver.service.ts` | vaste chauffeur "Sam Peeters" | profiel na inloggen |
+| `core/auth/auth.service.ts` | aanmelden = vlag in `localStorage` | echte login (token) |
+| `core/notifications/notification.service.ts` | vaste lijst meldingen | meldingen van de backend (drukte, iRail-storingen, nieuwe events) |
+| `core/agenda/agenda.service.ts` | agendapunten in `localStorage` | agenda-API per chauffeur |
 
 Koppeling met de databronnen:
 

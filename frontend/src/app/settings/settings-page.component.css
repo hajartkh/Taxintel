@@ -1,0 +1,26 @@
+:host { flex: 1; min-height: 0; overflow-y: auto; }
+
+.page { max-width: 640px; margin: 0 auto; padding: 22px 18px 40px; }
+h1 { margin: 12px 0 18px; font-size: 26px; font-weight: 800; }
+
+.card { margin-bottom: 14px; padding: 18px; border: 1px solid var(--tx-line); border-radius: var(--tx-radius); background: var(--tx-card); }
+h2 { margin: 0; color: var(--tx-yellow); }
+.hint { margin: 4px 0 12px; color: var(--tx-muted); font-size: 13px; }
+
+.profile { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+.avatar { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px; background: var(--tx-yellow); color: #000; font-size: 17px; font-weight: 800; }
+.profile b { display: block; font-size: 17px; }
+.profile small { color: var(--tx-green); font-weight: 600; }
+
+.options { display: flex; flex-wrap: wrap; gap: 8px; }
+.option {
+  flex: 1 1 140px; padding: 10px 12px; display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--tx-line); border-radius: 10px; background: var(--tx-card-2); font-size: 14px; font-weight: 700; text-align: left;
+}
+.option[aria-checked='true'] { border-color: var(--tx-yellow); color: var(--tx-yellow); box-shadow: 0 0 0 1px var(--tx-yellow) inset; }
+.code { width: 32px; height: 24px; display: grid; place-items: center; border-radius: 6px; background: #000; color: var(--tx-yellow); font-size: 11px; font-weight: 800; }
+.preview { width: 44px; height: 28px; border-radius: 6px; flex: none; }
+.preview.dark { background: linear-gradient(105deg, #2b2b2b 0 30%, #3a3a3a 30% 34%, #1c1c1c 34% 70%, #262626 70%); }
+.preview.light { background: linear-gradient(105deg, #aad3df 0 30%, #fff 30% 34%, #f2efe9 34% 70%, #add19e 70%); }
+
+.sign-out { margin-top: 12px; padding: 10px 16px; border: 1px solid rgba(255, 59, 59, 0.4); border-radius: 10px; background: rgba(255, 59, 59, 0.08); color: var(--tx-red); font-weight: 800; }

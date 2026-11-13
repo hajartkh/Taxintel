@@ -1,13 +1,16 @@
 <div class="head">
-  <div>
-    <h2 class="label">City calendar</h2>
-    <div class="sub">{{ dateLabel() }}</div>
-  </div>
+  <a class="title" routerLink="/calendar" [queryParams]="monthLink()" [title]="'cal.openMonth' | t">
+    <h2 class="label">{{ 'cal.title' | t }}</h2>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 10h18M8 3v4M16 3v4" />
+    </svg>
+    <span class="sub">{{ dateLabel() }}</span>
+  </a>
   <div class="arrows">
-    <button type="button" aria-label="Previous day" (click)="store.shiftDay(-1)">
+    <button type="button" [attr.aria-label]="'cal.prevWeek' | t" [disabled]="store.weekOffset() === 0" (click)="store.shiftWeek(-1)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
     </button>
-    <button type="button" aria-label="Next day" (click)="store.shiftDay(1)">
+    <button type="button" [attr.aria-label]="'cal.nextWeek' | t" (click)="store.shiftWeek(1)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
     </button>
   </div>
@@ -36,18 +39,33 @@
 </div>
 
 <div class="events">
-  @for (item of items(); track item.event.id) {
-    <button type="button" class="event" [class.active]="item.active" (click)="select(item.event)">
-      <div class="time">
-        <b>{{ item.start }}<span>–</span>{{ item.end }}</b>
-      </div>
-      <div>
-        <div class="name">{{ item.event.name }}</div>
-        <div class="venue">{{ item.event.venue.name }}</div>
-      </div>
-      <app-demand-badge [level]="item.level" />
-    </button>
+  @for (entry of items(); track entry.id) {
+    @if (entry.kind === 'event') {
+      <button type="button" class="event" [class.active]="entry.active" (click)="select(entry.event)">
+        <div class="time">
+          <b>{{ entry.startLabel }}<span>–</span>{{ entry.endLabel }}</b>
+        </div>
+        <div>
+          <div class="name">{{ entry.event.name }}</div>
+          <div class="venue">{{ entry.event.venue.name }}</div>
+        </div>
+        <app-demand-badge [level]="entry.level" />
+      </button>
+    } @else {
+      <a class="event own" routerLink="/calendar" [queryParams]="monthLink()">
+        <div class="time">
+          <b>{{ entry.startLabel }}@if (entry.endLabel) {<span>–</span>{{ entry.endLabel }}}</b>
+        </div>
+        <div>
+          <div class="name">{{ entry.item.title }}</div>
+          @if (entry.item.location) {
+            <div class="venue">{{ entry.item.location }}</div>
+          }
+        </div>
+        <span class="badge own">{{ 'cal.own' | t }}</span>
+      </a>
+    }
   } @empty {
-    <div class="empty">No major events on this day.</div>
+    <div class="empty-box">{{ 'cal.empty' | t }}</div>
   }
 </div>

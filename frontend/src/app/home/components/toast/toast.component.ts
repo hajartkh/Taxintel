@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 import { ToastService } from '../../services/toast.service';
 import { TripService } from '../../services/trip.service';
 
 @Component({
   selector: 'app-toast',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,41 @@
+:host {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 4000;
+  width: 260px;
+  padding: 8px;
+  display: block;
+}
+
+.who { display: flex; align-items: center; gap: 12px; padding: 8px 8px 12px; border-bottom: 1px solid var(--tx-line); margin-bottom: 6px; }
+.avatar { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: var(--tx-yellow); color: #000; font-weight: 800; }
+.who small { display: block; font-size: 11px; color: var(--tx-muted); }
+.who b { font-size: 15px; }
+
+.row {
+  width: 100%;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--tx-text);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: left;
+}
+.row:hover { background: var(--tx-card-2); }
+.row svg { color: var(--tx-muted); }
+
+.language { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px; }
+.language .label { color: var(--tx-muted); font-size: 10px; }
+.segments { display: flex; padding: 3px; border: 1px solid var(--tx-line); border-radius: 9px; background: var(--tx-card); }
+.segments button { min-width: 40px; padding: 5px 8px; border: 0; border-radius: 6px; background: none; color: var(--tx-muted); font-size: 12px; font-weight: 800; }
+.segments button[aria-checked='true'] { background: var(--tx-yellow); color: #000; }
+
+.sign-out { margin-top: 4px; border-top: 1px solid var(--tx-line); border-radius: 0 0 8px 8px; color: var(--tx-red); }
+.sign-out svg { color: var(--tx-red); }

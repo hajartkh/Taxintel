@@ -1,0 +1,18 @@
+<div class="card">
+  <span class="logo" aria-hidden="true">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 17h14v-5l-2-5H7l-2 5v5Z" /><path d="M9 4h6" /><circle cx="8" cy="14" r="1" /><circle cx="16" cy="14" r="1" /><path d="M6 17v2M18 17v2" />
+    </svg>
+  </span>
+  <h1>{{ 'login.title' | t }}</h1>
+  <p>{{ 'login.text' | t }}</p>
+  <button type="button" class="sign-in" (click)="signIn()">{{ 'login.signIn' | t: { name: driver().fullName } }}</button>
+
+  <div class="languages" role="radiogroup" [attr.aria-label]="'account.language' | t">
+    @for (lang of languages; track lang.code) {
+      <button type="button" role="radio" [attr.aria-checked]="i18n.language() === lang.code" (click)="i18n.setLanguage(lang.code)">
+        {{ lang.label }}
+      </button>
+    }
+  </div>
+</div>

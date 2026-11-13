@@ -3,8 +3,8 @@
     class="tab"
     type="button"
     [attr.aria-expanded]="store.forecastOpen()"
-    [title]="store.forecastOpen() ? 'Hide forecast' : 'Show forecast'"
-    aria-label="Show or hide the demand forecast"
+    [title]="(store.forecastOpen() ? 'forecast.hide' : 'forecast.show') | t"
+    [attr.aria-label]="'forecast.toggle' | t"
     (click)="toggle()"
   >
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
@@ -18,11 +18,11 @@
 
   <div class="body" [attr.inert]="store.forecastOpen() ? null : ''">
     <div class="head">
-      <span class="label">Demand forecast</span>
-      <button class="now" type="button" [class.active]="store.live()" (click)="store.goLive()">Now</button>
+      <span class="label">{{ 'forecast.title' | t }}</span>
+      <button class="now" type="button" [class.active]="store.live()" (click)="store.goLive()">{{ 'forecast.now' | t }}</button>
     </div>
     <div class="time">{{ time() }} <span>{{ day() }}</span></div>
-    <input type="range" min="0" [max]="maxSlot" step="1" [value]="store.slot()" aria-label="Forecast time" (input)="onSlide($event)" />
+    <input type="range" min="0" [max]="maxSlot" step="1" [value]="store.slot()" [attr.aria-label]="'forecast.slider' | t" (input)="onSlide($event)" />
     <div class="ticks"><span>06</span><span>12</span><span>18</span><span>00</span><span>05:30</span></div>
   </div>
 </div>

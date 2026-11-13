@@ -1,0 +1,38 @@
+<div class="grid">
+  @for (weekday of weekdays(); track $index) {
+    <div class="weekday" aria-hidden="true">{{ weekday }}</div>
+  }
+  @for (cell of cells(); track cell.date.getTime()) {
+    <button
+      type="button"
+      class="cell"
+      [class.out]="!cell.inMonth"
+      [class.today]="cell.today"
+      [class.selected]="cell.selected"
+      [attr.aria-label]="cell.ariaLabel"
+      [attr.aria-pressed]="cell.selected"
+      (click)="daySelected.emit(cell.date)"
+    >
+      <span class="num">{{ cell.day }}</span>
+      @for (chip of cell.chips; track chip.id) {
+        <span class="chip {{ chip.kind }}">{{ chip.label }}</span>
+      }
+      @if (cell.more) {
+        <span class="more">{{ 'month.more' | t: { count: cell.more } }}</span>
+      }
+      @if (cell.chips.length) {
+        <span class="dots" aria-hidden="true">
+          @for (chip of cell.chips; track chip.id) {
+            <i class="{{ chip.kind }}"></i>
+          }
+        </span>
+      }
+    </button>
+  }
+</div>
+
+<div class="legend">
+  <span><i class="event"></i>{{ 'month.legendCity' | t }}</span>
+  <span><i class="high"></i>{{ 'month.legendHigh' | t }}</span>
+  <span><i class="own"></i>{{ 'month.legendOwn' | t }}</span>
+</div>

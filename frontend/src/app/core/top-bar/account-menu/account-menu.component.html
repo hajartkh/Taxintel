@@ -1,0 +1,33 @@
+<div class="who">
+  <span class="avatar" aria-hidden="true">{{ driver().initials }}</span>
+  <div>
+    <small>{{ 'account.signedInAs' | t }}</small>
+    <b>{{ driver().fullName }}</b>
+  </div>
+</div>
+
+<a class="row" routerLink="/settings" (click)="closed.emit()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+  </svg>
+  {{ 'account.settings' | t }}
+</a>
+
+<div class="language">
+  <span class="label" id="tx-account-language">{{ 'account.language' | t }}</span>
+  <div class="segments" role="radiogroup" aria-labelledby="tx-account-language">
+    @for (lang of languages; track lang.code) {
+      <button type="button" role="radio" [attr.aria-checked]="i18n.language() === lang.code" [title]="lang.label" (click)="i18n.setLanguage(lang.code)">
+        {{ lang.code.toUpperCase() }}
+      </button>
+    }
+  </div>
+</div>
+
+<button class="row sign-out" type="button" (click)="signOut()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+  </svg>
+  {{ 'account.signOut' | t }}
+</button>

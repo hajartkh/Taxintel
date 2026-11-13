@@ -1,5 +1,6 @@
 import { atTime } from '../../shared/utils/time';
-import { BusyArea, CityEvent } from '../models/home.models';
+import { BusyArea, CityEvent } from '../../core/city-data/city.models';
+import { Hotspot } from '../models/home.models';
 import { clusterHotspots, computeHotspots, demandLevel, eventIntensity, eventsOnDay, peakPickupTime } from './demand-model';
 
 const day = new Date(2026, 9, 30); // Friday 30 October 2026
@@ -34,7 +35,7 @@ describe('demand model', () => {
   });
 
   it('merges hotspots that are close together', () => {
-    const near = { id: 'a', name: 'A', lat: 51.2297, lng: 4.4415, spread: 200, intensity: 0.5, reason: '' };
+    const near: Hotspot = { id: 'a', name: 'A', lat: 51.2297, lng: 4.4415, spread: 200, intensity: 0.5, reason: { key: 'reason.station' } };
     const alsoNear = { ...near, id: 'b', lng: 4.4425, intensity: 0.4 };
     const far = { ...near, id: 'c', lat: 51.2, intensity: 0.9 };
     const clusters = clusterHotspots([near, alsoNear, far]);

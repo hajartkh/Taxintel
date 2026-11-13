@@ -39,6 +39,9 @@ Angular 18-app in `frontend/`, details in [`frontend/README.md`](frontend/README
 | Route | Pagina |
 |---|---|
 | `/` | Homepagina chauffeur: heatmap van drukke zones in Antwerpen, locatie van de chauffeur, aanbevolen route langs de drukke zones, stadskalender met events |
+| `/calendar` | Maandkalender met stadsevenementen en eigen agendapunten |
+| `/settings` | Instellingen: taal (EN/NL/FR), kaartstijl, afmelden |
+| `/login` | Aanmeldpagina (na afmelden) |
 | `/route-finder` | Eerste routeplanner (prototype) |
 
 De homepagina draait nog op **dummy data** (`frontend/src/app/home/data/`). Overschakelen naar de backend gebeurt in

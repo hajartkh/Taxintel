@@ -28,10 +28,14 @@
 }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--tx-yellow); box-shadow: 0 0 10px var(--tx-yellow); }
 
-/* Account + notifications always on the right */
-.user { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-.bell { position: relative; padding: 6px; border: 0; background: none; color: var(--tx-muted); }
-.bell::after { content: ''; position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--tx-yellow); }
+/* Account + notifications always on the right; their drop-downs are positioned from here */
+.user { position: relative; margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.bell, .account { position: relative; border: 1px solid transparent; border-radius: 10px; background: none; }
+.bell { padding: 8px; color: var(--tx-muted); }
+.bell:hover, .bell[aria-expanded='true'] { color: var(--tx-text); background: var(--tx-card); }
+.unread-dot { position: absolute; top: 7px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--tx-yellow); box-shadow: 0 0 0 2px var(--tx-surface); }
+.account { padding: 3px 3px 3px 10px; display: flex; align-items: center; gap: 12px; }
+.account:hover, .account[aria-expanded='true'] { border-color: var(--tx-line); background: var(--tx-card); }
 .who { text-align: right; font-size: 14px; font-weight: 700; line-height: 1.2; }
 .who small { display: block; color: var(--tx-green); font-size: 12px; font-weight: 600; }
 .avatar { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: var(--tx-yellow); color: #000; font-weight: 800; }
