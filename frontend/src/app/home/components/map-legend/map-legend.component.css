@@ -15,6 +15,7 @@
 .swatch.high { background: var(--tx-red); }
 .swatch.busy { background: var(--tx-orange); }
 .swatch.venue { background: #111; border: 2px solid var(--tx-yellow); }
+.swatch.ai { background: radial-gradient(circle, #d10000 0%, #ff6a00 45%, rgba(255, 224, 102, 0.3) 100%); }
 .swatch.line { width: 18px; height: 4px; border-radius: 2px; background: var(--tx-yellow); box-shadow: 0 0 6px var(--tx-yellow); }
 
 @media (max-width: 1000px) {

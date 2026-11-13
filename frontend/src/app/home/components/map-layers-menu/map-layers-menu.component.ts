@@ -14,7 +14,8 @@ export class MapLayersMenuComponent {
   readonly store = inject(HomeStore);
 
   readonly layerOptions: ReadonlyArray<{ key: MapLayer; label: string }> = [
-    { key: 'heat', label: 'Heatmap' },
+    { key: 'ai', label: 'AI hotspots' },
+    { key: 'heat', label: 'Heatmap (demo)' },
     { key: 'events', label: 'Events' },
     { key: 'route', label: 'Recommended route' },
   ];

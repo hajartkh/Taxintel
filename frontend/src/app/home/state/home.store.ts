@@ -1,9 +1,10 @@
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, switchMap } from 'rxjs';
 import { ClockService } from '../../core/clock.service';
 import { clamp } from '../../shared/utils/math';
 import { HOUR_MS, addDays, daysBetween, isSameDay, startOfDay } from '../../shared/utils/time';
+import { AiHotspotsService } from '../data/ai-hotspots.service';
 import { CityDataService } from '../data/city-data.service';
 import { HOME_CONFIG } from '../home.config';
 import { computeHotspots, eventsOnDay, peakPickupTime } from '../logic/demand-model';
@@ -43,6 +44,7 @@ function toShiftSlot(time: Date): { day: Date; slot: number } {
 export class HomeStore {
   private readonly cityData = inject(CityDataService);
   private readonly clock = inject(ClockService);
+  private readonly ai = inject(AiHotspotsService);
 
   // ---------- Data ----------
   readonly events = toSignal(this.cityData.getEvents(), { initialValue: [] as CityEvent[] });
@@ -59,7 +61,8 @@ export class HomeStore {
   /** First day shown in the week strip of the calendar. */
   readonly stripStart = signal(startOfDay(new Date()), { equal: sameTime });
   readonly activeEventId = signal<number | null>(null);
-  readonly layers = signal<LayerVisibility>({ heat: true, events: true, route: true });
+  // heat = mock demand model, ai = backend hotspot model (backend/app/hotspots)
+  readonly layers = signal<LayerVisibility>({ heat: false, events: true, route: true, ai: true });
   readonly mapTheme = signal<MapTheme>(loadMapTheme());
   /** Forecast card on the map: starts tucked away on phones. */
   readonly forecastOpen = signal(typeof window === 'undefined' || window.innerWidth > 700);
@@ -69,6 +72,11 @@ export class HomeStore {
     () => new Date(this.day().getTime() + (HOME_CONFIG.shiftStartHour + this.slot() * 0.5) * HOUR_MS),
   );
   readonly hotspots = computed(() => computeHotspots(this.forecastTime(), this.busyAreas(), this.events()));
+  /** Hotspots of the backend AI model for the hour after the forecast time (null = AI service offline). */
+  readonly aiHotspots = toSignal(
+    toObservable(this.forecastTime).pipe(debounceTime(250), switchMap((time) => this.ai.getHotspots(time))),
+    { initialValue: null },
+  );
   readonly dayEvents = computed(() => eventsOnDay(this.events(), this.day()));
   readonly hasHiddenLayers = computed(() => Object.values(this.layers()).some((visible) => !visible));
   readonly places = computed<Place[]>(() => [
