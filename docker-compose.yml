@@ -54,9 +54,10 @@ services:
       CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-4200}
       WATCHFILES_FORCE_POLLING: "true"   # hot reload op Windows bind mounts
     # Zolang er nog geen app/main.py is, blijft de container gewoon draaien.
-    command: >
-      sh -c "if [ -f app/main.py ]; then uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload;
-             else echo 'Nog geen backend/app/main.py. Container wacht.'; tail -f /dev/null; fi"
+    # command: >
+    #   sh -c "if [ -f app/main.py ]; then uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload;
+    #          else echo 'Nog geen backend/app/main.py. Container wacht.'; tail -f /dev/null; fi"
+    command: ["sh", "-c", "npm install && node --watch server.js"]
     depends_on:
       mongo:
         condition: service_healthy
