@@ -9,5 +9,8 @@ pymongo==4.10.1
 # Externe API's (Google Maps, Events, De Lijn, ILine, iRail)
 httpx==0.28.1
 
+# Hotspots: hexagon-grid (Uber H3)
+h3==4.1.2
+
 # Tijdzones (Europe/Brussels) in de slim-image
 tzdata==2025.2

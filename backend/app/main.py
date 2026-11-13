@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import irail
+from app.api import hotspots, irail
 from app.db import get_db
 from app.irail.collector import collect
 
@@ -44,6 +44,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(irail.router)
+app.include_router(hotspots.router)
 
 
 @app.get("/health")
