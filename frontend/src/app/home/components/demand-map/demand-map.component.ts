@@ -20,7 +20,7 @@ import { formatTime, relativeDayLabel } from '../../../shared/utils/time';
 import { HOME_CONFIG } from '../../home.config';
 import { DEMAND_LABEL, clusterHotspots, demandLevel, eventSize, peakPickupTime } from '../../logic/demand-model';
 import { toHeatPoints } from '../../logic/heat-points';
-import { CityEvent, EventCategory, Hotspot, MapFocus, PlannedRoute } from '../../models/home.models';
+import { CityEvent, EventCategory, Hotspot, MapFocus, MapTheme, PlannedRoute } from '../../models/home.models';
 import { ToastService } from '../../services/toast.service';
 import { TripFrame, TripService } from '../../services/trip.service';
 import { HomeStore } from '../../state/home.store';
@@ -31,10 +31,20 @@ import { MapToolbarComponent } from '../map-toolbar/map-toolbar.component';
 import { NavBannerComponent } from '../nav-banner/nav-banner.component';
 import { ToastComponent } from '../toast/toast.component';
 
-// Basemap: Esri Dark Gray (no API key). If it cannot be loaded, fall back to
-// OpenStreetMap (same tiles as the route finder) darkened with a CSS filter.
-const ESRI_CANVAS = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+// Basemaps (no API keys needed), each with a fallback if its tiles cannot be loaded:
+//   dark  (default): Esri Dark Gray + street names  → fallback: OpenStreetMap darkened with a CSS filter
+//   light:           OpenStreetMap standard (blue water, green parks, white streets, buildings)
+//                    → fallback: Esri World Street Map
+const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
 const OSM_TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const ESRI_ATTRIBUTION = 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors';
+
+/** Route line per theme: a soft glow on dark maps, a black casing for contrast on light maps. */
+const ROUTE_CASING: Record<MapTheme, L.PolylineOptions> = {
+  dark: { color: '#ffd400', weight: 16, opacity: 0.16 },
+  light: { color: '#111111', weight: 10, opacity: 0.85 },
+};
 
 const HEAT_GRADIENT = { 0.1: '#4a3a00', 0.3: '#ffd400', 0.5: '#ffa800', 0.7: '#ff6a00', 0.9: '#ff2a2a' };
 
@@ -89,6 +99,7 @@ export class DemandMapComponent implements AfterViewInit {
   private readonly routeLayer = L.layerGroup();
   private readonly stopLayer = L.layerGroup();
   private readonly eventMarkers = new Map<number, L.Marker>();
+  private baseLayers: L.TileLayer[] = [];
   private hasFitted = false;
   private forecastWasOpen = false;
 
@@ -156,13 +167,12 @@ export class DemandMapComponent implements AfterViewInit {
     map.getPane('streetNames')!.style.pointerEvents = 'none';
     map.getPane('labelPane')!.style.pointerEvents = 'none';
 
-    this.addBaseTiles();
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
     this.heat = L.heatLayer([], { radius: 36, blur: 28, maxZoom: 14, max: 1, minOpacity: 0.04, gradient: HEAT_GRADIENT }).addTo(map);
     this.surge = L.marker(mapCenter, { pane: 'labelPane', interactive: false });
 
-    this.routeGlow = L.polyline([], { pane: 'routePane', color: '#ffd400', weight: 16, opacity: 0.16, interactive: false });
+    this.routeGlow = L.polyline([], { pane: 'routePane', ...ROUTE_CASING.dark, interactive: false });
     this.routeLine = L.polyline([], { pane: 'routePane', color: '#ffd400', weight: 5, opacity: 0.95, lineJoin: 'round', interactive: false });
     this.routeLayer.addLayer(this.routeGlow).addLayer(this.routeLine).addLayer(this.stopLayer).addTo(map);
     this.eventLayer.addTo(map);
@@ -207,32 +217,51 @@ export class DemandMapComponent implements AfterViewInit {
     );
   }
 
-  private addBaseTiles(): void {
-    const options = { maxZoom: 19, maxNativeZoom: 16 };
-    const base = L.tileLayer(`${ESRI_CANVAS}World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`, {
-      ...options,
-      attribution: 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors',
-    }).addTo(this.map);
-    const names = L.tileLayer(`${ESRI_CANVAS}World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`, {
-      ...options,
-      pane: 'streetNames',
-      opacity: 0.8,
-    }).addTo(this.map);
+  /** Swap the base map for the chosen theme. */
+  private applyTheme(theme: MapTheme): void {
+    const el = this.mapEl().nativeElement;
+    el.classList.toggle('theme-light', theme === 'light');
+    el.classList.remove('osm-dark');
+    this.routeGlow.setStyle(ROUTE_CASING[theme]);
+
+    const esriOptions = { maxZoom: 19, maxNativeZoom: 16 };
+    if (theme === 'dark') {
+      this.setBaseLayers(
+        [
+          L.tileLayer(`${ESRI}Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`, { ...esriOptions, attribution: ESRI_ATTRIBUTION }),
+          L.tileLayer(`${ESRI}Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`, { ...esriOptions, pane: 'streetNames', opacity: 0.8 }),
+        ],
+        () => {
+          el.classList.add('osm-dark');
+          return [L.tileLayer(OSM_TILES, { maxZoom: 19, attribution: OSM_ATTRIBUTION })];
+        },
+      );
+    } else {
+      this.setBaseLayers([L.tileLayer(OSM_TILES, { maxZoom: 19, attribution: OSM_ATTRIBUTION })], () => [
+        L.tileLayer(`${ESRI}World_Street_Map/MapServer/tile/{z}/{y}/{x}`, { maxZoom: 19, attribution: ESRI_ATTRIBUTION }),
+      ]);
+    }
+  }
+
+  /** Show `layers`; when the first of them fails before any tile loaded, switch to `fallback()`. */
+  private setBaseLayers(layers: L.TileLayer[], fallback?: () => L.TileLayer[]): void {
+    for (const layer of this.baseLayers) layer.remove();
+    this.baseLayers = layers;
+    layers.forEach((layer) => layer.addTo(this.map));
+    if (!fallback) return;
 
     let loaded = false;
     let errors = 0;
-    base.on('tileload', () => (loaded = true));
-    base.on('tileerror', () => {
-      if (loaded || ++errors !== 4) return;
-      this.map.removeLayer(base).removeLayer(names);
-      this.mapEl().nativeElement.classList.add('osm-dark');
-      L.tileLayer(OSM_TILES, { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(this.map);
+    layers[0].on('tileload', () => (loaded = true));
+    layers[0].on('tileerror', () => {
+      if (!loaded && ++errors === 4 && this.baseLayers === layers) this.setBaseLayers(fallback());
     });
   }
 
   /** Re-render the map layers whenever the signals they depend on change. */
   private bindState(): void {
     const injector = this.injector;
+    effect(() => this.applyTheme(this.store.mapTheme()), { injector });
     effect(() => this.renderHeat(this.store.hotspots(), this.store.layers().heat), { injector });
     effect(() => this.renderEvents(this.store.dayEvents(), this.store.layers().events), { injector });
     effect(() => this.renderRoute(this.trip.route(), this.store.layers().route), { injector });

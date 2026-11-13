@@ -7,7 +7,6 @@ export interface DriverProfile {
   online: boolean;
   earningsToday: number;
   tripsToday: number;
-  rating: number;
 }
 
 /** The logged-in driver. Dummy data until there is authentication and a driver API. */
@@ -20,6 +19,5 @@ export class DriverService {
     online: true,
     earningsToday: 84,
     tripsToday: 12,
-    rating: 4.92,
   });
 }

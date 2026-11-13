@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
-import { MapLayer } from '../../models/home.models';
 import { HomeStore } from '../../state/home.store';
+import { MapLayersMenuComponent } from '../map-layers-menu/map-layers-menu.component';
 
 /** Search · locate · layer filter · fullscreen, top left on the map. */
 @Component({
   selector: 'app-map-toolbar',
   standalone: true,
+  imports: [MapLayersMenuComponent],
   templateUrl: './map-toolbar.component.html',
   styleUrl: './map-toolbar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,12 +24,6 @@ export class MapToolbarComponent {
 
   readonly searchOpen = signal(false);
   readonly filterOpen = signal(false);
-
-  readonly layerOptions: ReadonlyArray<{ key: MapLayer; label: string }> = [
-    { key: 'heat', label: 'Heatmap' },
-    { key: 'events', label: 'Events' },
-    { key: 'route', label: 'Recommended route' },
-  ];
 
   /** First press opens the field; pressing again searches (or closes it when empty). */
   onSearchButton(): void {

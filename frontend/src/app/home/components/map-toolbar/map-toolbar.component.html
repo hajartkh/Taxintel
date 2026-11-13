@@ -47,15 +47,7 @@
   </button>
 
   @if (filterOpen()) {
-    <div class="menu glass" id="tx-layer-menu">
-      <div class="label">Show on map</div>
-      @for (layer of layerOptions; track layer.key) {
-        <button class="switch-row" type="button" role="switch" [attr.aria-checked]="store.layers()[layer.key]" (click)="store.toggleLayer(layer.key)">
-          <span>{{ layer.label }}</span>
-          <span class="switch" aria-hidden="true"></span>
-        </button>
-      }
-    </div>
+    <app-map-layers-menu id="tx-layer-menu" class="glass" />
   }
 </div>
 

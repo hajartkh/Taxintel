@@ -4,6 +4,8 @@ export type EventCategory = 'concert' | 'sports' | 'culture' | 'nightlife' | 'fa
 export type AreaKind = 'station' | 'nightlife' | 'shopping';
 export type DemandLevel = 'high' | 'busy' | 'mod';
 export type MapLayer = 'heat' | 'events' | 'route';
+/** Base map style: dark (default) or light with coloured water, parks, streets and buildings. */
+export type MapTheme = 'dark' | 'light';
 export type LayerVisibility = Record<MapLayer, boolean>;
 
 export interface Venue {

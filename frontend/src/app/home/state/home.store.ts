@@ -7,7 +7,18 @@ import { HOUR_MS, addDays, daysBetween, isSameDay, startOfDay } from '../../shar
 import { CityDataService } from '../data/city-data.service';
 import { HOME_CONFIG } from '../home.config';
 import { computeHotspots, eventsOnDay, peakPickupTime } from '../logic/demand-model';
-import { BusyArea, CityEvent, LayerVisibility, MapFocus, MapLayer, Place, Venue } from '../models/home.models';
+import { BusyArea, CityEvent, LayerVisibility, MapFocus, MapLayer, MapTheme, Place, Venue } from '../models/home.models';
+
+const THEME_STORAGE_KEY = 'taxintel.mapTheme';
+
+/** The map style the driver picked last time on this device (dark by default). */
+function loadMapTheme(): MapTheme {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark';
+  } catch {
+    return 'dark'; // storage unavailable (private mode, server rendering)
+  }
+}
 
 /** Dates are equal when they are the same moment (signals compare by reference otherwise). */
 const sameTime = (a: Date, b: Date): boolean => a.getTime() === b.getTime();
@@ -49,6 +60,7 @@ export class HomeStore {
   readonly stripStart = signal(startOfDay(new Date()), { equal: sameTime });
   readonly activeEventId = signal<number | null>(null);
   readonly layers = signal<LayerVisibility>({ heat: true, events: true, route: true });
+  readonly mapTheme = signal<MapTheme>(loadMapTheme());
   /** Forecast card on the map: starts tucked away on phones. */
   readonly forecastOpen = signal(typeof window === 'undefined' || window.innerWidth > 700);
 
@@ -122,6 +134,15 @@ export class HomeStore {
     this.live.set(false);
     this.showDayInStrip(day);
     this.focusRequests.next({ lat: ev.venue.lat, lng: ev.venue.lng, eventId: ev.id, openPopup });
+  }
+
+  setMapTheme(theme: MapTheme): void {
+    this.mapTheme.set(theme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // not remembered, but the theme still changes
+    }
   }
 
   toggleLayer(layer: MapLayer): void {

@@ -7,6 +7,9 @@
 
 /* ---------- Leaflet controls ---------- */
 .tx-map { background: #0b0b0b; font-family: var(--tx-font); }
+/* Light theme: OpenStreetMap colours (blue water, green parks); labels get a white halo */
+.tx-map.theme-light { background: #f2efe9; }
+.tx-map.theme-light .tx-area-label { color: #222; text-shadow: 0 0 4px #fff, 0 0 2px #fff, 0 0 1px #fff; }
 .tx-map.osm-dark .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) grayscale(0.6) brightness(0.85) contrast(0.95); }
 .tx-map .leaflet-bar { border: 1px solid var(--tx-line); border-radius: 10px; overflow: hidden; box-shadow: none; }
 .tx-map .leaflet-bar a {

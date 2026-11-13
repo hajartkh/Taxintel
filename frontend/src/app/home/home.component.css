@@ -29,7 +29,7 @@ h1 { margin: 0; font-size: 22px; font-weight: 800; }
 .stats {
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(84px, 1fr));
+  grid-template-columns: repeat(2, minmax(84px, 1fr));
   border: 1px solid var(--tx-line);
   border-radius: var(--tx-radius);
   background: var(--tx-card);

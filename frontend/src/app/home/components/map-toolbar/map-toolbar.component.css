@@ -55,34 +55,3 @@
   border-radius: 50%;
   background: var(--tx-yellow);
 }
-.menu { position: absolute; top: 50px; left: 0; width: 230px; padding: 10px 8px 8px; }
-.menu .label { color: var(--tx-muted); font-size: 10px; padding: 0 8px 6px; }
-
-.switch-row {
-  width: 100%;
-  padding: 9px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: none;
-  border: 0;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: left;
-}
-.switch-row:hover { background: var(--tx-card-2); }
-.switch { position: relative; flex: none; width: 34px; height: 20px; border-radius: 10px; background: #333; transition: 0.2s; }
-.switch::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #888;
-  transition: 0.2s;
-}
-.switch-row[aria-checked='true'] .switch { background: var(--tx-yellow); }
-.switch-row[aria-checked='true'] .switch::after { left: 17px; background: #000; }

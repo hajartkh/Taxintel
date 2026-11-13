@@ -15,7 +15,7 @@ Angular 18 (standalone components, signals) met Leaflet voor de kaart.
 
 | Route | Component | Wat |
 |---|---|---|
-| `/` | `home/home.component` | Homepagina chauffeur: heatmap van drukke zones, locatie chauffeur, aanbevolen route, stadskalender |
+| `/` | `home/home.component` | Homepagina chauffeur: heatmap van drukke zones, locatie chauffeur, aanbevolen route, stadskalender. Via de filterknop: lagen aan/uit en kaartstijl (donker of licht) |
 | `/route-finder` | `route-finder/route-finder.component` | Eerste routeplanner (prototype uit `main.html`) |
 
 De pagina's worden lazy geladen (`app.routes.ts`): Leaflet wordt pas gedownload als een kaartpagina opent.
@@ -64,6 +64,8 @@ src/
   `providers` van `HomeComponent`. Zo leeft de toestand even lang als de pagina, en componenten lezen ze met `inject()`.
 - **Leaflet** draait buiten de Angular-zone (`NgZone.runOutsideAngular`), zodat kaartbewegingen geen change detection
   veroorzaken. De kaart volgt de signals via `effect()`.
+- **Kaartstijl**: de keuze van de chauffeur wordt per toestel onthouden in `localStorage` (`taxintel.mapTheme`).
+  De tegels per stijl staan bovenaan `demand-map.component.ts`.
 - **Lettertype**: Manrope via `@fontsource/manrope` (zelf gehost, geen verzoek naar Google Fonts).
 
 ### Leaflet-plugins
@@ -99,6 +101,6 @@ van het AI-model; de heatmap en de aanbevolen route gebruiken enkel de uitkomst 
 
 | Dienst | Gebruikt voor | Opmerking |
 |---|---|---|
-| Esri World Dark Gray | donkere kaarttegels | geen API-key; valt automatisch terug op OpenStreetMap-tegels met een donkere filter |
-| OpenStreetMap | tegels van de route finder (en fallback) | |
+| Esri World Dark Gray | kaartstijl **donker** (standaard) | geen API-key; valt automatisch terug op OpenStreetMap-tegels met een donkere filter |
+| OpenStreetMap standaard | kaartstijl **licht** (water blauw, parken groen, straten wit, gebouwen zichtbaar) en de route finder | valt bij de lichte stijl terug op Esri World Street Map |
 | OSRM demo-server (`router.project-osrm.org`) | routes over de straten | enkel voor demo's, niet voor productie; url in `home/home.config.ts` |
