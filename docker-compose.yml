@@ -64,6 +64,30 @@ services:
     networks:
       - taxintel
 
+  # Python API (FastAPI): iRail-data + AI-hotspots (/hotspots), docs op http://localhost:8001/docs
+  ai:
+    build:
+      context: ./backend
+      target: dev
+    ports:
+      - "${AI_PORT:-8001}:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      MONGO_URI: mongodb://${MONGO_APP_USER}:${MONGO_APP_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=${MONGO_DB}
+      MONGO_DB: ${MONGO_DB}
+      IRAIL_STATIONS: ${IRAIL_STATIONS:-}
+      IRAIL_COLLECT_EVERY_MIN: ${IRAIL_COLLECT_EVERY_MIN:-0}
+      IRAIL_USER_AGENT: ${IRAIL_USER_AGENT:-}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-4200}
+      WATCHFILES_FORCE_POLLING: "true"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - taxintel
+
   mongo:
     image: mongo:8.0
     restart: unless-stopped

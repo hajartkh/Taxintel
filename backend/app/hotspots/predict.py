@@ -62,9 +62,10 @@ def predict(
         "window": {"from": start, "to": end},
         "modelVersion": MODEL_VERSION,
         "hotspots": hotspots,
-        "heatmap": [  # voor een heatmap-laag op de kaart (h3-js tekent de zeshoeken)
-            {"cell": c, "demand": round(e["demand"], 2)}
+        "heatmap": [  # 1 gewogen punt per H3-cel (middelpunt), voor een heatmap-laag op de kaart
+            {"cell": c, "lat": round(lat, 6), "lng": round(lng, 6), "demand": round(e["demand"], 2)}
             for c, e in heat.items() if e["demand"] >= model.MIN_CELL_DEMAND / 5
+            for lat, lng in [h3.cell_to_latlng(c)]
         ],
     }
 
