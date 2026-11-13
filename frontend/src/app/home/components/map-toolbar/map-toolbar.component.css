@@ -1,0 +1,57 @@
+:host {
+  position: absolute;
+  z-index: 900;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* ---------- Search: icon only, slides open ---------- */
+.searchbox {
+  display: flex;
+  align-items: center;
+  width: 42px;
+  height: 42px;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+.searchbox.open { width: 300px; max-width: calc(100vw - 178px); border-color: var(--tx-line-strong); }
+.searchbox button {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+}
+.searchbox input {
+  flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+  background: none;
+  border: 0;
+  outline: none;
+  color: var(--tx-text);
+  font: inherit;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.searchbox.open input { opacity: 1; }
+.searchbox input::placeholder { color: var(--tx-muted); }
+
+/* ---------- Layer filter ---------- */
+.filter { position: relative; }
+.flag {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tx-yellow);
+}

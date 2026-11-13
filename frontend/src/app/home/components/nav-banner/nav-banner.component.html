@@ -1,0 +1,17 @@
+@if (trip.nav(); as nav) {
+  <div class="banner" role="status">
+    <div class="arrow" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        @switch (nav.turn) {
+          @case ('left') { <path d="M15 18 9 12l6-6" /> }
+          @case ('right') { <path d="m9 18 6-6-6-6" /> }
+          @default { <path d="M12 19V5M5 12l7-7 7 7" /> }
+        }
+      </svg>
+    </div>
+    <div>
+      <div class="distance">{{ nav.distance }}</div>
+      <div class="text">{{ nav.text }}</div>
+    </div>
+  </div>
+}

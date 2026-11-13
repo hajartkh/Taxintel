@@ -1,0 +1,45 @@
+/* Small reusable classes shared by several components (and by Leaflet popups). */
+
+/* Small caps heading: "CITY CALENDAR" */
+.label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Translucent dark card floating on the map */
+.glass {
+  background: rgba(12, 12, 12, 0.88);
+  border: 1px solid var(--tx-line);
+  border-radius: var(--tx-radius);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--tx-shadow);
+}
+
+/* Square icon button on the map */
+.icon-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  color: var(--tx-text);
+}
+.icon-btn:hover { border-color: var(--tx-line-strong); }
+.icon-btn[aria-expanded='true'] { border-color: var(--tx-yellow); color: var(--tx-yellow); }
+
+/* Demand badge: <span class="badge high">High demand</span> */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.badge.high { color: var(--tx-red); background: rgba(255, 59, 59, 0.12); border-color: rgba(255, 59, 59, 0.35); }
+.badge.busy { color: var(--tx-orange); background: rgba(255, 138, 0, 0.12); border-color: rgba(255, 138, 0, 0.35); }
+.badge.mod { color: var(--tx-yellow); background: var(--tx-yellow-soft); border-color: rgba(255, 212, 0, 0.3); }

@@ -1,0 +1,23 @@
+<div class="label">Show on map</div>
+@for (layer of layerOptions; track layer.key) {
+  <button class="switch-row" type="button" role="switch" [attr.aria-checked]="store.layers()[layer.key]" (click)="store.toggleLayer(layer.key)">
+    <span>{{ layer.label }}</span>
+    <span class="switch" aria-hidden="true"></span>
+  </button>
+}
+
+<div class="label theme-label" id="tx-theme-label">Map style</div>
+<div class="themes" role="radiogroup" aria-labelledby="tx-theme-label">
+  @for (theme of themeOptions; track theme.key) {
+    <button
+      type="button"
+      role="radio"
+      [class]="'theme ' + theme.key"
+      [attr.aria-checked]="store.mapTheme() === theme.key"
+      (click)="store.setMapTheme(theme.key)"
+    >
+      <span class="preview" aria-hidden="true"></span>
+      {{ theme.label }}
+    </button>
+  }
+</div>

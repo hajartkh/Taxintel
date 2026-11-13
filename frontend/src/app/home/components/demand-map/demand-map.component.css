@@ -1,0 +1,19 @@
+/* The overlays (toolbar, forecast, legend …) position themselves inside this box. */
+:host {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #0b0b0b;
+}
+
+/* CSS fallback for fullscreen (e.g. iPhone has no Fullscreen API for elements) */
+:host(.fullscreen) {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+}

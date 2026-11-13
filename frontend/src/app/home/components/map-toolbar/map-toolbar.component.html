@@ -1,0 +1,68 @@
+<div class="searchbox glass" [class.open]="searchOpen()">
+  <button type="button" title="Search" aria-label="Search" [attr.aria-expanded]="searchOpen()" (click)="onSearchButton()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+    </svg>
+  </button>
+  <input
+    #searchInput
+    list="tx-places"
+    placeholder="Search places"
+    autocomplete="off"
+    aria-label="Search an area or venue"
+    [tabIndex]="searchOpen() ? 0 : -1"
+    (change)="submitSearch()"
+    (keydown.escape)="closeSearch()"
+    (blur)="onSearchBlur()"
+  />
+  <datalist id="tx-places">
+    @for (place of store.places(); track place.name) {
+      <option [value]="place.name"></option>
+    }
+  </datalist>
+</div>
+
+<button class="glass icon-btn" type="button" title="Center on my position" aria-label="Center on my position" (click)="locate.emit()">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3" /><circle cx="12" cy="12" r="8" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+  </svg>
+</button>
+
+<div class="filter">
+  <button
+    class="glass icon-btn"
+    type="button"
+    title="Map layers"
+    [attr.aria-label]="store.hasHiddenLayers() ? 'Map layers (some hidden)' : 'Map layers'"
+    aria-controls="tx-layer-menu"
+    [attr.aria-expanded]="filterOpen()"
+    (click)="filterOpen.set(!filterOpen())"
+  >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M3 5h18l-7 8v6l-4 2v-8Z" />
+    </svg>
+    @if (store.hasHiddenLayers()) {
+      <span class="flag" aria-hidden="true"></span>
+    }
+  </button>
+
+  @if (filterOpen()) {
+    <app-map-layers-menu id="tx-layer-menu" class="glass" />
+  }
+</div>
+
+<button
+  class="glass icon-btn"
+  type="button"
+  [title]="fullscreen() ? 'Exit fullscreen' : 'Fullscreen map'"
+  [attr.aria-label]="fullscreen() ? 'Exit fullscreen' : 'Fullscreen map'"
+  (click)="fullscreenToggle.emit()"
+>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    @if (fullscreen()) {
+      <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+    } @else {
+      <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+    }
+  </svg>
+</button>

@@ -1,0 +1,16 @@
+:host {
+  position: absolute;
+  z-index: 800;
+  bottom: 18px;
+  left: 50%;
+  max-width: 80%;
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s;
+}
+:host(.show) { opacity: 1; transform: translateX(-50%); }
+/* Above the drive controls while a trip is running */
+:host(.raised) { bottom: 96px; }
+
+.toast { padding: 10px 16px; font-size: 13px; font-weight: 600; }

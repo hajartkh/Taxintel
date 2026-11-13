@@ -1,0 +1,67 @@
+:host { display: block; }
+
+.head { display: flex; justify-content: space-between; align-items: center; }
+h2 { margin: 0; }
+.sub { color: var(--tx-muted); font-size: 13px; margin-top: 3px; }
+
+.arrows { display: flex; gap: 4px; }
+.arrows button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--tx-line);
+  border-radius: 8px;
+  background: var(--tx-card);
+}
+
+/* ---------- Week strip ---------- */
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 14px 0; }
+.day {
+  padding: 7px 0 6px;
+  border: 1px solid var(--tx-line);
+  border-radius: 10px;
+  background: var(--tx-card);
+  text-align: center;
+  line-height: 1.15;
+}
+.day small { display: block; font-size: 10px; font-weight: 700; color: var(--tx-muted); text-transform: uppercase; }
+.day b { font-size: 16px; }
+.dots { display: flex; justify-content: center; gap: 3px; height: 5px; margin-top: 4px; }
+.dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--tx-yellow); }
+.day.today { border-color: #3d3d3d; }
+.day.selected { background: var(--tx-yellow); border-color: var(--tx-yellow); color: #000; }
+.day.selected small { color: #000; }
+.day.selected .dots i { background: #000; }
+
+/* ---------- Events ---------- */
+.events { display: flex; flex-direction: column; gap: 8px; }
+.event {
+  width: 100%;
+  padding: 12px 12px 12px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--tx-line);
+  border-radius: var(--tx-radius);
+  background: var(--tx-card);
+  text-align: left;
+}
+.event:hover { border-color: var(--tx-line-strong); }
+.event.active { border-color: var(--tx-yellow); box-shadow: 0 0 0 1px var(--tx-yellow) inset; }
+
+.time { padding: 6px 12px 6px 0; border-right: 1px solid var(--tx-line); line-height: 1.2; white-space: nowrap; }
+.time b { font-size: 14px; }
+.time span { margin: 0 3px; color: var(--tx-muted); font-weight: 600; }
+.name { font-size: 14px; font-weight: 700; }
+.venue { margin-top: 2px; font-size: 12px; color: var(--tx-muted); }
+
+.empty {
+  padding: 14px;
+  border: 1px dashed var(--tx-line);
+  border-radius: var(--tx-radius);
+  color: var(--tx-muted);
+  font-size: 13px;
+  text-align: center;
+}

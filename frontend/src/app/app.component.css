@@ -1,0 +1,17 @@
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The routed page fills the space below the top bar */
+.page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+@media (max-width: 1000px) {
+  :host { height: auto; min-height: 100%; }
+  .page { display: block; }
+}

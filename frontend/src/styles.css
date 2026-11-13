@@ -1,14 +1,16 @@
+/*
+ * Global styles: only what cannot live in a component.
+ * Component styles sit next to each component (*.component.css).
+ */
 @import 'leaflet/dist/leaflet.css';
 @import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
-html, body { height: 100%; width: 100%; margin: 0; font-family: system-ui, sans-serif; }
-app-root { display: block; height: 100%; }
+/* Manrope, self-hosted via npm (no request to Google Fonts) */
+@import '@fontsource/manrope/latin-400.css';
+@import '@fontsource/manrope/latin-600.css';
+@import '@fontsource/manrope/latin-700.css';
+@import '@fontsource/manrope/latin-800.css';
 
-/* The driver: a blue disc with an arrow that turns to the direction of travel */
-.car {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: #2563eb; color: #fff; border: 3px solid #fff;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; box-sizing: border-box;
-}
+@import './styles/theme.css';       /* colours, fonts, base elements */
+@import './styles/utilities.css';   /* .label, .glass, .icon-btn, .badge */
+@import './styles/map.css';         /* Leaflet theme + map markers (created outside Angular) */

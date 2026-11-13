@@ -1,0 +1,50 @@
+<div class="head">
+  <div>
+    <h2 class="label">Smart route</h2>
+    <div class="sub">{{ basis() }}</div>
+  </div>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--tx-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="m12 3-1.9 5.8L4 10.7l5 3.6L7.1 20 12 16.4l4.9 3.6-1.9-5.7 5-3.6-6.1-1.9Z" />
+  </svg>
+</div>
+
+<div class="summary">
+  <div><b>{{ summary()?.distance ?? '–' }}</b><span>Distance</span></div>
+  <div><b>{{ summary()?.time ?? '–' }}</b><span>Drive time</span></div>
+  <div><b>{{ summary()?.stops ?? '–' }}</b><span>Hotspots</span></div>
+</div>
+
+<ol class="stops">
+  <li class="start">
+    <span class="num" aria-hidden="true">
+      <svg width="12" height="12" viewBox="0 0 24 24"><path d="M12 2 20 21 12 16.5 4 21Z" fill="currentColor" /></svg>
+    </span>
+    <div>
+      <div class="name">Your position</div>
+      <div class="why">{{ trip.active() ? 'Driving' : 'Ready' }}</div>
+    </div>
+  </li>
+  @for (item of stops(); track item.stop.id; let i = $index) {
+    <li [class.done]="item.stop.done">
+      <span class="num">{{ i + 1 }}</span>
+      <div>
+        <div class="name">{{ item.stop.name }}</div>
+        <div class="why">{{ item.stop.reason }}</div>
+      </div>
+      <app-demand-badge [level]="item.level" />
+    </li>
+  }
+</ol>
+
+<div class="options">
+  <label>
+    Speed
+    <select (change)="setSpeed($event)">
+      @for (speed of speedOptions; track speed) {
+        <option [value]="speed" [selected]="speed === trip.speedKmh()">{{ speed }} km/h{{ speed > 100 ? ' (demo)' : '' }}</option>
+      }
+    </select>
+  </label>
+  <label><input type="checkbox" [checked]="trip.follow()" (change)="setFollow($event)" /> Follow driver</label>
+</div>
+<div class="info" aria-live="polite">{{ trip.info() }}</div>
