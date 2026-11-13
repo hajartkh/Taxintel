@@ -1,0 +1,8 @@
+:host { display: flex; flex-direction: column; height: 100%; width: 100%; }
+.bar {
+  display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+  padding: 8px 12px; background: #f4f4f4; border-bottom: 1px solid #ddd;
+}
+.info { flex: 1; min-width: 220px; }
+.bar button, .bar select { padding: 6px 10px; cursor: pointer; }
+.map { flex: 1; width: 100%; }

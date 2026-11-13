@@ -1,0 +1,14 @@
+@import 'leaflet/dist/leaflet.css';
+@import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+
+html, body { height: 100%; width: 100%; margin: 0; font-family: system-ui, sans-serif; }
+app-root { display: block; height: 100%; }
+
+/* The driver: a blue disc with an arrow that turns to the direction of travel */
+.car {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #2563eb; color: #fff; border: 3px solid #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; box-sizing: border-box;
+}

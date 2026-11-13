@@ -6,5 +6,8 @@ pydantic-settings==2.6.1
 # Database (pymongo bevat ook de async client)
 pymongo==4.10.1
 
-# Externe API's (Google Maps, Events, De Lijn, ILine)
+# Externe API's (Google Maps, Events, De Lijn, ILine, iRail)
 httpx==0.28.1
+
+# Tijdzones (Europe/Brussels) in de slim-image
+tzdata==2025.2
