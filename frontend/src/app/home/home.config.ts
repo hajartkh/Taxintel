@@ -13,6 +13,12 @@ export const HOME_CONFIG = {
   /** The forecast slider covers one "taxi night": 06:00 of the selected day until 05:30 the next morning. */
   shiftStartHour: 6,
   forecastSlots: 48,
+  /** Events: how far back and ahead they are loaded, and how often they are refreshed. */
+  eventsDaysBack: 7,
+  eventsDaysAhead: 90,
+  eventsRefreshMinutes: 15,
+  /** Events with fewer (estimated) visitors are not shown: they bring no real taxi demand. */
+  minEventAttendance: 300,
   /** Simulated driving speeds (km/h); the higher ones are for demos. */
   speedOptions: [50, 100, 300, 1000],
 } as const;

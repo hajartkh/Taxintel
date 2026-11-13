@@ -48,6 +48,8 @@
       <app-demand-badge [level]="item.level" />
     </button>
   } @empty {
-    <div class="empty">No major events on this day.</div>
+    <div class="empty">
+      {{ store.eventsFailed() ? 'Events could not be loaded. Is the backend running?' : 'No major events on this day.' }}
+    </div>
   }
 </div>

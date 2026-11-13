@@ -52,12 +52,46 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
-app.get('/api/events', async (_req, res) => {
+// Events for the calendar and the map pins (filled by backend/scrapers/load_mongo.py).
+//   GET /api/events?from=2026-11-01&to=2026-12-01&category=concert,festival&limit=2000
+// `from` is inclusive, `to` is exclusive (both ISO dates, compared with startsAt). Sorted by start time.
+// The big debug fields (raw, sources, dedupe) are left out.
+const EVENT_FIELDS = {
+  title: 1, category: 1, startsAt: 1, endsAt: 1, venue: 1,
+  url: 1, price: 1, organizer: 1, flags: 1, source: 1,
+};
+
+// undefined = not given, null = given but not a valid date
+function parseDate(value) {
+  if (value === undefined || value === '') return undefined;
+  const d = new Date(String(value));
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+app.get('/api/events', async (req, res) => {
+  const from = parseDate(req.query.from);
+  const to = parseDate(req.query.to);
+  if (from === null || to === null) {
+    return res.status(400).json({ error: '`from` and `to` must be ISO dates, e.g. 2026-11-01' });
+  }
+
+  const filter = {};
+  if (from || to) {
+    filter.startsAt = {};
+    if (from) filter.startsAt.$gte = from;
+    if (to) filter.startsAt.$lt = to;
+  }
+  if (req.query.category) {
+    filter.category = { $in: String(req.query.category).split(',').map((c) => c.trim()).filter(Boolean) };
+  }
+  const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 2000, 1), 5000);
+
   try {
     const events = await db
       .collection('events')
-      .find({}, { projection: { name: 1, lat: 1, lng: 1 } })
-      .limit(200)
+      .find(filter, { projection: EVENT_FIELDS })
+      .sort({ startsAt: 1 })
+      .limit(limit)
       .toArray();
     res.json(events);
   } catch (err) {

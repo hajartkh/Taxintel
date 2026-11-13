@@ -6,7 +6,7 @@ Angular 18 (standalone components, signals) met Leaflet voor de kaart.
 
 | Wat | Commando | Resultaat |
 |---|---|---|
-| Lokaal, met hot reload | `npm install` en daarna `npm start` | http://localhost:4200 – `/api` gaat via `proxy.conf.json` naar de backend op `localhost:8000` |
+| Lokaal, met hot reload | `npm install` en daarna `npm start` | http://localhost:4200 – `/api` gaat via `proxy.conf.js` naar de backend op `localhost:8000` |
 | Via Docker | `docker compose up frontend` (vanuit de hoofdmap) | http://localhost:4200 |
 | Productie-build | `npm run build` | `dist/frontend/browser/` |
 | Unit tests | `npm test` (Karma + Jasmine, Chrome nodig) | |
@@ -47,7 +47,7 @@ src/
         ├── home.component.*    pagina-layout (begroeting, kaart, zijpaneel)
         ├── home.config.ts      instellingen (OSRM-url, startpositie, …)
         ├── models/             TypeScript-interfaces
-        ├── data/               CityDataService + dummy data
+        ├── data/               CityDataService (events uit de backend), event-mapper, dummy zones
         ├── logic/              vraagmodel en heatmap-punten (pure functies, getest)
         ├── state/home.store.ts toestand van de pagina (signals)
         ├── services/           routeplanner (OSRM), rit-simulatie, toasts
@@ -78,21 +78,30 @@ import * as L from 'leaflet';
 import '../shared/leaflet/leaflet-plugins'; // L.Routing en L.heatLayer
 ```
 
-## Van dummy data naar echte data
+## Data: echt en dummy
 
-Alle dummy data zit op twee plaatsen. De componenten hoeven niet te veranderen als je overschakelt.
-
-| Bestand | Nu | Later |
+| Wat | Bron | Bestand |
 |---|---|---|
-| `home/data/city-data.service.ts` | `of(...)` met data uit `mock-city-data.ts` | `HttpClient`-calls naar de backend, gemapt naar de modellen in `home/models/home.models.ts` |
-| `core/driver.service.ts` | vaste chauffeur "Sam Peeters" | profiel na inloggen |
+| Events (kalender, event-pins, heatmap, aanbevolen route) | **echt**: `GET /api/events` (MongoDB, gevuld door `backend/scrapers`) | `home/data/city-data.service.ts`, `events/events.service.ts` |
+| Venues in de zoekbalk | **echt**: afgeleid uit de events | `home/data/city-data.service.ts` |
+| Drukke zones (stations, uitgaansbuurten, Meir) | dummy; later `/irail/crowding` | `home/data/mock-city-data.ts` |
+| Chauffeur ("Sam Peeters", omzet, ritten) | dummy; later profiel na inloggen | `core/driver.service.ts` |
 
-Koppeling met de databronnen:
+De events worden bij het openen geladen (7 dagen terug tot 90 dagen vooruit) en elke 15 minuten ververst; de
+waarden staan in `home/home.config.ts`. Is de backend niet bereikbaar, dan blijft de kalender leeg met een melding.
 
-| Methode | Endpoint | Bron |
-|---|---|---|
-| `getEvents()` | `GET /api/events` | UiTdatabank, Ticketmaster, AllEvents |
-| `getBusyAreas()` | `GET /irail/crowding` | iRail (later ook De Lijn) |
+### Van scraper-event naar UI-model (`home/data/event-mapper.ts`)
+
+De bronnen geven geen bezoekersaantallen en vaak geen einduur. Die worden daarom **geschat**:
+
+- **Bezoekers**: capaciteit van een bekende zaal (AFAS Dome/Sportpaleis, Lotto Arena, Stadsschouwburg, De Roma, Trix, ...;
+  80% bezet, 100% bij "uitverkocht"), anders een typisch aantal per categorie. De tabellen staan bovenaan het bestand.
+- **Einduur**: dat van de bron, anders een typische duur per categorie (concert 3 u, theater 2,5 u, ...).
+- **Categorie**: `concert`/`festival` -> concert, `sport` -> sports, `uitgaan` -> nightlife, `beurs` -> fair, de rest -> culture.
+
+Niet getoond worden: cursussen, kampen en rondleidingen, reeksen (bv. een expo van weken), events zonder gekend
+startuur, lounge/VIP-pakketten van een show, en events onder `minEventAttendance` (300) geschatte bezoekers.
+Events op dezelfde plek met hetzelfde startuur tellen als één event (bv. de tientallen activiteiten van een wetenschapsdag).
 
 Het vraagmodel (`home/logic/demand-model.ts`) is een tijdelijke schatting. Vervang het door de voorspellingen
 van het AI-model; de heatmap en de aanbevolen route gebruiken enkel de uitkomst (`Hotspot[]`).

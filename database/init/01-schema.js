@@ -60,7 +60,7 @@ create("events", {
   bsonType: "object",
   required: ["source", "title", "startsAt", "venue"],
   properties: {
-    source: { enum: ["events_api", "allevents", "manual"] }, // allevents = scraper (demo)
+    source: { enum: ["events_api", "manual", "uitinvlaanderen", "allevents", "ticketmaster", "eventbrite"] }, // scrapers: backend/scrapers
     externalId: { bsonType: "string" },
     title: { bsonType: "string" },
     description: { bsonType: "string" },

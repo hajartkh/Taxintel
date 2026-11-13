@@ -1,0 +1,9 @@
+# Gegenereerde bestanden: niet committen (iedereen kan ze opnieuw maken met run_all.py)
+data/*
+!data/.gitkeep
+!data/raw_allevents.json     # vaste snapshot die tests/test_pipeline.py gebruikt
+events_clean.json
+events_rejected.json
+dedupe_report.csv
+uit_events.*
+*.log

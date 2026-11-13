@@ -48,6 +48,8 @@ export class HomeStore {
   readonly events = toSignal(this.cityData.getEvents(), { initialValue: [] as CityEvent[] });
   readonly busyAreas = toSignal(this.cityData.getBusyAreas(), { initialValue: [] as BusyArea[] });
   readonly venues = toSignal(this.cityData.getVenues(), { initialValue: [] as Venue[] });
+  /** True when the events could not be loaded from the backend. */
+  readonly eventsFailed = this.cityData.eventsFailed;
 
   // ---------- UI state ----------
   /** Selected calendar day; the forecast covers 06:00 that day until 05:30 the next morning. */

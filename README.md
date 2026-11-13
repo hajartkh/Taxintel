@@ -41,12 +41,41 @@ Angular 18-app in `frontend/`, details in [`frontend/README.md`](frontend/README
 | `/` | Homepagina chauffeur: heatmap van drukke zones in Antwerpen, locatie van de chauffeur, aanbevolen route langs de drukke zones, stadskalender met events |
 | `/route-finder` | Eerste routeplanner (prototype) |
 
-De homepagina draait nog op **dummy data** (`frontend/src/app/home/data/`). Overschakelen naar de backend gebeurt in
-één service (`CityDataService`), zie de frontend-README.
+De events op de homepagina komen uit MongoDB (`GET /api/events`, gevuld door de scrapers). De drukke zones
+(stations, uitgaansbuurten) en de chauffeur zijn nog **dummy data**; zie de frontend-README.
 
 Lokaal zonder Docker: `cd frontend && npm install && npm start`.
 
 `main.html` en `home.html` in de hoofdmap zijn de oorspronkelijke HTML-prototypes; de Angular-app is de versie om op verder te bouwen.
+
+## Events: van scraper naar kalender en kaart
+
+```
+backend/scrapers (UiT, allevents, Ticketmaster)  ->  events_clean.json  ->  MongoDB `events`
+        ->  GET /api/events (Express)  ->  kalender + pins op de kaart (Angular)
+```
+
+Events in de database zetten (upsert op `source` + `externalId`, dus herhalen geeft geen dubbels):
+
+```bash
+docker compose up -d mongo
+docker compose --profile seed run --rm load-events
+```
+
+Dit laadt `backend/scrapers/events_clean.json` als je zelf gescrapet hebt, anders de meegeleverde momentopname
+`backend/scrapers/seed/events_seed.json`. Vers scrapen: zie [`backend/scrapers/README.md`](backend/scrapers/README.md).
+Bestaande database van voor deze wijziging? Voer dan eerst eenmalig de migratie uit (stap 2 in die README).
+
+**Automatisch bijwerken:** de service `scraper` start mee met `docker compose up` en haalt de bronnen zelf opnieuw op
+(Ticketmaster elke 6 u, allevents elke 12 u, UiT elke 24 u), schoont op en werkt MongoDB bij. De homepagina haalt
+de events elke 15 minuten opnieuw op. Volgen: `docker compose logs -f scraper`. Voor Ticketmaster moet
+`TICKETMASTER_KEY` in `.env` staan. Dit werkt alleen zolang de containers draaien.
+
+`GET /api/events?from=2026-11-01&to=2026-12-01&category=concert,festival&limit=2000`: events die starten in
+`[from, to)`, gesorteerd op starttijd. Alle parameters zijn optioneel.
+
+De homepagina (stadskalender, event-pins, heatmap, aanbevolen route) leest deze events via `CityDataService`;
+hoe ze naar het UI-model vertaald worden staat in [`frontend/README.md`](frontend/README.md).
 
 ## Treindata (iRail) - drukte rond stations
 

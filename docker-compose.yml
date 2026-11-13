@@ -89,6 +89,48 @@ services:
     networks:
       - taxintel
 
+  # Houdt de events automatisch actueel: draait backend/scrapers/run_all.py als lus.
+  # Ticketmaster elke 6 u, allevents elke 12 u, UiT elke 24 u -> opschonen -> upsert in MongoDB.
+  # Start mee met `docker compose up`. Logboek: `docker compose logs -f scraper` of backend/scrapers/data/run.log
+  # Niet nodig? `docker compose stop scraper`.
+  scraper:
+    image: python:3.12-slim
+    restart: unless-stopped
+    working_dir: /scrapers
+    volumes:
+      - ./backend/scrapers:/scrapers
+    environment:
+      MONGO_URI: mongodb://${MONGO_APP_USER}:${MONGO_APP_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=${MONGO_DB}
+      TICKETMASTER_KEY: ${TICKETMASTER_KEY:-}
+      PYTHONUNBUFFERED: "1"
+    command: sh -c "pip install -q --root-user-action=ignore pymongo tzdata && python run_all.py"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - taxintel
+
+  # Eenmalig: scraper-events in MongoDB zetten (upsert, dus veilig om te herhalen).
+  #   docker compose --profile seed run --rm load-events
+  # Neemt events_clean.json (eigen scraper-run) als die bestaat, anders de meegeleverde seed.
+  load-events:
+    image: python:3.12-slim
+    profiles: ["seed"]
+    working_dir: /scrapers
+    volumes:
+      - ./backend/scrapers:/scrapers
+    environment:
+      MONGO_URI: mongodb://${MONGO_APP_USER}:${MONGO_APP_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=${MONGO_DB}
+    command: >
+      sh -c "pip install -q --root-user-action=ignore pymongo &&
+             if [ -f events_clean.json ]; then python load_mongo.py --input events_clean.json;
+             else python load_mongo.py --input seed/events_seed.json; fi"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - taxintel
+
   mongo-express:
     image: mongo-express:1.0.2
     profiles: ["tools"]
