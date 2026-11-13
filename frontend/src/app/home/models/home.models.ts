@@ -3,7 +3,7 @@ import type { LatLng } from 'leaflet';
 export type EventCategory = 'concert' | 'sports' | 'culture' | 'nightlife' | 'fair';
 export type AreaKind = 'station' | 'nightlife' | 'shopping';
 export type DemandLevel = 'high' | 'busy' | 'mod';
-export type MapLayer = 'heat' | 'events' | 'route';
+export type MapLayer = 'heat' | 'events' | 'route' | 'ai';
 /** Base map style: dark (default) or light with coloured water, parks, streets and buildings. */
 export type MapTheme = 'dark' | 'light';
 export type LayerVisibility = Record<MapLayer, boolean>;

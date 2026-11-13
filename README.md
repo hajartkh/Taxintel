@@ -77,6 +77,18 @@ de events elke 15 minuten opnieuw op. Volgen: `docker compose logs -f scraper`. 
 De homepagina (stadskalender, event-pins, heatmap, aanbevolen route) leest deze events via `CityDataService`;
 hoe ze naar het UI-model vertaald worden staat in [`frontend/README.md`](frontend/README.md).
 
+## AI-hotspots op de kaart
+
+De service `ai` (Python/FastAPI, http://localhost:8001/docs) berekent de hotspots uit dezelfde MongoDB:
+de **events** van de scrapers (`events`) en de **treinen** van iRail (`trainMovements`). De frontend haalt ze op via
+`/ai/hotspots` en tekent ze als de laag "AI hotspots". Uitleg van het model: [`backend/app/hotspots/notes.md`](backend/app/hotspots/notes.md).
+
+- Treindata: de `ai`-service haalt zonder extra instelling elke 15 minuten de komende 2 uur op voor de Antwerpse
+  stations (`IRAIL_STATIONS`, `IRAIL_COLLECT_EVERY_MIN` in `.env` om dat te wijzigen). Stations tellen dus alleen mee
+  voor tijdstippen waarvoor al treinen zijn opgehaald; verder vooruit bestaat de heatmap enkel uit events.
+- Events: zelfde filter en bezoekersschatting als de kalender (`backend/app/hotspots/sources.py` en
+  `frontend/src/app/home/data/event-mapper.ts` delen de lijst met zaalcapaciteiten).
+
 ## Treindata (iRail) - drukte rond stations
 
 Via de [iRail API](https://docs.irail.be/) (live NMBS-data, gratis, geen API-key) volgt de backend aankomsten en vertrekken

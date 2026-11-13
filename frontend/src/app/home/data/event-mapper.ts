@@ -40,18 +40,19 @@ const TYPICAL: Record<string, { attendance: number; hours: number }> = {
 };
 const TYPICAL_OTHER = { attendance: 100, hours: 2 };
 
-/** Approximate capacity of the big Antwerp venues, matched on a part of the venue name. */
+/** Approximate capacity of the big Antwerp venues, matched on a part of the venue name.
+ *  Keep in sync with VENUE_CAPACITY in backend/app/hotspots/sources.py. */
 const VENUE_CAPACITY: Array<[match: string, capacity: number]> = [
   ['afas dome', 23000],
   ['sportpaleis', 23000],
-  ['bosuil', 16000],
+  ['bosuil', 12000],
   ['olympisch stadion', 12000],
   ['lotto arena', 8000],
-  ['antwerp expo', 8000],
+  ['antwerp expo', 10000],
   ['stadsschouwburg', 2000],
   ['elisabethzaal', 2000],
-  ['de roma', 1500],
-  ['trix', 1100],
+  ['de roma', 1800],
+  ['trix', 1200],
   ['opera antwerpen', 1000],
   ['singel', 950],
   ['bourla', 900],

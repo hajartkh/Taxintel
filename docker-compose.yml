@@ -21,6 +21,7 @@ services:
     environment:
       # Used by proxy.conf.js: inside compose, the API is reached via the service name
       API_PROXY_TARGET: http://backend:8000
+      AI_PROXY_TARGET: http://ai:8000
       GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
     command: >
       sh -c "if [ -f package.json ]; then npm install && npx ng serve --host 0.0.0.0 --poll 2000;
@@ -58,6 +59,31 @@ services:
     #   sh -c "if [ -f app/main.py ]; then uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload;
     #          else echo 'Nog geen backend/app/main.py. Container wacht.'; tail -f /dev/null; fi"
     command: ["sh", "-c", "npm install && node --watch server.js"]
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - taxintel
+
+  # Python API (FastAPI): iRail-data + AI-hotspots (/hotspots), docs op http://localhost:8001/docs
+  ai:
+    build:
+      context: ./backend
+      target: dev
+    ports:
+      - "${AI_PORT:-8001}:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      MONGO_URI: mongodb://${MONGO_APP_USER}:${MONGO_APP_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=${MONGO_DB}
+      MONGO_DB: ${MONGO_DB}
+      # Treindata voor de hotspots: zonder .env-instelling de Antwerpse stations, elke 15 min de komende 2 uur
+      IRAIL_STATIONS: ${IRAIL_STATIONS:-BE.NMBS.008821006,BE.NMBS.008821121,BE.NMBS.008821196,BE.NMBS.008821063,BE.NMBS.008821089,BE.NMBS.008894839}
+      IRAIL_COLLECT_EVERY_MIN: ${IRAIL_COLLECT_EVERY_MIN:-15}
+      IRAIL_USER_AGENT: ${IRAIL_USER_AGENT:-}
+      CORS_ORIGINS: http://localhost:${FRONTEND_PORT:-4200}
+      WATCHFILES_FORCE_POLLING: "true"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     depends_on:
       mongo:
         condition: service_healthy

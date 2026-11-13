@@ -16,7 +16,9 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as L from 'leaflet';
 import '../../../shared/leaflet/leaflet-plugins'; // adds L.heatLayer
+import { SmoothHeatLayer } from '../../../shared/leaflet/smooth-heat-layer';
 import { formatTime, relativeDayLabel } from '../../../shared/utils/time';
+import { AiHotspotResult } from '../../data/ai-hotspots.service';
 import { HOME_CONFIG } from '../../home.config';
 import { DEMAND_LABEL, clusterHotspots, demandLevel, eventSize, peakPickupTime } from '../../logic/demand-model';
 import { toHeatPoints } from '../../logic/heat-points';
@@ -45,6 +47,11 @@ const ROUTE_CASING: Record<MapTheme, L.PolylineOptions> = {
   dark: { color: '#ffd400', weight: 16, opacity: 0.16 },
   light: { color: '#111111', weight: 10, opacity: 0.85 },
 };
+
+/** AI hotspots (backend model): smooth heat, transparent at the edge and red in the centre. */
+const AI_GRADIENT = { 0.15: '#ffe066', 0.4: '#ffb000', 0.65: '#ff6a00', 0.85: '#ff2a00', 1: '#d10000' };
+/** Heat radius in metres around every cell centre (cells are ~300 m apart, so neighbours blend). */
+const AI_RADIUS_M = 300;
 
 const HEAT_GRADIENT = { 0.1: '#4a3a00', 0.3: '#ffd400', 0.5: '#ffa800', 0.7: '#ff6a00', 0.9: '#ff2a2a' };
 
@@ -90,6 +97,7 @@ export class DemandMapComponent implements AfterViewInit {
 
   private map!: L.Map;
   private heat!: L.HeatLayer;
+  private aiHeat!: SmoothHeatLayer;
   private car!: L.Marker;
   private surge!: L.Marker;
   private routeGlow!: L.Polyline;
@@ -170,6 +178,8 @@ export class DemandMapComponent implements AfterViewInit {
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
     this.heat = L.heatLayer([], { radius: 36, blur: 28, maxZoom: 14, max: 1, minOpacity: 0.04, gradient: HEAT_GRADIENT }).addTo(map);
+    // Own layer (radial gradients): stays soft when zoomed in, radius in metres (not pixels)
+    this.aiHeat = new SmoothHeatLayer({ radiusM: AI_RADIUS_M * 1.8, gradient: AI_GRADIENT, max: 0.9 });
     this.surge = L.marker(mapCenter, { pane: 'labelPane', interactive: false });
 
     this.routeGlow = L.polyline([], { pane: 'routePane', ...ROUTE_CASING.dark, interactive: false });
@@ -263,6 +273,7 @@ export class DemandMapComponent implements AfterViewInit {
     const injector = this.injector;
     effect(() => this.applyTheme(this.store.mapTheme()), { injector });
     effect(() => this.renderHeat(this.store.hotspots(), this.store.layers().heat), { injector });
+    effect(() => this.renderAi(this.store.aiHotspots(), this.store.layers().ai), { injector });
     effect(() => this.renderEvents(this.store.dayEvents(), this.store.layers().events), { injector });
     effect(() => this.renderRoute(this.trip.route(), this.store.layers().route), { injector });
     effect(() => this.renderDriver(this.trip.driverPosition()), { injector });
@@ -303,6 +314,17 @@ export class DemandMapComponent implements AfterViewInit {
     } else {
       this.surge.remove();
     }
+  }
+
+  /** Backend AI model as a smooth heatmap (red = centre of a hotspot). Ranking/scores stay in the API for routing. */
+  private renderAi(result: AiHotspotResult | null, visible: boolean): void {
+    if (!visible || !result) {
+      this.aiHeat.remove();
+      return;
+    }
+    const top = Math.max(...result.heatmap.map((c) => c.demand), 1);
+    this.aiHeat.setPoints(result.heatmap.map((c) => [c.lat, c.lng, c.demand / top]));
+    this.aiHeat.addTo(this.map);
   }
 
   private renderEvents(events: CityEvent[], visible: boolean): void {
