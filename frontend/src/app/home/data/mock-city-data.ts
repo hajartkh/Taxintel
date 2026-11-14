@@ -6,7 +6,7 @@
  * Event dates are generated relative to today, so the demo never goes stale.
  */
 import { addDays, atTime } from '../../shared/utils/time';
-import { BusyArea, CityEvent, EventCategory, Venue } from './city.models';
+import { BusyArea, CityEvent, EventCategory, Venue } from '../models/home.models';
 
 type VenueId =
   | 'sportpaleis' | 'lotto' | 'bosuil' | 'olympisch' | 'schouwburg' | 'elisabeth' | 'opera'
