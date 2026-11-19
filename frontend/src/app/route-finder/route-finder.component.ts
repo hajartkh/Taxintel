@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
+import { I18nService, Message } from '../core/i18n/i18n.service';
 import '../shared/leaflet/leaflet-plugins'; // adds L.Routing (loads Leaflet first, see that file)
 
 // Default marker icon fix (used by the draggable waypoint markers)
@@ -20,15 +21,19 @@ L.Icon.Default.mergeOptions({
 export class RouteFinderComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapEl', { static: true }) mapEl!: ElementRef<HTMLDivElement>;
 
+  readonly i18n = inject(I18nService);
+  readonly t = this.i18n.t;
+
   // ---- bound to the template ----
-  info = 'Click the map to set the start (the driver).';
+  /** Status line (a message, so it follows a language change). */
+  info: Message = { key: 'rf.clickStart' };
   startDisabled = true;
   speedKmh = 50;
   follow = true;
   pinMode = false;
 
   get buttonLabel() {
-    return this.driving ? 'Pause' : this.tripActive ? 'Resume' : 'Start driving';
+    return this.t(this.driving ? 'home.pause' : this.tripActive ? 'rf.resume' : 'rf.start');
   }
 
   // ---- map objects ----
@@ -70,7 +75,8 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
       router: L.Routing.osrmv1({
         serviceUrl: 'https://router.project-osrm.org/route/v1',
         profile: 'driving',
-      }),
+        language: this.i18n.lang(),
+      } as L.Routing.OSRMOptions),
       show: false,
       showAlternatives: false,
       routeWhileDragging: true,
@@ -84,7 +90,7 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
     this.routing.on('routesfound', (e: L.Routing.RoutingResultEvent) => this.onRoutesFound(e));
     this.routing.on('routingerror', () => {
       this.rerouting = false;
-      this.info = 'No route found. Try different points.';
+      this.info = { key: 'rf.noRoute' };
     });
 
     this.pins.addTo(this.map);
@@ -119,7 +125,7 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
   reset(): void {
     this.stopTrip();
     this.setRoute([]);
-    this.info = 'Click the map to set the start (the driver).';
+    this.info = { key: 'rf.clickStart' };
   }
 
   // ---------- Helpers ----------
@@ -201,7 +207,7 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
       this.map.fitBounds(L.latLngBounds(this.path), { padding: [40, 40] });
       const s = e.routes[0].summary;
       if (s) {
-        this.info = `Route: ${(s.totalDistance / 1000).toFixed(2)} km, about ${Math.round(s.totalTime / 60)} min. Press Start driving.`;
+        this.info = { key: 'rf.route', params: { km: this.i18n.number(s.totalDistance / 1000, 2), min: Math.round(s.totalTime / 60) } };
       }
     }
   }
@@ -225,7 +231,7 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
     const dest = this.currentPoints().pop()!;
     this.stopTrip();
     this.setRoute([dest]);
-    this.info = 'Arrived. Click the map to pick a new destination.';
+    this.info = { key: 'rf.arrived' };
   }
 
   private tick = (t: number): void => {
@@ -244,7 +250,7 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
     if (this.follow) this.map.panTo(latlng, { animate: false });
 
     const left = total - this.travelled;
-    this.info = `${(left / 1000).toFixed(2)} km to go, about ${Math.ceil(left / mps / 60)} min`;
+    this.info = { key: 'rf.progress', params: { km: this.i18n.number(left / 1000, 2), min: Math.ceil(left / mps / 60) } };
 
     if (this.rerouting && t - this.lastReroute > 10000) this.rerouting = false;
 
@@ -260,46 +266,50 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
   };
 
   // ---------- Pins ----------
-  private addPin(latlng: L.LatLngExpression, label?: string): L.CircleMarker {
+  private addPin(latlng: L.LatLngExpression, label?: string | Message): L.CircleMarker {
     const ll = L.latLng(latlng);
     const marker = L.circleMarker(ll, {
       radius: 8, color: '#b45309', fillColor: '#f59e0b', fillOpacity: 0.9, weight: 2,
     }).addTo(this.pins);
 
-    const popup = document.createElement('div');
-    const title = document.createElement('b');
-    title.textContent = label || 'Pin';
-    popup.append(title, document.createElement('br'));
+    // Built when it opens, so the texts are in the current language.
+    const buildPopup = (): HTMLElement => {
+      const popup = document.createElement('div');
+      const title = document.createElement('b');
+      title.textContent = label ? (typeof label === 'string' ? label : this.i18n.msg(label)) : this.t('rf.pin');
+      popup.append(title, document.createElement('br'));
 
-    const button = (text: string, onClick: () => void) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = text;
-      b.style.margin = '4px 4px 0 0';
-      b.addEventListener('click', () => { onClick(); marker.closePopup(); });
-      popup.append(b);
+      const button = (text: string, onClick: () => void) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = text;
+        b.style.margin = '4px 4px 0 0';
+        b.addEventListener('click', () => { onClick(); marker.closePopup(); });
+        popup.append(b);
+      };
+
+      button(this.t('rf.driveFrom'), () => {
+        this.stopTrip();
+        const pts = this.currentPoints();
+        this.setRoute(pts.length > 1 ? [ll, pts[pts.length - 1]] : [ll]);
+      });
+      button(this.t('rf.driveTo'), () => {
+        const pts = this.currentPoints();
+        this.setRoute(pts.length ? [pts[0], ll] : [ll]);
+      });
+      button(this.t('rf.addWaypoint'), () => this.setRoute([...this.currentPoints(), ll]));
+      button(this.t('rf.delete'), () => this.pins.removeLayer(marker));
+      return popup;
     };
 
-    button('Drive from here', () => {
-      this.stopTrip();
-      const pts = this.currentPoints();
-      this.setRoute(pts.length > 1 ? [ll, pts[pts.length - 1]] : [ll]);
-    });
-    button('Drive to here', () => {
-      const pts = this.currentPoints();
-      this.setRoute(pts.length ? [pts[0], ll] : [ll]);
-    });
-    button('Add to waypoints', () => this.setRoute([...this.currentPoints(), ll]));
-    button('Delete', () => this.pins.removeLayer(marker));
-
-    marker.bindPopup(popup);
+    marker.bindPopup(buildPopup);
     return marker;
   }
 
   // ---------- Map clicks ----------
   private onMapClick(e: L.LeafletMouseEvent): void {
     if (this.pinMode) {
-      this.addPin(e.latlng, `Pin at ${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`);
+      this.addPin(e.latlng, { key: 'rf.pinAt', params: { lat: e.latlng.lat.toFixed(4), lng: e.latlng.lng.toFixed(4) } });
       return;
     }
     if (this.tripActive) {
@@ -308,10 +318,10 @@ export class RouteFinderComponent implements AfterViewInit, OnDestroy {
     }
     const pts = this.currentPoints();
     if (pts.length === 1) {
-      this.info = 'Calculating route…';
+      this.info = { key: 'trip.calculating' };
       this.setRoute([pts[0], e.latlng]);
     } else {
-      this.info = 'Now click the destination.';
+      this.info = { key: 'rf.clickDestination' };
       this.setRoute([e.latlng]);
     }
   }

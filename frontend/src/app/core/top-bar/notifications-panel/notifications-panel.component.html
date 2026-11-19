@@ -1,0 +1,39 @@
+<header class="head">
+  <div>
+    <h2 class="label">{{ t('notif.title') }}</h2>
+    <div class="sub">
+      @if (notifications.unreadCount() > 0) {
+        {{ t('notif.unread', { count: notifications.unreadCount() }) }}
+      } @else {
+        {{ t('notif.allRead') }}
+      }
+    </div>
+  </div>
+  <button type="button" class="mark-all" [disabled]="notifications.unreadCount() === 0" (click)="notifications.markAllRead()">
+    {{ t('notif.markAll') }}
+  </button>
+</header>
+
+<ul class="list">
+  @for (n of items(); track n.id) {
+    <li>
+      <button type="button" class="item" [class.unread]="!n.read" (click)="notifications.markRead(n.id)">
+        <span [class]="'icon ' + n.kind" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="icons[n.kind]" />
+          </svg>
+        </span>
+        <span class="text">
+          <b>{{ n.titleText }}</b>
+          <span>{{ n.bodyText }}</span>
+          <time>{{ n.ago }}</time>
+        </span>
+        @if (!n.read) {
+          <span class="dot" aria-hidden="true"></span>
+        }
+      </button>
+    </li>
+  } @empty {
+    <li class="empty">{{ t('notif.empty') }}</li>
+  }
+</ul>

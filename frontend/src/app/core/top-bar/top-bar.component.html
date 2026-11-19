@@ -1,26 +1,55 @@
-<a class="brand" routerLink="/" aria-label="TaxIntel home">
+<a class="brand" routerLink="/" [attr.aria-label]="t('topbar.home')">
   <span class="logo" aria-hidden="true">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M5 17h14v-5l-2-5H7l-2 5v5Z" /><path d="M9 4h6" /><circle cx="8" cy="14" r="1" /><circle cx="16" cy="14" r="1" /><path d="M6 17v2M18 17v2" />
     </svg>
   </span>
   <span class="name">TAXINTEL</span>
-  <span class="city">Antwerpen</span>
+  <span class="city">{{ t('topbar.city') }}</span>
 </a>
 
 <div class="clock"><span class="dot" aria-hidden="true"></span>{{ clockLabel() }}</div>
 
-<div class="user">
-  <button class="bell" type="button" aria-label="Notifications">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-    </svg>
-  </button>
-  <div class="who">
-    {{ driver().fullName }}
-    @if (driver().online) {
-      <small>● Online</small>
-    }
+@if (signedIn()) {
+  <div class="user">
+    <button
+      class="bell"
+      type="button"
+      [class.unread]="unread() > 0"
+      [attr.aria-label]="t('topbar.notifications')"
+      [attr.aria-expanded]="open() === 'notifications'"
+      aria-haspopup="true"
+      (click)="toggle('notifications')"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      </svg>
+    </button>
+
+    <button
+      class="account"
+      type="button"
+      [attr.aria-label]="t('topbar.account')"
+      [attr.aria-expanded]="open() === 'account'"
+      aria-haspopup="true"
+      (click)="toggle('account')"
+    >
+      <span class="who">
+        {{ driver().fullName }}
+        @if (driver().online) {
+          <small>● {{ t('common.online') }}</small>
+        }
+      </span>
+      <span class="avatar" aria-hidden="true">{{ driver().initials }}</span>
+    </button>
   </div>
-  <div class="avatar" aria-hidden="true">{{ driver().initials }}</div>
-</div>
+
+  @switch (open()) {
+    @case ('notifications') {
+      <app-notifications-panel class="dropdown" />
+    }
+    @case ('account') {
+      <app-account-menu class="dropdown" (done)="close()" />
+    }
+  }
+}

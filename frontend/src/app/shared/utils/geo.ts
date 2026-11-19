@@ -21,8 +21,3 @@ export function bearing(a: LatLngLike, b: LatLngLike): number {
   const x = Math.cos(a.lat * RAD) * Math.sin(b.lat * RAD) - Math.sin(a.lat * RAD) * Math.cos(b.lat * RAD) * Math.cos(dLng);
   return (Math.atan2(y, x) / RAD + 360) % 360;
 }
-
-/** "350 m" or "2.4 km". */
-export function formatDistance(meters: number): string {
-  return meters < 1000 ? `${Math.max(0, Math.round(meters / 10) * 10)} m` : `${(meters / 1000).toFixed(1)} km`;
-}

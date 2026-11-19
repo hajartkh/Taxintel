@@ -1,0 +1,44 @@
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <h3 class="label">{{ t('form.heading') }}</h3>
+
+  <label class="field">
+    <span>{{ t('form.title') }}</span>
+    <input
+      #titleInput
+      type="text"
+      formControlName="title"
+      maxlength="80"
+      autocomplete="off"
+      [placeholder]="t('form.titlePlaceholder')"
+      [class.invalid]="form.controls.title.invalid && form.controls.title.touched"
+    />
+  </label>
+
+  <div class="row">
+    <label class="field date">
+      <span>{{ t('form.date') }}</span>
+      <input type="date" formControlName="date" />
+    </label>
+    <label class="field">
+      <span>{{ t('form.start') }}</span>
+      <input type="time" formControlName="start" />
+    </label>
+    <label class="field">
+      <span>{{ t('form.end') }}</span>
+      <input type="time" formControlName="end" [class.invalid]="form.hasError('endBeforeStart')" />
+    </label>
+  </div>
+  @if (form.hasError('endBeforeStart')) {
+    <p class="error" role="alert">{{ t('form.endBeforeStart') }}</p>
+  }
+
+  <label class="field">
+    <span>{{ t('form.note') }}</span>
+    <textarea formControlName="note" rows="2" maxlength="200" [placeholder]="t('form.notePlaceholder')"></textarea>
+  </label>
+
+  <button type="submit" class="save" [disabled]="form.invalid">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+    {{ t('form.save') }}
+  </button>
+</form>

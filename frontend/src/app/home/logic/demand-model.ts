@@ -6,6 +6,7 @@
 import { clamp, gauss } from '../../shared/utils/math';
 import { distanceMeters } from '../../shared/utils/geo';
 import { HOUR_MS, addMinutes, formatTime, isSameDay } from '../../shared/utils/time';
+import type { Message, TranslationKey } from '../../core/i18n/translations';
 import { AreaKind, BusyArea, CityEvent, DemandLevel, Hotspot } from '../models/home.models';
 
 /** Typical demand per hour of the day (00:00 … 23:00), 0..1. */
@@ -15,16 +16,11 @@ const HOURLY_PROFILES: Record<AreaKind, number[]> = {
   shopping: [0, 0, 0, 0, 0, 0, 0, 0.05, 0.1, 0.3, 0.6, 0.75, 0.8, 0.8, 0.85, 0.9, 0.85, 0.6, 0.25, 0.05, 0, 0, 0, 0],
 };
 
-const AREA_REASON: Record<AreaKind, string> = {
-  station: 'Train arrivals',
-  nightlife: 'Nightlife',
-  shopping: 'Shoppers',
-};
-
-export const DEMAND_LABEL: Record<DemandLevel, string> = {
-  high: 'High demand',
-  busy: 'Busy',
-  mod: 'Moderate',
+/** Translation keys (core/i18n/translations.ts) for why an area is busy. */
+const AREA_REASON: Record<AreaKind, TranslationKey> = {
+  station: 'reason.station',
+  nightlife: 'reason.nightlife',
+  shopping: 'reason.shopping',
 };
 
 export function demandLevel(intensity: number): DemandLevel {
@@ -68,10 +64,10 @@ export function peakPickupTime(ev: CityEvent): Date {
   return addMinutes(ev.end, 15);
 }
 
-function eventPhase(ev: CityEvent, t: Date): string {
-  if (t < ev.start) return `starts ${formatTime(ev.start)}`;
-  if (t <= ev.end) return `ends ${formatTime(ev.end)}`;
-  return `let out ${formatTime(ev.end)}`;
+function eventPhase(ev: CityEvent, t: Date): Message {
+  if (t < ev.start) return { key: 'reason.starts', params: { name: ev.name, time: formatTime(ev.start) } };
+  if (t <= ev.end) return { key: 'reason.ends', params: { name: ev.name, time: formatTime(ev.end) } };
+  return { key: 'reason.letOut', params: { name: ev.name, time: formatTime(ev.end) } };
 }
 
 export function eventsOnDay(events: CityEvent[], day: Date): CityEvent[] {
@@ -87,7 +83,7 @@ export function computeHotspots(t: Date, areas: BusyArea[], events: CityEvent[])
     lng: a.lng,
     spread: a.spread,
     intensity: areaIntensity(a, t),
-    reason: AREA_REASON[a.kind],
+    reason: { key: AREA_REASON[a.kind] },
   }));
   for (const ev of events) {
     const intensity = eventIntensity(ev, t);
@@ -99,7 +95,7 @@ export function computeHotspots(t: Date, areas: BusyArea[], events: CityEvent[])
       lng: ev.venue.lng,
       spread: 150 + 230 * Math.sqrt(eventSize(ev)),
       intensity,
-      reason: `${ev.name} · ${eventPhase(ev, t)}`,
+      reason: eventPhase(ev, t),
       eventId: ev.id,
     });
   }

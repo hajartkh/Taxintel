@@ -3,7 +3,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Subject, debounceTime, switchMap } from 'rxjs';
 import { ClockService } from '../../core/clock.service';
 import { clamp } from '../../shared/utils/math';
-import { HOUR_MS, addDays, daysBetween, isSameDay, startOfDay } from '../../shared/utils/time';
+import { HOUR_MS, addDays, daysBetween, isSameDay, startOfDay, startOfWeek } from '../../shared/utils/time';
 import { AiHotspotsService } from '../data/ai-hotspots.service';
 import { CityDataService } from '../data/city-data.service';
 import { HOME_CONFIG } from '../home.config';
@@ -58,7 +58,10 @@ export class HomeStore {
   readonly slot = signal(0);
   /** True while the forecast follows the real clock ("Now"). */
   readonly live = signal(true);
-  /** First day shown in the week strip of the calendar. */
+  /**
+   * First day shown in the week strip of the calendar: today for the current week
+   * (today + the next 6 days), a Monday for the weeks after it.
+   */
   readonly stripStart = signal(startOfDay(new Date()), { equal: sameTime });
   readonly activeEventId = signal<number | null>(null);
   // heat = mock demand model, ai = backend hotspot model (backend/app/hotspots)
@@ -68,6 +71,10 @@ export class HomeStore {
   readonly forecastOpen = signal(typeof window === 'undefined' || window.innerWidth > 700);
 
   // ---------- Derived ----------
+  /** Today as a shift day: at 02:00 the driver is still working Friday's night shift. */
+  readonly shiftToday = computed(() => toShiftSlot(this.clock.now()).day, { equal: sameTime });
+  /** True when the week strip shows the current week (starting today); no earlier weeks then. */
+  readonly stripIsCurrent = computed(() => daysBetween(this.shiftToday(), this.stripStart()) <= 0);
   readonly forecastTime = computed(
     () => new Date(this.day().getTime() + (HOME_CONFIG.shiftStartHour + this.slot() * 0.5) * HOUR_MS),
   );
@@ -108,7 +115,7 @@ export class HomeStore {
     this.day.set(day);
     this.slot.set(slot);
     this.live.set(true);
-    this.showDayInStrip(day);
+    this.stripStart.set(day);
   }
 
   setSlot(slot: number): void {
@@ -130,6 +137,23 @@ export class HomeStore {
 
   shiftDay(days: number): void {
     this.selectDay(addDays(this.day(), days));
+  }
+
+  /** Week strip ">": the next week, Monday to Sunday. Selects its first day. */
+  nextWeek(): void {
+    const today = this.shiftToday();
+    const start = this.stripStart();
+    const next = isSameDay(start, today) ? addDays(startOfWeek(today), 7) : addDays(start, 7);
+    const diff = daysBetween(next, today);
+    this.showWeek(diff >= 0 && diff <= 6 ? today : next);
+  }
+
+  /** Week strip "<": the previous week, until the current week (which starts today again). */
+  prevWeek(): void {
+    if (this.stripIsCurrent()) return;
+    const today = this.shiftToday();
+    const prev = addDays(this.stripStart(), -7);
+    this.showWeek(daysBetween(prev, today) >= 0 ? today : prev);
   }
 
   /** Select an event: jump the forecast to when it lets out and show it on the map. */
@@ -157,8 +181,22 @@ export class HomeStore {
     this.layers.update((l) => ({ ...l, [layer]: !l[layer] }));
   }
 
+  /** Show the week strip starting at `start` and select its first day (back to "Now" for today). */
+  private showWeek(start: Date): void {
+    if (isSameDay(start, this.shiftToday())) {
+      this.activeEventId.set(null);
+      this.goLive();
+      return;
+    }
+    this.stripStart.set(start);
+    this.selectDay(start);
+  }
+
+  /** Keep the selected day visible: jump to the strip that contains it when it is off-screen. */
   private showDayInStrip(day: Date): void {
     const diff = daysBetween(this.stripStart(), day);
-    if (diff < 0 || diff > 6) this.stripStart.set(addDays(this.stripStart(), Math.floor(diff / 7) * 7));
+    if (diff >= 0 && diff <= 6) return;
+    const fromToday = daysBetween(this.shiftToday(), day);
+    this.stripStart.set(fromToday >= 0 && fromToday <= 6 ? this.shiftToday() : startOfWeek(day));
   }
 }

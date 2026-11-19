@@ -1,0 +1,48 @@
+<div class="main">
+  <header class="head">
+    <div class="title">
+      <a class="back" routerLink="/" [attr.aria-label]="t('common.backToMap')" [attr.title]="t('common.backToMap')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+      </a>
+      <div>
+        <div class="label">{{ t('calPage.title') }}</div>
+        <h1>{{ monthLabel() }}</h1>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button type="button" class="today" [disabled]="showingToday() && selected().getTime() === today().getTime()" (click)="goToday()">
+        {{ t('calPage.today') }}
+      </button>
+      <div class="arrows">
+        <button type="button" [attr.aria-label]="t('calPage.prevMonth')" (click)="shiftMonth(-1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+        </button>
+        <button type="button" [attr.aria-label]="t('calPage.nextMonth')" (click)="shiftMonth(1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+        </button>
+      </div>
+      <ul class="legend">
+        <li class="event">{{ t('calPage.cityEvents') }}</li>
+        <li class="agenda">{{ t('calPage.myAgenda') }}</li>
+      </ul>
+      <button type="button" class="add" (click)="addItem()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+        {{ t('calPage.add') }}
+      </button>
+    </div>
+  </header>
+
+  <app-month-grid
+    class="grid"
+    [month]="month()"
+    [selected]="selected()"
+    [today]="today()"
+    [entries]="entriesByDay()"
+    (pick)="select($event)"
+  />
+</div>
+
+<aside class="panel">
+  <app-day-panel [day]="selected()" [entries]="selectedEntries()" (added)="onAdded($event)" (remove)="removeItem($event)" />
+</aside>

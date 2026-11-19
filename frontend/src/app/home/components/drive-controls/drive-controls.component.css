@@ -18,6 +18,7 @@ button {
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.03em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 

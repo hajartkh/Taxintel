@@ -1,10 +1,11 @@
 import { DestroyRef, Injectable, NgZone, computed, effect, inject, signal } from '@angular/core';
 import * as L from 'leaflet';
 import { Subject } from 'rxjs';
-import { bearing, formatDistance } from '../../shared/utils/geo';
+import { I18nService, Message } from '../../core/i18n/i18n.service';
+import { bearing } from '../../shared/utils/geo';
 import { clamp } from '../../shared/utils/math';
 import { HOME_CONFIG } from '../home.config';
-import { DEMAND_LABEL, demandLevel } from '../logic/demand-model';
+import { demandLevel } from '../logic/demand-model';
 import { Hotspot, PlannedRoute } from '../models/home.models';
 import { HomeStore } from '../state/home.store';
 import { RoutePlannerService } from './route-planner.service';
@@ -14,8 +15,10 @@ export type TripStatus = 'idle' | 'driving' | 'paused';
 export type Turn = 'left' | 'right' | 'straight';
 
 export interface NavHint {
-  distance: string;
-  text: string;
+  /** Distance to the next turn (or to the destination). */
+  meters: number;
+  /** OSRM instruction in the chosen language; null = "to destination". */
+  text: string | null;
   turn: Turn;
 }
 
@@ -38,6 +41,7 @@ export class TripService {
   private readonly planner = inject(RoutePlannerService);
   private readonly toast = inject(ToastService);
   private readonly zone = inject(NgZone);
+  private readonly i18n = inject(I18nService);
 
   /** Where the driver stands while no trip is running (dummy GPS: click the map to move). */
   readonly driverPosition = signal(L.latLng(HOME_CONFIG.driverStart.lat, HOME_CONFIG.driverStart.lng));
@@ -45,7 +49,8 @@ export class TripService {
   readonly status = signal<TripStatus>('idle');
   readonly speedKmh = signal<number>(HOME_CONFIG.speedOptions[0]);
   readonly follow = signal(true);
-  readonly info = signal('');
+  /** Status line under the smart route (a message, so it follows a language change). */
+  readonly info = signal<Message | null>(null);
   readonly nav = signal<NavHint | null>(null);
 
   readonly active = computed(() => this.status() !== 'idle');
@@ -66,10 +71,12 @@ export class TripService {
 
   constructor() {
     // Re-plan when the forecast (hotspots) or the driver's position changes, debounced.
+    // A new language also re-plans, so the turn instructions are in that language.
     effect((onCleanup) => {
       const hotspots = this.store.hotspots();
       const from = this.driverPosition();
-      const timer = setTimeout(() => void this.replan(hotspots, from), 350);
+      const language = this.i18n.lang();
+      const timer = setTimeout(() => void this.replan(hotspots, from, language), 350);
       onCleanup(() => clearTimeout(timer));
     });
 
@@ -110,26 +117,27 @@ export class TripService {
   stop(): void {
     if (!this.active()) return;
     this.endTrip(this.livePosition);
-    this.toast.show('Trip stopped. Route recalculated from your position.');
+    this.toast.show(this.i18n.t('toast.stopped'));
   }
 
   /** Simulated GPS: put the driver somewhere else. */
   moveDriver(position: L.LatLng): void {
     if (this.active()) {
-      this.toast.show('End the trip first to move the driver.');
+      this.toast.show(this.i18n.t('toast.endFirst'));
       return;
     }
     this.driverPosition.set(position);
-    this.toast.show('Driver moved — recalculating recommended route…');
+    this.toast.show(this.i18n.t('toast.moved'));
   }
 
   // ---------- Planning ----------
-  private async replan(hotspots: Hotspot[], idlePosition: L.LatLng): Promise<void> {
+  private async replan(hotspots: Hotspot[], idlePosition: L.LatLng, language: string): Promise<void> {
     const active = this.active();
     const from = active ? this.livePosition : idlePosition;
     const targets = this.planner.pickStops(from, hotspots);
     // Same stops as now? Then only refresh their demand. (While driving, the position may change freely.)
-    const key = targets.map((t) => t.id).join('|') + (active ? '' : `@${from.lat.toFixed(4)},${from.lng.toFixed(4)}`);
+    const key =
+      `${language}:` + targets.map((t) => t.id).join('|') + (active ? '' : `@${from.lat.toFixed(4)},${from.lng.toFixed(4)}`);
     if (key === this.routeKey) {
       this.route.update((r) => r && {
         ...r,
@@ -144,15 +152,15 @@ export class TripService {
     if (!targets.length) return;
 
     const request = ++this.request;
-    this.info.set('Calculating route…');
-    const route = await this.planner.plan(from, targets);
+    this.info.set({ key: 'trip.calculating' });
+    const route = await this.planner.plan(from, targets, language);
     if (request !== this.request) return; // a newer request is underway
 
     this.travelled = 0;
     this.seg = 0;
     this.route.set(route);
-    if (route.straightLine) this.info.set('Routing service unreachable — showing a straight-line preview.');
-    else this.info.set(this.active() ? 'Route updated to the new forecast.' : 'Route ready. Press start when you are.');
+    if (route.straightLine) this.info.set({ key: 'trip.straightLine' });
+    else this.info.set({ key: this.active() ? 'trip.updated' : 'trip.ready' });
   }
 
   // ---------- Simulation ----------
@@ -201,7 +209,8 @@ export class TripService {
     if (!route) return;
     const stop = route.stops[index];
     this.route.set({ ...route, stops: route.stops.map((s, i) => (i === index ? { ...s, done: true } : s)) });
-    this.toast.show(`Hotspot reached: ${stop.name} — ${DEMAND_LABEL[demandLevel(stop.intensity)].toLowerCase()}`);
+    const level = this.i18n.t(`demand.${demandLevel(stop.intensity)}`).toLocaleLowerCase(this.i18n.locale());
+    this.toast.show(this.i18n.t('toast.hotspotReached', { name: stop.name, level }));
   }
 
   private arrive(route: PlannedRoute): void {
@@ -209,7 +218,7 @@ export class TripService {
     this.route.set({ ...route, stops: route.stops.map((s) => ({ ...s, done: true })) });
     this.endTrip(end);
     const last = route.stops[route.stops.length - 1];
-    this.toast.show(`Route completed at ${last?.name ?? 'destination'}. New recommendation incoming.`);
+    this.toast.show(this.i18n.t('toast.completed', { name: last?.name ?? this.i18n.t('toast.destination') }));
   }
 
   private endTrip(position: L.LatLng): void {
@@ -230,12 +239,12 @@ export class TripService {
     const next = route.instructions.find((i) => i.index > this.seg);
     if (next) {
       const distance = route.cum[Math.min(next.index, route.cum.length - 1)] - this.travelled;
-      this.nav.set({ distance: formatDistance(distance), text: next.text, turn: toTurn(next.modifier) });
+      this.nav.set({ meters: distance, text: next.text, turn: toTurn(next.modifier) });
     } else {
-      this.nav.set({ distance: formatDistance(left), text: 'to destination', turn: 'straight' });
+      this.nav.set({ meters: left, text: null, turn: 'straight' });
     }
     const mps = this.speedKmh() / 3.6;
-    this.info.set(`${(left / 1000).toFixed(2)} km to go · about ${Math.ceil(left / mps / 60)} min at this speed`);
+    this.info.set({ key: 'trip.progress', params: { km: this.i18n.number(left / 1000, 2), min: Math.ceil(left / mps / 60) } });
   }
 }
 

@@ -13,18 +13,51 @@ export function formatTime(d: Date): string {
   return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
 }
 
-/** "Fri 30 Oct" */
-export function formatShortDate(d: Date): string {
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+/** "Fri 30 Oct" (pass a locale such as 'nl-BE' for another language) */
+export function formatShortDate(d: Date, locale = 'en-GB'): string {
+  return d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 /** "Friday 30 October" */
-export function formatLongDate(d: Date): string {
-  return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+export function formatLongDate(d: Date, locale = 'en-GB'): string {
+  return d.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
 }
 
-export function weekdayShort(d: Date): string {
+/** "November 2026" */
+export function formatMonthYear(d: Date, locale = 'en-GB'): string {
+  return d.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
+}
+
+/** "Fri"; with a locale the name is translated ("vr", "ven."). */
+export function weekdayShort(d: Date, locale?: string): string {
+  if (locale) return d.toLocaleDateString(locale, { weekday: 'short' }).replace('.', '');
   return WEEKDAY_SHORT[d.getDay()];
+}
+
+/** Local date as "2026-11-19" (no time zone shift, unlike toISOString). */
+export function toIsoDate(d: Date): string {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+/** "2026-11-19" -> that day at midnight, local time. */
+export function fromIsoDate(iso: string): Date {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/** Monday of the week that contains `d` (midnight). */
+export function startOfWeek(d: Date): Date {
+  const day = startOfDay(d);
+  return addDays(day, -((day.getDay() + 6) % 7));
+}
+
+/** First day of the month of `d` (midnight). */
+export function startOfMonth(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+export function addMonths(d: Date, months: number): Date {
+  return new Date(d.getFullYear(), d.getMonth() + months, 1);
 }
 
 export function startOfDay(d: Date): Date {
@@ -60,19 +93,13 @@ export function atTime(day: Date, hhmm: string): Date {
   return x;
 }
 
-/** "Today", "Tomorrow", "Yesterday" or the short weekday. */
-export function relativeDayLabel(d: Date, now: Date = new Date()): string {
-  const diff = daysBetween(now, d);
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Tomorrow';
-  if (diff === -1) return 'Yesterday';
-  return weekdayShort(d);
-}
+export type PartOfDay = 'night' | 'morning' | 'afternoon' | 'evening';
 
-export function greetingFor(d: Date): string {
+/** For the greeting ("Good morning" …); the text itself comes from the translations. */
+export function partOfDay(d: Date): PartOfDay {
   const h = d.getHours();
-  if (h < 5) return 'Good night';
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 5) return 'night';
+  if (h < 12) return 'morning';
+  if (h < 18) return 'afternoon';
+  return 'evening';
 }

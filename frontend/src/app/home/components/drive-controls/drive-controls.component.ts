@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { I18nService } from '../../../core/i18n/i18n.service';
 import { TripService } from '../../services/trip.service';
 
 /** PAUSE / RESUME ROUTE and STOP on the map while a trip is running. */
@@ -11,4 +12,5 @@ import { TripService } from '../../services/trip.service';
 })
 export class DriveControlsComponent {
   readonly trip = inject(TripService);
+  readonly t = inject(I18nService).t;
 }

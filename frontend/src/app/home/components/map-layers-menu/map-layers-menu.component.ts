@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { I18nService, TranslationKey } from '../../../core/i18n/i18n.service';
 import { MapLayer, MapTheme } from '../../models/home.models';
 import { HomeStore } from '../../state/home.store';
 
@@ -12,16 +13,17 @@ import { HomeStore } from '../../state/home.store';
 })
 export class MapLayersMenuComponent {
   readonly store = inject(HomeStore);
+  readonly t = inject(I18nService).t;
 
-  readonly layerOptions: ReadonlyArray<{ key: MapLayer; label: string }> = [
-    { key: 'ai', label: 'AI hotspots' },
-    { key: 'heat', label: 'Heatmap (demo)' },
-    { key: 'events', label: 'Events' },
-    { key: 'route', label: 'Recommended route' },
+  readonly layerOptions: ReadonlyArray<{ key: MapLayer; label: TranslationKey }> = [
+    { key: 'ai', label: 'layers.ai' },
+    { key: 'heat', label: 'layers.heat' },
+    { key: 'events', label: 'layers.events' },
+    { key: 'route', label: 'layers.route' },
   ];
 
-  readonly themeOptions: ReadonlyArray<{ key: MapTheme; label: string }> = [
-    { key: 'dark', label: 'Dark' },
-    { key: 'light', label: 'Light' },
+  readonly themeOptions: ReadonlyArray<{ key: MapTheme; label: TranslationKey }> = [
+    { key: 'dark', label: 'layers.dark' },
+    { key: 'light', label: 'layers.light' },
   ];
 }
