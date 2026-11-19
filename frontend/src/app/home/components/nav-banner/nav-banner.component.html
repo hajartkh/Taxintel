@@ -10,8 +10,8 @@
       </svg>
     </div>
     <div>
-      <div class="distance">{{ nav.distance }}</div>
-      <div class="text">{{ nav.text }}</div>
+      <div class="distance">{{ i18n.distance(nav.meters) }}</div>
+      <div class="text">{{ nav.text ?? i18n.t('nav.toDestination') }}</div>
     </div>
   </div>
 }

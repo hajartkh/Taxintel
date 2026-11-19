@@ -20,4 +20,15 @@ export class DriverService {
     earningsToday: 84,
     tripsToday: 12,
   });
+
+  /** False after "Sign out". Replace with a real session (token) once there is a login. */
+  readonly signedIn = signal(true);
+
+  signOut(): void {
+    this.signedIn.set(false);
+  }
+
+  signIn(): void {
+    this.signedIn.set(true);
+  }
 }

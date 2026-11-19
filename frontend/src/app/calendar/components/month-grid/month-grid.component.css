@@ -1,0 +1,60 @@
+:host { display: flex; flex-direction: column; border: 1px solid var(--tx-line); border-radius: var(--tx-radius); background: var(--tx-panel); overflow: hidden; }
+
+.weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-bottom: 1px solid var(--tx-line); }
+.weekdays div { padding: 9px 10px; color: var(--tx-muted); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.days { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+
+.cell {
+  min-width: 0;
+  min-height: 96px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+  overflow: hidden;
+  border: 0;
+  border-right: 1px solid var(--tx-line);
+  border-bottom: 1px solid var(--tx-line);
+  background: none;
+  text-align: left;
+}
+.cell:nth-child(7n) { border-right: 0; }
+.cell:hover { background: var(--tx-card); }
+.cell.other { background: #0b0b0b; }
+.cell.other .num { color: var(--tx-faint); }
+.cell.selected { background: var(--tx-card); box-shadow: 0 0 0 2px var(--tx-yellow) inset; }
+
+.cell-head { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.num { width: 24px; height: 24px; display: grid; place-items: center; flex: none; border-radius: 50%; font-size: 13px; font-weight: 800; }
+.today .num { background: var(--tx-yellow); color: #000; }
+
+.chips { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.chip {
+  padding: 2px 6px;
+  overflow: hidden;
+  border-left: 3px solid;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.chip b { font-weight: 800; }
+.chip.event { border-color: var(--tx-yellow); background: var(--tx-yellow-soft); }
+.chip.agenda { border-color: var(--tx-green); background: rgba(43, 212, 107, 0.13); }
+.more { padding-right: 2px; color: var(--tx-muted); font-size: 11px; font-weight: 700; white-space: nowrap; }
+
+.dots { display: none; gap: 3px; justify-content: center; }
+.dots i { width: 5px; height: 5px; border-radius: 50%; }
+.dots .event { background: var(--tx-yellow); }
+.dots .agenda { background: var(--tx-green); }
+
+/* Phones: numbers + coloured dots instead of chips */
+@media (max-width: 700px) {
+  .cell { min-height: 54px; align-items: center; padding: 6px 2px; }
+  .chips, .more { display: none; }
+  .dots { display: flex; }
+}

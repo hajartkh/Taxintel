@@ -1,4 +1,6 @@
 :host {
+  position: relative;
+  z-index: 2000; /* dropdowns open above the map (Leaflet panes go up to 1000) */
   flex: none;
   height: 64px;
   padding: 0 20px;
@@ -29,12 +31,20 @@
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--tx-yellow); box-shadow: 0 0 10px var(--tx-yellow); }
 
 /* Account + notifications always on the right */
-.user { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-.bell { position: relative; padding: 6px; border: 0; background: none; color: var(--tx-muted); }
-.bell::after { content: ''; position: absolute; top: 5px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--tx-yellow); }
+.user { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.bell { position: relative; padding: 8px; border: 1px solid transparent; border-radius: 10px; background: none; color: var(--tx-muted); }
+/* Yellow dot = unread notifications */
+.bell.unread::after { content: ''; position: absolute; top: 7px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--tx-yellow); }
+
+.account { padding: 4px 4px 4px 10px; display: flex; align-items: center; gap: 12px; border: 1px solid transparent; border-radius: 12px; background: none; }
+.bell:hover, .account:hover { background: var(--tx-card); }
+.bell[aria-expanded='true'], .account[aria-expanded='true'] { border-color: var(--tx-line-strong); background: var(--tx-card); color: var(--tx-text); }
+
 .who { text-align: right; font-size: 14px; font-weight: 700; line-height: 1.2; }
 .who small { display: block; color: var(--tx-green); font-size: 12px; font-weight: 600; }
 .avatar { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; background: var(--tx-yellow); color: #000; font-weight: 800; }
+
+.dropdown { position: absolute; top: calc(100% + 6px); right: 20px; }
 
 @media (max-width: 1000px) {
   .clock, .who { display: none; }
@@ -43,4 +53,5 @@
 @media (max-width: 600px) {
   :host { padding: 0 14px; }
   .city { display: none; }
+  .dropdown { right: 10px; left: 10px; }
 }

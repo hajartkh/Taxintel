@@ -1,0 +1,47 @@
+<div class="profile">
+  <span class="avatar" aria-hidden="true">{{ driver().initials }}</span>
+  <div>
+    <div class="name">{{ driver().fullName }}</div>
+    <div class="role">
+      {{ t('account.role') }} ·
+      <span [class.online]="driver().online">{{ driver().online ? t('common.online') : t('common.offline') }}</span>
+    </div>
+  </div>
+</div>
+
+<a class="row" routerLink="/settings" (click)="done.emit()">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+  </svg>
+  {{ t('account.settings') }}
+</a>
+
+<div class="lang">
+  <span class="lang-label">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20" />
+    </svg>
+    {{ t('account.language') }}
+  </span>
+  <div class="segments" role="radiogroup" [attr.aria-label]="t('account.language')">
+    @for (lang of languages; track lang.code) {
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="i18n.lang() === lang.code"
+        [attr.title]="lang.label"
+        (click)="i18n.setLang(lang.code)"
+      >
+        {{ lang.short }}
+      </button>
+    }
+  </div>
+</div>
+
+<button type="button" class="row sign-out" (click)="signOut()">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+  </svg>
+  {{ t('account.signOut') }}
+</button>

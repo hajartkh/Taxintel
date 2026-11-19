@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, inject, viewChild } from '@angular/core';
 import { ClockService } from '../core/clock.service';
 import { DriverService } from '../core/driver.service';
-import { greetingFor } from '../shared/utils/time';
+import { I18nService } from '../core/i18n/i18n.service';
+import { partOfDay } from '../shared/utils/time';
 import { CityCalendarComponent } from './components/city-calendar/city-calendar.component';
 import { DemandMapComponent } from './components/demand-map/demand-map.component';
 import { SmartRouteComponent } from './components/smart-route/smart-route.component';
@@ -26,17 +27,18 @@ export class HomeComponent {
   readonly trip = inject(TripService);
   readonly driver = inject(DriverService).profile;
   private readonly clock = inject(ClockService);
+  readonly t = inject(I18nService).t;
   private readonly mapRef = viewChild.required(DemandMapComponent, { read: ElementRef });
 
-  readonly greeting = computed(() => `${greetingFor(this.clock.now())}, ${this.driver().firstName}`);
+  readonly greeting = computed(() => this.t(`greeting.${partOfDay(this.clock.now())}`, { name: this.driver().firstName }));
   readonly startLabel = computed(() => {
     switch (this.trip.status()) {
       case 'driving':
-        return 'Pause';
+        return this.t('home.pause');
       case 'paused':
-        return 'Resume route';
+        return this.t('home.resume');
       default:
-        return 'Start recommended route';
+        return this.t('home.start');
     }
   });
 

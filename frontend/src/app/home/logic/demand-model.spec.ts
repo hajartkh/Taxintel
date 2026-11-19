@@ -34,7 +34,7 @@ describe('demand model', () => {
   });
 
   it('merges hotspots that are close together', () => {
-    const near = { id: 'a', name: 'A', lat: 51.2297, lng: 4.4415, spread: 200, intensity: 0.5, reason: '' };
+    const near = { id: 'a', name: 'A', lat: 51.2297, lng: 4.4415, spread: 200, intensity: 0.5, reason: { key: 'reason.station' as const } };
     const alsoNear = { ...near, id: 'b', lng: 4.4425, intensity: 0.4 };
     const far = { ...near, id: 'c', lat: 51.2, intensity: 0.9 };
     const clusters = clusterHotspots([near, alsoNear, far]);

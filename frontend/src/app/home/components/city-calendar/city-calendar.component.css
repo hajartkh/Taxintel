@@ -2,6 +2,9 @@
 
 .head { display: flex; justify-content: space-between; align-items: center; }
 h2 { margin: 0; }
+.title-link { display: inline-flex; align-items: center; gap: 5px; color: inherit; text-decoration: none; }
+.title-link svg { color: var(--tx-yellow); }
+.title-link:hover { color: var(--tx-yellow); }
 .sub { color: var(--tx-muted); font-size: 13px; margin-top: 3px; }
 
 .arrows { display: flex; gap: 4px; }

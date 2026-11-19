@@ -1,13 +1,18 @@
 <div class="head">
   <div>
-    <h2 class="label">City calendar</h2>
+    <h2 class="label">
+      <a class="title-link" routerLink="/calendar" [attr.title]="t('cal.openMonth')">
+        {{ t('cal.title') }}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+      </a>
+    </h2>
     <div class="sub">{{ dateLabel() }}</div>
   </div>
   <div class="arrows">
-    <button type="button" aria-label="Previous day" (click)="store.shiftDay(-1)">
+    <button type="button" [attr.aria-label]="t('cal.prevWeek')" [disabled]="store.stripIsCurrent()" (click)="store.prevWeek()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
     </button>
-    <button type="button" aria-label="Next day" (click)="store.shiftDay(1)">
+    <button type="button" [attr.aria-label]="t('cal.nextWeek')" (click)="store.nextWeek()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
     </button>
   </div>
@@ -48,6 +53,6 @@
       <app-demand-badge [level]="item.level" />
     </button>
   } @empty {
-    <div class="empty">No major events on this day.</div>
+    <div class="empty">{{ t('cal.noEvents') }}</div>
   }
 </div>

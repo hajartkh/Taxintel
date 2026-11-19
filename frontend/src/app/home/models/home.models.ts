@@ -1,4 +1,5 @@
 import type { LatLng } from 'leaflet';
+import type { Message } from '../../core/i18n/translations';
 
 export type EventCategory = 'concert' | 'sports' | 'culture' | 'nightlife' | 'fair';
 export type AreaKind = 'station' | 'nightlife' | 'shopping';
@@ -48,7 +49,8 @@ export interface Hotspot {
   spread: number;
   /** Roughly 0..1.3; ≥ 0.75 is high demand. */
   intensity: number;
-  reason: string;
+  /** Why it is busy, translated in the UI ("Train arrivals", "Concert · ends 23:00"). */
+  reason: Message;
   eventId?: number;
 }
 
@@ -69,6 +71,7 @@ export interface RouteStop extends Hotspot {
 export interface RouteInstruction {
   /** Index in `PlannedRoute.path` where the manoeuvre happens. */
   index: number;
+  /** Turn instruction from OSRM, already in the chosen language. */
   text: string;
   modifier?: string;
 }

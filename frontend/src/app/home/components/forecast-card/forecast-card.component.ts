@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { formatShortDate, formatTime, relativeDayLabel } from '../../../shared/utils/time';
+import { I18nService } from '../../../core/i18n/i18n.service';
+import { formatShortDate, formatTime } from '../../../shared/utils/time';
 import { HOME_CONFIG } from '../../home.config';
 import { HomeStore } from '../../state/home.store';
 
@@ -14,12 +15,14 @@ import { HomeStore } from '../../state/home.store';
 })
 export class ForecastCardComponent {
   readonly store = inject(HomeStore);
+  private readonly i18n = inject(I18nService);
+  readonly t = this.i18n.t;
   readonly maxSlot = HOME_CONFIG.forecastSlots - 1;
 
   readonly time = computed(() => formatTime(this.store.forecastTime()));
   readonly day = computed(() => {
     const t = this.store.forecastTime();
-    return `${relativeDayLabel(t)} · ${formatShortDate(t)}`;
+    return `${this.i18n.relativeDay(t)} · ${formatShortDate(t, this.i18n.locale())}`;
   });
 
   toggle(): void {

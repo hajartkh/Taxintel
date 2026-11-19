@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { I18nService } from '../../../core/i18n/i18n.service';
 
 @Component({
   selector: 'app-map-legend',
@@ -7,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './map-legend.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapLegendComponent {}
+export class MapLegendComponent {
+  readonly t = inject(I18nService).t;
+}

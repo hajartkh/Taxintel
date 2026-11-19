@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
+import { I18nService } from '../../../core/i18n/i18n.service';
 import { HomeStore } from '../../state/home.store';
 import { MapLayersMenuComponent } from '../map-layers-menu/map-layers-menu.component';
 
@@ -14,6 +15,7 @@ import { MapLayersMenuComponent } from '../map-layers-menu/map-layers-menu.compo
 })
 export class MapToolbarComponent {
   readonly store = inject(HomeStore);
+  readonly t = inject(I18nService).t;
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
 

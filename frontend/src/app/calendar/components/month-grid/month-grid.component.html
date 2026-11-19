@@ -1,0 +1,42 @@
+<div class="weekdays" aria-hidden="true">
+  @for (name of weekdays(); track $index) {
+    <div>{{ name }}</div>
+  }
+</div>
+
+<div class="days" [style.grid-template-rows]="'repeat(' + weeks() + ', minmax(0, 1fr))'">
+  @for (cell of cells(); track cell.iso) {
+    <button
+      type="button"
+      class="cell"
+      [class.other]="!cell.inMonth"
+      [class.today]="cell.today"
+      [class.selected]="cell.selected"
+      [attr.aria-label]="cell.ariaLabel"
+      [attr.aria-pressed]="cell.selected"
+      (click)="pick.emit(cell.date)"
+    >
+      <span class="cell-head">
+        <span class="num">{{ cell.day }}</span>
+        @if (cell.more) {
+          <span class="more">{{ t('calPage.more', { count: cell.more }) }}</span>
+        }
+      </span>
+      <span class="chips">
+        @for (e of cell.shown; track e.key) {
+          <span [class]="'chip ' + e.kind">
+            @if (e.startTime) {
+              <b>{{ e.startTime }}</b>
+            }
+            {{ e.title }}
+          </span>
+        }
+      </span>
+      <span class="dots" aria-hidden="true">
+        @for (kind of cell.kinds; track kind) {
+          <i [class]="kind"></i>
+        }
+      </span>
+    </button>
+  }
+</div>
